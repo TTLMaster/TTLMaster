@@ -26,7 +26,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Custom"
+        android:text="Задать"
         android:onClick="onMyClick"
         android:id="@+id/button3"
         android:layout_below="@+id/button2"
@@ -39,7 +39,7 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/txt"
-        android:hint="Custom TTL"
+        android:hint="Другой TTL"
         android:layout_alignBottom="@+id/button3"
         android:layout_toLeftOf="@+id/button3"
         android:layout_toStartOf="@+id/button3" />
@@ -61,10 +61,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Choose TTL to change"
+        android:text="Выберите TTL для изменения"
         android:id="@+id/textView2"
         android:layout_below="@+id/txt"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="48dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onMyClick"
+        android:text="Попробовать правило iptables"
+        android:id="@+id/button4"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onMyClick"
+        android:text="Тема приложения на 4PDA"
+        android:id="@+id/pda"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text=" Версии 1.1.0"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/textView"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView" />
 
 </RelativeLayout>

@@ -7,6 +7,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.CheckBox;
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import ru.antiyotazapret.yotatetherttl.ShellExecuter;
 public class MainActivity extends Activity {
     EditText input;
@@ -37,14 +39,21 @@ public class MainActivity extends Activity {
 
                     } else
                     {
-                        error="Please, enter a correct TTL!";
+                        error="Пожалуйста, введите правильный TTL!";
                     }
                 }
                 else
                 {
-                    error="Please, enter something.";
+                    error="Пожалуйста, введите что-нибудь.";
                 }
                 break;
+            case R.id.button4: command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
+                exe.Executer(command);
+                error="ОК. Перезагрузите устройство и проверьте, работает ли правило.";
+                break;
+            case R.id.pda: error="Выберите TTL для изменения"; Uri uri = Uri.parse("http://4pda.ru/forum/index.php?showtopic=647126");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent); break;
         }
         TextView tv = (TextView) findViewById(R.id.textView2);
         if(error==null) {
@@ -56,7 +65,7 @@ public class MainActivity extends Activity {
             command += "\nsettings put global airplane_mode_on 0";
             command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false";
             exe.Executer(command);
-            tv.setText("OK. Now you can turn on tethering!");
+            tv.setText("ОК. Теперь Вы можете включить тетеринг!");
         }
         else
         {

@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Yota Tether TTL</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="main_version" formatted="false">Версия %s</string>
 
 </resources>

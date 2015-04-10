@@ -5,16 +5,23 @@ import java.io.InputStreamReader;
 
 public class ShellExecuter {
 
-    public String Executer(String command) {
+    public String execute(String command) {
         StringBuilder output = new StringBuilder();
-        Process p;
         try {
-            p = Runtime.getRuntime().exec(new String[]{"su", "-c", command});
-            p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append('\n');
+            Process process = Runtime.getRuntime().exec(new String[]{"su", "-c", command});
+            try {
+                process.waitFor();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                try {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        output.append(line).append('\n');
+                    }
+                } finally {
+                    reader.close();
+                }
+            } finally {
+                process.destroy();
             }
         } catch (Exception e) {
             e.printStackTrace();

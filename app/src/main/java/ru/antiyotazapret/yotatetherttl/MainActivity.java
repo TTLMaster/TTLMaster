@@ -6,15 +6,17 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    EditText input;
-    String command;
-    ShellExecuter exe = new ShellExecuter();
+    private EditText ttlField;
+    private ShellExecutor exe = new ShellExecutor();
+
+    private TextView messageTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,71 +36,72 @@ public class MainActivity extends Activity {
         findViewById(R.id.web_page_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("http://4pda.ru/forum/index.php?showtopic=647126");
+                Uri uri = Uri.parse(getString(R.string.app_web_address));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
         });
 
+        messageTextView = (TextView) findViewById(R.id.message_text_view);
+        ttlField = (EditText) findViewById(R.id.ttl_field);
+
     }
 
     public void onMyClick(View v) {
 
-        int ttlnumber = 63;
+        int ttl = 63;
         String error = null;
 
+        String command;
         switch (v.getId()) {
 
             case R.id.windows_ttl_button:
-                ttlnumber = 127;
+                ttl = 127;
                 break;
 
             case R.id.unix_ttl_button:
-                ttlnumber = 63;
+                ttl = 63;
                 break;
 
             case R.id.set_button:
-                TextView tv = (TextView) findViewById(R.id.message_text_view);
-                input = (EditText) findViewById(R.id.txt);
-                if (input.length() > 0) {
-                    ttlnumber = Integer.parseInt(input.getText().toString());
-                    if (ttlnumber > 1 && ttlnumber < 255) {
 
-                    } else {
-                        error = "Пожалуйста, введите правильный TTL!";
-                    }
-                } else {
+                if (TextUtils.isEmpty(ttlField.getText().toString())) {
                     error = "Пожалуйста, введите что-нибудь.";
+                    break;
                 }
+
+                ttl = Integer.parseInt(ttlField.getText().toString());
+                if (ttl <= 1 || ttl >= 255) {
+                    error = "Пожалуйста, введите правильный TTL!";
+                    break;
+                }
+
                 break;
 
             case R.id.iptables_button:
                 command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
                 exe.execute(command);
-                error = "ОК. Перезагрузите устройство и проверьте, работает ли правило.";
+                error = getString(R.string.main_iptables_message_done);
                 break;
 
         }
 
-        TextView tv = (TextView) findViewById(R.id.message_text_view);
-
-        if (error == null) {
-
-            command = "settings put global airplane_mode_on 1";
-            command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true";
-            command += "\nsettings put global tether_dun_required 0";
-            exe.execute(command);
-
-            command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttlnumber);
-            command += "\nsettings put global airplane_mode_on 0";
-            command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false";
-            exe.execute(command);
-
-            tv.setText("ОК. Теперь Вы можете включить тетеринг!");
-
-        } else {
-            tv.setText(error);
+        if (!TextUtils.isEmpty(error)) {
+            messageTextView.setText(error);
+            return;
         }
+
+        command = "settings put global airplane_mode_on 1";
+        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true";
+        command += "\nsettings put global tether_dun_required 0";
+        exe.execute(command);
+
+        command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl);
+        command += "\nsettings put global airplane_mode_on 0";
+        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false";
+        exe.execute(command);
+
+        messageTextView.setText(getString(R.string.main_ttl_message_done));
 
     }
 

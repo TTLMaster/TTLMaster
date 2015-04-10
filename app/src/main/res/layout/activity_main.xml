@@ -1,101 +1,101 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/windows_ttl_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:onClick="onMyClick"
-        android:text="Windows (127)" />
-
-    <Button
-        android:id="@+id/unix_ttl_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/windows_ttl_button"
-        android:layout_centerHorizontal="true"
-        android:onClick="onMyClick"
-        android:text="UNIX Android, Mac, IOS (63)" />
-
-    <Button
-        android:id="@+id/set_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/unix_ttl_button"
-        android:layout_toEndOf="@+id/windows_ttl_button"
-        android:layout_toRightOf="@+id/windows_ttl_button"
-        android:onClick="onMyClick"
-        android:text="Задать" />
-
-    <EditText
-        android:id="@+id/txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/set_button"
-        android:layout_toLeftOf="@+id/set_button"
-        android:layout_toStartOf="@+id/set_button"
-        android:ems="10"
-        android:hint="Другой TTL"
-        android:inputType="number" />
-
-
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="59dp"
-        android:text="YOTA TETHER TTL"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textIsSelectable="false"
-        android:textSize="40dp" />
-
-    <TextView
-        android:id="@+id/message_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txt"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
-        android:text="Выберите TTL для изменения"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <Button
-        android:id="@+id/iptables_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/message_text_view"
-        android:layout_centerHorizontal="true"
-        android:onClick="onMyClick"
-        android:text="Попробовать правило iptables" />
-
-    <Button
-        android:id="@+id/web_page_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="23dp"
-        android:onClick="onMyClick"
-        android:text="Тема приложения на 4PDA" />
+        android:text="@string/app_name"
+        android:textSize="34sp" />
 
     <TextView
         android:id="@+id/version_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView"
-        android:layout_below="@+id/textView"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textSize="20sp" />
 
-</RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical">
+
+            <Button
+                android:id="@+id/windows_ttl_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onMyClick"
+                android:text="@string/main_ttl_windows" />
+
+            <Button
+                android:id="@+id/unix_ttl_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onMyClick"
+                android:text="@string/main_ttl_unix" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/ttl_field"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/main_ttl_hint"
+                    android:inputType="number" />
+
+                <Button
+                    android:id="@+id/set_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="onMyClick"
+                    android:text="@string/main_ttl_apply" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/message_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/main_ttl_message_init"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Button
+                android:id="@+id/iptables_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:onClick="onMyClick"
+                android:text="@string/main_iptables_button" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/web_page_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/app_web_address" />
+
+</LinearLayout>

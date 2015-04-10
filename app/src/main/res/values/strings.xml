@@ -2,7 +2,18 @@
 <resources>
 
     <string name="app_name">Yota Tether TTL</string>
+    <string name="app_web_address">http://4pda.ru/forum/index.php?showtopic=647126</string>
 
     <string name="main_version" formatted="false">Версия %s</string>
+
+    <string name="main_ttl_windows">Windows (127)</string>
+    <string name="main_ttl_unix">UNIX Android, Mac, IOS (63)</string>
+    <string name="main_ttl_hint">Другой TTL</string>
+    <string name="main_ttl_apply">Задать</string>
+    <string name="main_ttl_message_init">Выберите TTL для изменения</string>
+    <string name="main_ttl_message_done">ОК. Теперь Вы можете включить тетеринг!</string>
+
+    <string name="main_iptables_button">Попробовать правило iptables</string>
+    <string name="main_iptables_message_done">ОК. Перезагрузите устройство и проверьте, работает ли правило.</string>
 
 </resources>

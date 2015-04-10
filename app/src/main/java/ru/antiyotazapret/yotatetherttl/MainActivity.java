@@ -10,18 +10,29 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 public class MainActivity extends Activity {
 
-    private EditText ttlField;
-    private ShellExecutor exe = new ShellExecutor();
+    @InjectView(R.id.ttl_field) EditText ttlField;
+    @InjectView(R.id.message_text_view) TextView messageTextView;
 
-    private TextView messageTextView;
+    private ShellExecutor exe = new ShellExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.inject(this);
+
+        if (savedInstanceState == null) {
+            ttlField.setText("63");
+        }
 
         TextView versionTextView = (TextView) findViewById(R.id.version_text_view);
 
@@ -47,51 +58,40 @@ public class MainActivity extends Activity {
 
     }
 
-    public void onMyClick(View v) {
+    @OnClick(R.id.windows_ttl_button)
+    void windowsClicked() {
+        ttlField.setText("127");
+    }
 
-        int ttl = 63;
-        String error = null;
+    @OnClick(R.id.unix_ttl_button)
+    void unixClicked() {
+        ttlField.setText("63");
+    }
 
-        String command;
-        switch (v.getId()) {
+    @OnClick(R.id.set_button)
+    void ttlClicked() {
 
-            case R.id.windows_ttl_button:
-                ttl = 127;
-                break;
-
-            case R.id.unix_ttl_button:
-                ttl = 63;
-                break;
-
-            case R.id.set_button:
-
-                if (TextUtils.isEmpty(ttlField.getText().toString())) {
-                    error = "Пожалуйста, введите что-нибудь.";
-                    break;
-                }
-
-                ttl = Integer.parseInt(ttlField.getText().toString());
-                if (ttl <= 1 || ttl >= 255) {
-                    error = "Пожалуйста, введите правильный TTL!";
-                    break;
-                }
-
-                break;
-
-            case R.id.iptables_button:
-                command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
-                exe.execute(command);
-                error = getString(R.string.main_iptables_message_done);
-                break;
-
-        }
-
-        if (!TextUtils.isEmpty(error)) {
-            messageTextView.setText(error);
+        if (TextUtils.isEmpty(ttlField.getText().toString())) {
+            Toast.makeText(this, R.string.main_ttl_error_empty, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        command = "settings put global airplane_mode_on 1";
+        int ttl;
+
+        try {
+            ttl = Integer.parseInt(ttlField.getText().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, R.string.main_ttl_error_cantReadValue, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (ttl <= 1 || ttl >= 255) {
+            Toast.makeText(this, R.string.main_ttl_error_between, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String command = "settings put global airplane_mode_on 1";
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true";
         command += "\nsettings put global tether_dun_required 0";
         exe.execute(command);
@@ -102,7 +102,13 @@ public class MainActivity extends Activity {
         exe.execute(command);
 
         messageTextView.setText(getString(R.string.main_ttl_message_done));
+    }
 
+    @OnClick(R.id.iptables_button)
+    void iptablesClicked() {
+        String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
+        exe.execute(command);
+        messageTextView.setText(R.string.main_iptables_message_done);
     }
 
 }

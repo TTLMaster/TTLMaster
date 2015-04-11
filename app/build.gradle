@@ -1,16 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
 
     defaultConfig {
-        applicationId "ru.antiyotazapret.yotatetherttl"
+        applicationId 'ru.antiyotazapret.yotatetherttl'
         minSdkVersion 8
         targetSdkVersion 21
         versionCode 2
-        versionName "1.1.0"
+        versionName '1.1.0'
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,6 +22,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.jakewharton:butterknife:6.1.0'
 }

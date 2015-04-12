@@ -1,6 +1,8 @@
 package ru.antiyotazapret.yotatetherttl;
 
+import android.util.Log;
 import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,17 +13,42 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.view.Menu;
+import android.view.MenuItem;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     @InjectView(R.id.ttl_field) EditText ttlField;
     @InjectView(R.id.message_text_view) TextView messageTextView;
 
     private ShellExecutor exe = new ShellExecutor();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        setTitle(R.string.app_name);
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_4pda: Uri uri = Uri.parse("http://4pda.ru/forum/index.php?showtopic=647126");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                break;
+            case R.id.action_settings:
+                Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settings);
+                return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +71,6 @@ public class MainActivity extends Activity {
             throw new RuntimeException(e);
         }
 
-        findViewById(R.id.web_page_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse(getString(R.string.app_web_address));
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
 
         messageTextView = (TextView) findViewById(R.id.message_text_view);
         ttlField = (EditText) findViewById(R.id.ttl_field);

@@ -24,5 +24,8 @@
 
     <string name="main_iptables_button">Попробовать правило iptables</string>
     <string name="main_iptables_message_done">ОК. Перезагрузите устройство и проверьте, работает ли правило.</string>
-
+    <string name="action_4pda">4PDA</string>
+    <string name="action_settings">Настройки</string>
+    <string name="checkbox1_title">Режим Debug</string>
+    <string name="checkbox1_summary">Включение режима Debug</string>
 </resources>

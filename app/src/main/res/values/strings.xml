@@ -19,13 +19,15 @@
     <string name="main_ttl_error_cantReadValue">Не удалось прочитать число</string>
     <string name="main_ttl_error_empty">Введите значение TTL</string>
     <string name="main_ttl_error_between">Значение должно быть от 1 до 255</string>
-
+    <string name="main_wait">Пожалуйста, подождите...</string>
 
 
     <string name="main_iptables_button">Попробовать правило iptables</string>
     <string name="main_iptables_message_done">ОК. Перезагрузите устройство и проверьте, работает ли правило.</string>
     <string name="action_4pda">4PDA</string>
     <string name="action_settings">Настройки</string>
-    <string name="checkbox1_title">Режим Debug</string>
-    <string name="checkbox1_summary">Включение режима Debug</string>
+    <string name="debugcheckbox_title">Режим Debug</string>
+    <string name="debugcheckbox_summary">Включение режима Debug</string>
+    <string name="wificheckbox_title">Включать тетеринг</string>
+    <string name="wificheckbox_summary">Включать WiFi раздачу после смены TTL (работает не у всех)</string>
 </resources>

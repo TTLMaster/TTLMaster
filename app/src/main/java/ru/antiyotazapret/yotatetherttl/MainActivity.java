@@ -9,7 +9,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import java.lang.reflect.Method;
 import android.view.View;
+import android.net.wifi.WifiManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,9 +20,14 @@ import android.view.MenuItem;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 
 public class MainActivity extends ActionBarActivity {
-
+    SharedPreferences sp;
+    String returnc;
+    String debuginfo;
+    boolean debugm;
     @InjectView(R.id.ttl_field) EditText ttlField;
     @InjectView(R.id.message_text_view) TextView messageTextView;
 
@@ -47,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
                 Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(settings);
                 return true;
-                
+
         }
         return false;
     }
@@ -76,7 +83,21 @@ public class MainActivity extends ActionBarActivity {
 
         messageTextView = (TextView) findViewById(R.id.message_text_view);
         ttlField = (EditText) findViewById(R.id.ttl_field);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+    }
+    private void setWifiTetheringEnabled(boolean enable) {
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
 
+        Method[] methods = wifiManager.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getName().equals("setWifiApEnabled")) {
+                try {
+                    method.invoke(wifiManager, null, enable);
+                } catch (Exception ex) {
+                }
+                break;
+            }
+        }
     }
 
     @OnClick(R.id.windows_ttl_button)
@@ -91,7 +112,7 @@ public class MainActivity extends ActionBarActivity {
 
     @OnClick(R.id.set_button)
     void ttlClicked() {
-
+       // messageTextView.setText(R.string.main_wait);
         if (TextUtils.isEmpty(ttlField.getText().toString())) {
             Toast.makeText(this, R.string.main_ttl_error_empty, Toast.LENGTH_SHORT).show();
             return;
@@ -115,21 +136,28 @@ public class MainActivity extends ActionBarActivity {
         String command = "settings put global airplane_mode_on 1";
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true";
         command += "\nsettings put global tether_dun_required 0";
-        exe.execute(command);
+        debuginfo=returnc+"\n"+exe.execute(command);
+        debugm = sp.getBoolean("debugm", false);
 
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl);
         command += "\nsettings put global airplane_mode_on 0";
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false";
-        exe.execute(command);
+        returnc=exe.execute(command);
+        debuginfo+="\n"+command+"\n"+returnc;
+        if(sp.getBoolean("wifi",false))
+            setWifiTetheringEnabled(true);
 
-        messageTextView.setText(getString(R.string.main_ttl_message_done));
+        messageTextView.setText(getString(R.string.main_ttl_message_done)+(debugm?debuginfo:""));
     }
 
     @OnClick(R.id.iptables_button)
     void iptablesClicked() {
+       // messageTextView.setText(R.string.main_wait);
         String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
-        exe.execute(command);
-        messageTextView.setText(R.string.main_iptables_message_done);
+        returnc=exe.execute(command);
+        debugm = sp.getBoolean("debugm", false);
+        debuginfo="\n"+command+"\n"+returnc;
+        messageTextView.setText(getString(R.string.main_iptables_message_done)+(debugm?debuginfo:""));
     }
 
 }

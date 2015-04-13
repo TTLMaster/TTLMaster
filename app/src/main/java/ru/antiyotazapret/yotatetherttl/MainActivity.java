@@ -41,11 +41,13 @@ public class MainActivity extends ActionBarActivity {
             case R.id.action_4pda: Uri uri = Uri.parse("http://4pda.ru/forum/index.php?showtopic=647126");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-                break;
+                return true;
+
             case R.id.action_settings:
                 Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(settings);
                 return true;
+                
         }
         return false;
     }

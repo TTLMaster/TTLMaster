@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Yota Tether TTL</string>
-    <string name="app_web_address">http://4pda.ru/forum/index.php?showtopic=647126</string>
-
-    <string name="main_version" formatted="false">Версия %s</string>
-
-
-
-    <string name="main_ttl_windows">Windows (127)</string>
-    <string name="main_ttl_unix">UNIX Android, Mac, IOS (63)</string>
-    <string name="main_ttl_hint">Другой TTL</string>
-    <string name="main_ttl_apply">Задать</string>
-
-    <string name="main_ttl_message_init">Выберите TTL для изменения</string>
-    <string name="main_ttl_message_done">ОК. Теперь Вы можете включить тетеринг!</string>
-
-    <string name="main_ttl_error_cantReadValue">Не удалось прочитать число</string>
-    <string name="main_ttl_error_empty">Введите значение TTL</string>
-    <string name="main_ttl_error_between">Значение должно быть от 1 до 255</string>
-    <string name="main_wait">Пожалуйста, подождите...</string>
-
-
-    <string name="main_iptables_button">Попробовать правило iptables</string>
-    <string name="main_iptables_message_done">ОК. Перезагрузите устройство и проверьте, работает ли правило.</string>
-    <string name="action_4pda">4PDA</string>
-    <string name="action_settings">Настройки</string>
-    <string name="debugcheckbox_title">Режим Debug</string>
-    <string name="debugcheckbox_summary">Включение режима Debug</string>
-    <string name="wificheckbox_title">Включать тетеринг</string>
-    <string name="wificheckbox_summary">Включать WiFi раздачу после смены TTL (работает не у всех)</string>
+    <string name="app_name" translatable="false">YOTA Tether TTL</string>
+    <string name="app_web_address" translatable="false">http://4pda.ru/forum/index.php?showtopic=647126</string>
+    <string name="main_version" formatted="false">Version %s</string>
+    <string name="main_ttl_windows" translatable="false">Windows (127)</string>
+    <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS (63)</string>
+    <string name="main_ttl_hint">Enter TTL</string>
+    <string name="main_ttl_apply">Apply</string>
+    <string name="main_ttl_message_init">Choose or enter value of TTL</string>
+    <string name="main_ttl_message_done">Done! Now you can turn on tethering or portable hotspot.</string>
+    <string name="main_ttl_error_cantReadValue">Unable to read value of TTL</string>
+    <string name="main_ttl_error_empty">Enter value of TTL</string>
+    <string name="main_ttl_error_between">The value must be from 1 to 255</string>
+    <string name="main_wait">Please wait…</string>
+    <string name="main_iptables_button">Try IPTables rule</string>
+    <string name="main_iptables_message_done">Done! Reboot the device and test the rule.</string>
+    <string name="action_4pda" translatable="false">4PDA</string>
+    <string name="action_settings">Settings</string>
+    <string name="debugcheckbox_title">Debug mode</string>
+    <string name="debugcheckbox_summary">Enabling debug mode</string>
+    <string name="wificheckbox_title">Turn on portable hotspot</string>
+    <string name="wificheckbox_summary">Turn on portable hotspot after changing the TTL (only works on some versions of Android)</string>
 </resources>

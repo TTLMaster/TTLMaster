@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-
-        <CheckBoxPreference
+    <CheckBoxPreference
             android:key="debugm"
             android:summary="@string/debugcheckbox_summary"
             android:title="@string/debugcheckbox_title">
-        </CheckBoxPreference>
+    </CheckBoxPreference>
+
     <CheckBoxPreference
         android:key="wifi"
         android:summary="@string/wificheckbox_summary"
         android:title="@string/wificheckbox_title">
     </CheckBoxPreference>
+
 </PreferenceScreen>

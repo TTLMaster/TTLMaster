@@ -1,51 +1,47 @@
 package ru.antiyotazapret.yotatetherttl;
 
-import android.util.Log;
-import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.text.TextUtils;
-import java.lang.reflect.Method;
-import android.view.View;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.Menu;
-import android.view.MenuItem;
+import java.lang.reflect.Method;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import android.preference.PreferenceManager;
-import android.content.SharedPreferences;
 
 public class MainActivity extends ActionBarActivity {
-    SharedPreferences sp;
-    String returnc;
-    String debuginfo;
-    boolean debugm;
-    @InjectView(R.id.ttl_field) EditText ttlField;
-    @InjectView(R.id.message_text_view) TextView messageTextView;
+    private SharedPreferences sp;
+    private String returnc;
+    private String debuginfo;
+    private boolean debugm;
+    @InjectView(R.id.ttl_field)
+    EditText ttlField;
+    @InjectView(R.id.message_text_view)
+    TextView messageTextView;
 
-    private ShellExecutor exe = new ShellExecutor();
+    private final ShellExecutor exe = new ShellExecutor();
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         setTitle(R.string.app_name);
-
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_4pda: Uri uri = Uri.parse("http://4pda.ru/forum/index.php?showtopic=647126");
+            case R.id.action_4pda: Uri uri = Uri.parse(getString(R.string.app_web_address));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 return true;
@@ -85,15 +81,15 @@ public class MainActivity extends ActionBarActivity {
         ttlField = (EditText) findViewById(R.id.ttl_field);
         sp = PreferenceManager.getDefaultSharedPreferences(this);
     }
-    private void setWifiTetheringEnabled(boolean enable) {
+    private void setWifiTetheringEnabled() {
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
 
         Method[] methods = wifiManager.getClass().getDeclaredMethods();
         for (Method method : methods) {
             if (method.getName().equals("setWifiApEnabled")) {
                 try {
-                    method.invoke(wifiManager, null, enable);
-                } catch (Exception ex) {
+                    method.invoke(wifiManager, null, true);
+                } catch (Exception ignored) {
                 }
                 break;
             }
@@ -112,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
 
     @OnClick(R.id.set_button)
     void ttlClicked() {
-       // messageTextView.setText(R.string.main_wait);
+        //messageTextView.setText(R.string.main_wait);
         if (TextUtils.isEmpty(ttlField.getText().toString())) {
             Toast.makeText(this, R.string.main_ttl_error_empty, Toast.LENGTH_SHORT).show();
             return;
@@ -145,19 +141,19 @@ public class MainActivity extends ActionBarActivity {
         returnc=exe.execute(command);
         debuginfo+="\n"+command+"\n"+returnc;
         if(sp.getBoolean("wifi",false))
-            setWifiTetheringEnabled(true);
+            setWifiTetheringEnabled();
 
-        messageTextView.setText(getString(R.string.main_ttl_message_done)+(debugm?debuginfo:""));
+        messageTextView.setText(getString(R.string.main_ttl_message_done)+("\n\n")+(debugm?debuginfo:""));
     }
 
     @OnClick(R.id.iptables_button)
     void iptablesClicked() {
-       // messageTextView.setText(R.string.main_wait);
+        //messageTextView.setText(R.string.main_wait);
         String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
         returnc=exe.execute(command);
         debugm = sp.getBoolean("debugm", false);
         debuginfo="\n"+command+"\n"+returnc;
-        messageTextView.setText(getString(R.string.main_iptables_message_done)+(debugm?debuginfo:""));
+        messageTextView.setText(getString(R.string.main_iptables_message_done)+("\n\n")+(debugm?debuginfo:""));
     }
 
 }

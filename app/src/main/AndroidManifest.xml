@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.antiyotazapret.yotatetherttl"
-    android:versionCode="2"
-    android:versionName="2.0.0"
-    >
+    package="ru.antiyotazapret.yotatetherttl">
 
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -26,8 +23,7 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/action_settings"
-            android:parentActivityName=".MainActivity">
+            android:label="@string/action_settings">
         </activity>
 
 

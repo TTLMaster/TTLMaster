@@ -6,27 +6,48 @@ import java.io.InputStreamReader;
 class ShellExecutor {
 
     public String execute(String command) {
-        StringBuilder output = new StringBuilder();
+
+        StringBuffer output = new StringBuffer();
+
+        Process p;
         try {
-            Process process = Runtime.getRuntime().exec(new String[]{"su", "-c", command});
-            try {
-                process.waitFor();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                try {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        output.append(line).append('\n');
-                    }
-                } finally {
-                    reader.close();
-                }
-            } finally {
-                process.destroy();
+            p = Runtime.getRuntime().exec(new String[]{"su", "-c", command});
+            p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";
+            while ((line = reader.readLine())!= null) {
+                output.append(line + "\n");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return output.toString();
+        String response = output.toString();
+        return response;
+
+    }
+    public String executenoroot(String command) {
+
+        StringBuffer output = new StringBuffer();
+
+        Process p;
+        try {
+            p = Runtime.getRuntime().exec(command);
+            p.waitFor();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line = "";
+            while ((line = reader.readLine())!= null) {
+                output.append(line + "\n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String response = output.toString();
+        return response;
+
     }
 
 }

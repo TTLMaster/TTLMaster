@@ -22,7 +22,6 @@ import butterknife.OnClick;
 
 public class MainActivity extends ActionBarActivity {
     private SharedPreferences sp;
-    private String returnc;
     private String debuginfo;
     private boolean debugm;
     @InjectView(R.id.ttl_field)
@@ -67,11 +66,13 @@ public class MainActivity extends ActionBarActivity {
         }
 
         TextView versionTextView = (TextView) findViewById(R.id.version_text_view);
+        TextView CurrentTTL=(TextView) findViewById(R.id.current_TTL);
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
             versionTextView.setText(getString(R.string.main_version, version));
+            CurrentTTL.setText(exe.executenoroot("cat /proc/sys/net/ipv4/ip_default_ttl"));
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -132,14 +133,14 @@ public class MainActivity extends ActionBarActivity {
         String command = "settings put global airplane_mode_on 1";
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true";
         command += "\nsettings put global tether_dun_required 0";
-        debuginfo=returnc+"\n"+exe.execute(command);
+        debuginfo=command+"\n"+exe.execute(command);
         debugm = sp.getBoolean("debugm", false);
 
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl);
         command += "\nsettings put global airplane_mode_on 0";
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false";
-        returnc=exe.execute(command);
-        debuginfo+="\n"+command+"\n"+returnc;
+
+        debuginfo+="\n"+command+"\n"+exe.execute(command);
         if(sp.getBoolean("wifi",false))
         {
             setWifiTetheringEnabled();
@@ -155,9 +156,9 @@ public class MainActivity extends ActionBarActivity {
     void iptablesClicked() {
         //messageTextView.setText(R.string.main_wait);
         String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
-        returnc=exe.execute(command);
+
         debugm = sp.getBoolean("debugm", false);
-        debuginfo="\n"+command+"\n"+returnc;
+        debuginfo="\n"+command+"\n"+exe.execute(command);
         messageTextView.setText(getString(R.string.main_iptables_message_done)+("\n\n")+(debugm?debuginfo:""));
     }
 

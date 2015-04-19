@@ -141,9 +141,14 @@ public class MainActivity extends ActionBarActivity {
         returnc=exe.execute(command);
         debuginfo+="\n"+command+"\n"+returnc;
         if(sp.getBoolean("wifi",false))
+        {
             setWifiTetheringEnabled();
 
-        messageTextView.setText(getString(R.string.main_ttl_message_done)+("\n\n")+(debugm?debuginfo:""));
+            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + ("\n\n") + (debugm ? debuginfo : ""));
+        }
+        else
+            messageTextView.setText(getString(R.string.main_ttl_message_done) + ("\n\n") + (debugm ? debuginfo : ""));
+
     }
 
     @OnClick(R.id.iptables_button)

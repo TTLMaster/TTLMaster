@@ -10,6 +10,7 @@
     <string name="main_ttl_apply">Apply</string>
     <string name="main_ttl_message_init">Choose or enter value of TTL</string>
     <string name="main_ttl_message_done">Done! Now you can turn on tethering or portable hotspot.</string>
+    <string name="main_ttl_message_done_auto">Done! Portable hotspot has been turned on.</string>
     <string name="main_ttl_error_cantReadValue">Unable to read value of TTL</string>
     <string name="main_ttl_error_empty">Enter value of TTL</string>
     <string name="main_ttl_error_between">The value must be from 1 to 255</string>

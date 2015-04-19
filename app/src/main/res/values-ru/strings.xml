@@ -5,6 +5,7 @@
     <string name="main_ttl_apply">Применить</string>
     <string name="main_ttl_message_init">Выберите или введите значение TTL</string>
     <string name="main_ttl_message_done">Готово! Теперь Вы можете включить режим модема.</string>
+    <string name="main_ttl_message_done_auto">Готово! Режим модема включен.</string>
     <string name="main_ttl_error_cantReadValue">Не удалось прочитать значение TTL</string>
     <string name="main_ttl_error_empty">Введите значение TTL</string>
     <string name="main_ttl_error_between">Значение должно быть от 1 до 255</string>

@@ -18,10 +18,15 @@
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/current_TTL"
+        android:background="@drawable/rounded"
+        android:layout_margin="30dp"
+        android:paddingTop="27dp"
+        android:textAlignment="gravity"
+        android:gravity="center"
         android:layout_gravity="center_horizontal" />
 
     <TextView

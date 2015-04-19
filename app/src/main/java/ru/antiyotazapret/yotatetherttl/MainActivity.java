@@ -24,6 +24,8 @@ public class MainActivity extends ActionBarActivity {
     private SharedPreferences sp;
     private String debuginfo;
     private boolean debugm;
+    @InjectView(R.id.current_TTL)
+    TextView CurrentTTL;
     @InjectView(R.id.ttl_field)
     EditText ttlField;
     @InjectView(R.id.message_text_view)
@@ -66,7 +68,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         TextView versionTextView = (TextView) findViewById(R.id.version_text_view);
-        TextView CurrentTTL=(TextView) findViewById(R.id.current_TTL);
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -150,6 +151,7 @@ public class MainActivity extends ActionBarActivity {
         else
             messageTextView.setText(getString(R.string.main_ttl_message_done) + ("\n\n") + (debugm ? debuginfo : ""));
 
+        CurrentTTL.setText(exe.executenoroot("cat /proc/sys/net/ipv4/ip_default_ttl"));
     }
 
     @OnClick(R.id.iptables_button)

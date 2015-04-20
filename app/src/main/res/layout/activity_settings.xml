@@ -1,18 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:orientation="vertical" >
 
-    <CheckBoxPreference
-            android:key="debugm"
-            android:summary="@string/debugcheckbox_summary"
-            android:title="@string/debugcheckbox_title">
-    </CheckBoxPreference>
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar">
+    </include>
 
-    <CheckBoxPreference
-        android:key="wifi"
-        android:summary="@string/wificheckbox_summary"
-        android:title="@string/wificheckbox_title">
-    </CheckBoxPreference>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</PreferenceScreen>
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+</LinearLayout>

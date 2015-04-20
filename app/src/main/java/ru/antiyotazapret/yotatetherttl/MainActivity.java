@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.lang.reflect.Method;
+import java.util.Locale;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -59,29 +63,37 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String lang = sp.getString("lang", "default");
+        assert lang != null;
+        if (lang.equals("default")) {
+            lang =getResources().getConfiguration().locale.getCountry();}
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, null);
         setContentView(R.layout.activity_main);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(R.string.app_name);
         ButterKnife.inject(this);
 
         if (savedInstanceState == null) {
             ttlField.setText("63");
         }
 
-        TextView versionTextView = (TextView) findViewById(R.id.version_text_view);
-
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
-            versionTextView.setText(getString(R.string.main_version, version));
+            toolbar.setSubtitle(getString(R.string.main_version, version));
             CurrentTTL.setText(exe.executenoroot("cat /proc/sys/net/ipv4/ip_default_ttl"));
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-
         messageTextView = (TextView) findViewById(R.id.message_text_view);
         ttlField = (EditText) findViewById(R.id.ttl_field);
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
     }
     private void setWifiTetheringEnabled() {
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);

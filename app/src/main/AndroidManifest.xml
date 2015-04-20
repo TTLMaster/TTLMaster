@@ -9,12 +9,14 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:configChanges="locale">
 
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden">
+            android:windowSoftInputMode="stateHidden"
+            android:configChanges="locale">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.AIRPLANE_MODE" />
@@ -23,9 +25,9 @@
         </activity>
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/action_settings">
+            android:label="@string/action_settings"
+            android:configChanges="locale">
         </activity>
-
 
     </application>
 

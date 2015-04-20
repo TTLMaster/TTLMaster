@@ -4,6 +4,7 @@
     <string name="app_name" translatable="false">YOTA Tether TTL</string>
     <string name="app_web_address" translatable="false">http://4pda.ru/forum/index.php?showtopic=647126</string>
     <string name="main_version" formatted="false">Version %s</string>
+    <string name="main_current_ttl">current TTL</string>
     <string name="main_ttl_windows" translatable="false">Windows (127)</string>
     <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS (63)</string>
     <string name="main_ttl_hint">Enter TTL</string>
@@ -23,4 +24,8 @@
     <string name="debugcheckbox_summary">Enabling debug mode</string>
     <string name="wificheckbox_title">Turn on portable hotspot</string>
     <string name="wificheckbox_summary">Turn on portable hotspot after changing the TTL (only works on some versions of Android)</string>
+    <string name="langlist_title">Language</string>
+    <string name="langlist_summary">Application language.\nNeed restart application to apply changes.</string>
+    <string name="langdialog_title">Select language:</string>
+    <string name="restart">Restart application</string>
 </resources>

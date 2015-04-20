@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="main_version" formatted="false">Версия %s</string>
+    <string name="main_current_ttl">текущий TTL</string>
     <string name="main_ttl_hint">Введите TTL</string>
     <string name="main_ttl_apply">Применить</string>
     <string name="main_ttl_message_init">Выберите или введите значение TTL</string>
@@ -17,4 +18,8 @@
     <string name="debugcheckbox_summary">Включение режима отладки</string>
     <string name="wificheckbox_title">Включать точку доступа</string>
     <string name="wificheckbox_summary">Включать точку доступа после смены TTL (работает только на некоторых версиях Android)</string>
+    <string name="langlist_title">Язык</string>
+    <string name="langlist_summary">Язык приложения.\nНеобходимо перезапустить приложение для принятия изменений.</string>
+    <string name="langdialog_title">Выберите язык:</string>
+    <string name="restart">Перезапустить приложение</string>
 </resources>

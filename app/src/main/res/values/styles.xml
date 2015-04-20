@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#00aeed</item>
-        <item name="colorPrimaryDark">#0079a8</item>
-        <item name="colorAccent">#00aeed</item>
-        <item name="android:navigationBarColor" tools:ignore="NewApi">#0079a8</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@color/colorNavBar</item>
     </style>
 </resources>

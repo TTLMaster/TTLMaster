@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <CheckBoxPreference
+            android:key="debugm"
+            android:summary="@string/debugcheckbox_summary"
+            android:title="@string/debugcheckbox_title">
+    </CheckBoxPreference>
+
+    <CheckBoxPreference
+        android:key="wifi"
+        android:summary="@string/wificheckbox_summary"
+        android:title="@string/wificheckbox_title">
+    </CheckBoxPreference>
+
+    <ListPreference
+        android:key="lang"
+        android:summary="@string/langlist_summary"
+        android:title="@string/langlist_title"
+        android:entries="@array/lang_array"
+        android:entryValues="@array/lang_arrayvalues"
+        android:dialogTitle="@string/langdialog_title">
+    </ListPreference>
+    <PreferenceScreen android:title="@string/restart" android:key="restart">
+    </PreferenceScreen>
+</PreferenceScreen>

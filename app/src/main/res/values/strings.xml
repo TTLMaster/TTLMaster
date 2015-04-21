@@ -15,9 +15,9 @@
     <string name="main_ttl_error_cantReadValue">Unable to read value of TTL</string>
     <string name="main_ttl_error_empty">Enter value of TTL</string>
     <string name="main_ttl_error_between">The value must be from 1 to 255</string>
-    <string name="main_wait">Please wait…</string>
     <string name="main_iptables_button">Try IPTables rule</string>
     <string name="main_iptables_message_done">Done! Reboot the device and test the rule.</string>
+    <string name="main_usb_button">Enable USB-modem</string>
     <string name="action_4pda" translatable="false">4PDA</string>
     <string name="action_settings">Settings</string>
     <string name="debugcheckbox_title">Debug mode</string>

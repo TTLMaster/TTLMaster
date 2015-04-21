@@ -1,10 +1,12 @@
 package ru.antiyotazapret.yotatetherttl;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
@@ -87,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
             toolbar.setSubtitle(getString(R.string.main_version, version));
-            CurrentTTL.setText(exe.executenoroot("cat /proc/sys/net/ipv4/ip_default_ttl"));
+            CurrentTTL.setText(exe.executenoroot());
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -108,6 +112,36 @@ public class MainActivity extends ActionBarActivity {
                 break;
             }
         }
+    }
+
+    private void setUsbTetheringEnabled() {
+        ConnectivityManager cm =
+                (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        String[] available = null;
+        Method[] methods = cm.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            if(method.getName().equals("getTetherableIfaces")){
+                try {
+                    available= (String[]) method.invoke(cm);
+                    break;
+                } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        }
+        for (Method method: methods) {
+            if(method.getName().equals("tether")){
+                try {
+                    method.invoke(cm, "rndis0");
+                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                break;
+            }
+        }
+
     }
 
     @OnClick(R.id.windows_ttl_button)
@@ -163,7 +197,7 @@ public class MainActivity extends ActionBarActivity {
         else
             messageTextView.setText(getString(R.string.main_ttl_message_done) + ("\n\n") + (debugm ? debuginfo : ""));
 
-        CurrentTTL.setText(exe.executenoroot("cat /proc/sys/net/ipv4/ip_default_ttl"));
+        CurrentTTL.setText(exe.executenoroot());
     }
 
     @OnClick(R.id.iptables_button)
@@ -173,7 +207,12 @@ public class MainActivity extends ActionBarActivity {
 
         debugm = sp.getBoolean("debugm", false);
         debuginfo="\n"+command+"\n"+exe.execute(command);
-        messageTextView.setText(getString(R.string.main_iptables_message_done)+("\n\n")+(debugm?debuginfo:""));
+        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (debugm ? debuginfo : ""));
+    }
+
+    @OnClick(R.id.usb_button)
+    void usbClicked() {
+        setUsbTetheringEnabled();
     }
 
 }

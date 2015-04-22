@@ -50,12 +50,12 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_4pda: Uri uri = Uri.parse(getString(R.string.app_web_address));
+            case R.id.action_4pda: Uri uri = Uri.parse(getString(R.string.app_web_address)); //Ссылка на тему 4PDA
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
                 return true;
 
-            case R.id.action_settings:
+            case R.id.action_settings: //Кнопка настроек
                 Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(settings);
                 return true;
@@ -67,11 +67,11 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String lang = sp.getString("lang", "default");
+        sp = PreferenceManager.getDefaultSharedPreferences(this); //Настройки
+        String lang = sp.getString("lang", "default"); //Настройка языка
         assert lang != null;
         if (lang.equals("default")) {
-            lang =getResources().getConfiguration().locale.getCountry();}
+            lang =getResources().getConfiguration().locale.getCountry();} //Автоматическое назначение языка
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -84,22 +84,22 @@ public class MainActivity extends ActionBarActivity {
         ButterKnife.inject(this);
 
         if (savedInstanceState == null) {
-            ttlField.setText("63");
+            ttlField.setText("63"); //TTL в поле ввода при открытии приложения
         }
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
             toolbar.setSubtitle(getString(R.string.main_version, version));
-            CurrentTTL.setText(exe.executenoroot());
+            CurrentTTL.setText(exe.executenoroot()); //Отображение версии
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
 
-        messageTextView = (TextView) findViewById(R.id.message_text_view);
-        ttlField = (EditText) findViewById(R.id.ttl_field);
+        messageTextView = (TextView) findViewById(R.id.message_text_view); //Поле вывода
+        ttlField = (EditText) findViewById(R.id.ttl_field); //Поле ввода TTL
     }
-    private void setWifiTetheringEnabled() {
+    private void setWifiTetheringEnabled() { //Функция включения тетеринга WiFi
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
 
         Method[] methods = wifiManager.getClass().getDeclaredMethods();
@@ -114,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private void setUsbTetheringEnabled() {
+    private void setUsbTetheringEnabled() { //Функция включения тетеринга USB
         ConnectivityManager cm =
                 (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         String[] available = null;
@@ -147,17 +147,17 @@ public class MainActivity extends ActionBarActivity {
     @OnClick(R.id.windows_ttl_button)
     void windowsClicked() {
         ttlField.setText("127");
-    }
+    } //Событие нажатия кнопки Windows
 
     @OnClick(R.id.unix_ttl_button)
     void unixClicked() {
         ttlField.setText("63");
-    }
+    } //Событие нажатия кнопки UNIX
 
     @OnClick(R.id.set_button)
-    void ttlClicked() {
+    void ttlClicked() { //Событие нажатия кнопки задания TTL
         //messageTextView.setText(R.string.main_wait);
-        if (TextUtils.isEmpty(ttlField.getText().toString())) {
+        if (TextUtils.isEmpty(ttlField.getText().toString())) { //Если поле TTL пустое
             Toast.makeText(this, R.string.main_ttl_error_empty, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -165,55 +165,55 @@ public class MainActivity extends ActionBarActivity {
         int ttl;
 
         try {
-            ttl = Integer.parseInt(ttlField.getText().toString());
-        } catch (Exception e) {
+            ttl = Integer.parseInt(ttlField.getText().toString()); //Парсинг поля TTL
+        } catch (Exception e) { //Исключение: невозможность прочтения поля TTL
             e.printStackTrace();
             Toast.makeText(this, R.string.main_ttl_error_cantReadValue, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (ttl <= 1 || ttl >= 255) {
-            Toast.makeText(this, R.string.main_ttl_error_between, Toast.LENGTH_SHORT).show();
-            return;
+        if (ttl <= 1 || ttl >= 255) { //Если TTL находится вне диапазона допустимых значений...
+            Toast.makeText(this, R.string.main_ttl_error_between, Toast.LENGTH_SHORT).show(); //...сообщаем об этом...
+            return; //...и закругляемся.
         }
 
-        String command = "settings put global airplane_mode_on 1";
-        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true";
-        command += "\nsettings put global tether_dun_required 0";
-        debuginfo=command+"\n"+exe.execute(command);
-        debugm = sp.getBoolean("debugm", false);
+        String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
+        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
+        command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
+        debuginfo=command+"\n"+exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
+        debugm = sp.getBoolean("debugm", false); //Включен ли режим Debug
 
-        command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl);
-        command += "\nsettings put global airplane_mode_on 0";
-        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false";
+        command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
+        command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
+        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
 
-        debuginfo+="\n"+command+"\n"+exe.execute(command);
-        if(sp.getBoolean("wifi",false))
+        debuginfo+="\n"+command+"\n"+exe.execute(command); //И опять заливаем
+        if(sp.getBoolean("wifi",false)) //Если стоит галка на включении тетеринга
         {
-            setWifiTetheringEnabled();
+            setWifiTetheringEnabled(); //Тогда включаем
 
-            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + ("\n\n") + (debugm ? debuginfo : ""));
+            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + ("\n\n") + (debugm ? debuginfo : "")); //И пишем об этом
         }
-        else
-            messageTextView.setText(getString(R.string.main_ttl_message_done) + ("\n\n") + (debugm ? debuginfo : ""));
+        else //А если нет
+            messageTextView.setText(getString(R.string.main_ttl_message_done) + ("\n\n") + (debugm ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
 
-        CurrentTTL.setText(exe.executenoroot());
+        CurrentTTL.setText(exe.executenoroot()); //И обновляем поле с текущим TTL
     }
 
-    @OnClick(R.id.iptables_button)
+    @OnClick(R.id.iptables_button) //IPTABLES правило
     void iptablesClicked() {
         //messageTextView.setText(R.string.main_wait);
-        String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64";
+        String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64"; //Само правило
 
-        debugm = sp.getBoolean("debugm", false);
-        debuginfo="\n"+command+"\n"+exe.execute(command);
-        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (debugm ? debuginfo : ""));
+        debugm = sp.getBoolean("debugm", false); // Включен ли Debug mode?
+        debuginfo="\n"+command+"\n"+exe.execute(command); // Заливаем команду
+        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (debugm ? debuginfo : "")); //Выводим отчет
     }
 
     @OnClick(R.id.usb_button)
     void usbClicked() {
         setUsbTetheringEnabled();
-    }
+    } // Включение тетеринга USB
 
 }
 

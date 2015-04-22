@@ -7,7 +7,7 @@ class ShellExecutor {
 
     public String execute(String command) {
 
-        StringBuilder output = new StringBuilder();
+        StringBuffer output = new StringBuffer();
 
         Process p;
         try {
@@ -15,36 +15,38 @@ class ShellExecutor {
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            String line;
+            String line = "";
             while ((line = reader.readLine())!= null) {
-                output.append(line).append("\n");
+                output.append(line + "\n");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return output.toString();
+        String response = output.toString();
+        return response;
 
     }
-    public String executenoroot() {
+    public String executenoroot(String command) {
 
-        StringBuilder output = new StringBuilder();
+        StringBuffer output = new StringBuffer();
 
         Process p;
         try {
-            p = Runtime.getRuntime().exec("cat /proc/sys/net/ipv4/ip_default_ttl");
+            p = Runtime.getRuntime().exec(command);
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            String line;
+            String line = "";
             while ((line = reader.readLine())!= null) {
-                output.append(line).append("\n");
+                output.append(line + "\n");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return output.toString();
+        String response = output.toString();
+        return response;
 
     }
 

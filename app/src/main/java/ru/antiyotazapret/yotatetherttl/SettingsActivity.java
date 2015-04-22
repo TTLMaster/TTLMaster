@@ -12,9 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 
-@SuppressWarnings("ALL")
 public class SettingsActivity extends PreferenceActivity {
-    private PendingIntent intent;
+    PendingIntent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +23,7 @@ public class SettingsActivity extends PreferenceActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
         addPreferencesFromResource(R.xml.preference);
-        Preference restart = findPreference("restart");
+        Preference restart = (Preference) findPreference("restart");
 
         intent = PendingIntent.getActivity(getApplicationContext(), 0,
                 new Intent(getIntent()), 0);
@@ -33,13 +32,15 @@ public class SettingsActivity extends PreferenceActivity {
         restart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+                AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, intent);
                 System.exit(1);
                 return true;
             }
         });
 
         toolbar.setClickable(true);
-        toolbar.setNavigationIcon(getResIdFromAttribute(this));
+        toolbar.setNavigationIcon(getResIdFromAttribute(this, R.attr.homeAsUpIndicator));
         toolbar.setTitle(R.string.action_settings);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
 
@@ -51,12 +52,12 @@ public class SettingsActivity extends PreferenceActivity {
 
     }
 
-    private static int getResIdFromAttribute(final Activity activity) {
-        if (R.attr.homeAsUpIndicator == 0) {
+    private static int getResIdFromAttribute(final Activity activity, final int attr) {
+        if (attr == 0) {
             return 0;
         }
         final TypedValue typedvalueattr = new TypedValue();
-        activity.getTheme().resolveAttribute(R.attr.homeAsUpIndicator, typedvalueattr, true);
+        activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
         return typedvalueattr.resourceId;
     }
 }

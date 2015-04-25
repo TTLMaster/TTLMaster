@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.os.Handler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +30,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+    private SwipeRefreshLayout mSwipeRefresh;
     private SharedPreferences sp;
     private String debuginfo;
     private boolean debugm;
@@ -67,6 +71,14 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh); //Pull to refresh
+
+       //Настраиваем выполнение OnRefreshListener для activity:
+        mSwipeRefresh.setOnRefreshListener(this);
+      // Настраиваем цветовую тему значка обновления:
+        mSwipeRefresh.setColorSchemeResources
+              (R.color.light_blue, R.color.middle_blue,R.color.deep_blue);
         sp = PreferenceManager.getDefaultSharedPreferences(this); //Настройки
         String lang = sp.getString("lang", "default"); //Настройка языка
         assert lang != null;
@@ -77,7 +89,7 @@ public class MainActivity extends ActionBarActivity {
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
-        setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
@@ -214,6 +226,13 @@ public class MainActivity extends ActionBarActivity {
     void usbClicked() {
         setUsbTetheringEnabled();
     } // Включение тетеринга USB
-
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                CurrentTTL.setText(exe.executenoroot()); //Обновляем поле с текущим TTL
+                //Останавливаем обновление:
+                mSwipeRefresh.setRefreshing(false)
+                ;}}, 2000);
+    }
 }
 

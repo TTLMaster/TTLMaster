@@ -71,14 +71,6 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh); //Pull to refresh
-
-       //Настраиваем выполнение OnRefreshListener для activity:
-        mSwipeRefresh.setOnRefreshListener(this);
-      // Настраиваем цветовую тему значка обновления:
-        mSwipeRefresh.setColorSchemeResources
-              (R.color.light_blue, R.color.middle_blue,R.color.deep_blue);
         sp = PreferenceManager.getDefaultSharedPreferences(this); //Настройки
         String lang = sp.getString("lang", "default"); //Настройка языка
         assert lang != null;
@@ -89,7 +81,11 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
-
+        setContentView(R.layout.activity_main);
+        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh); //Pull to refresh
+        mSwipeRefresh.setOnRefreshListener(this); //Настраиваем выполнение OnRefreshListener для activity:
+        mSwipeRefresh.setColorSchemeResources
+                (R.color.light_blue, R.color.middle_blue, R.color.deep_blue);  // Настраиваем цветовую тему значка обновления:
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);

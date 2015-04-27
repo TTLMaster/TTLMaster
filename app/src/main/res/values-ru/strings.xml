@@ -12,7 +12,7 @@
     <string name="main_ttl_error_between">Значение должно быть от 1 до 255</string>
     <string name="main_iptables_button">Попробовать правило IPTables</string>
     <string name="main_iptables_message_done">ОК. Перезагрузите устройство и проверьте, работает ли правило.</string>
-    <string name="main_usb_button">Включить USB-модем</string>
+    <string name="main_settings_button">Открыть \"Режим модема\" в Настройках</string>
     <string name="action_settings">Настройки</string>
     <string name="debugcheckbox_title">Режим отладки</string>
     <string name="debugcheckbox_summary">Включение режима отладки</string>

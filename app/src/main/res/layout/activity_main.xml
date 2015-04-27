@@ -90,37 +90,48 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/main_ttl_windows"
                         android:id="@+id/windows_ttl_button"
-                        android:layout_gravity="center_horizontal" />
+                        android:layout_gravity="center_horizontal"
+                        android:background="@android:color/white"
+                        android:textColor="@color/blue"/>
 
                     <Button
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/main_ttl_unix"
                         android:id="@+id/unix_ttl_button"
-                        android:layout_gravity="center_horizontal" />
+                        android:layout_gravity="center_horizontal"
+                        android:background="@android:color/white"
+                        android:textColor="@color/blue"/>
 
                     <LinearLayout
                         android:id="@+id/buttons_container"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal">
+                        android:layout_gravity="center_horizontal"
+                        android:background="@android:color/white">
 
                         <EditText
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:inputType="number"
                             android:id="@+id/ttl_field"
-                            android:hint="@string/main_ttl_hint" />
+                            android:hint="@string/main_ttl_hint"
+                            android:gravity="center"
+                            android:background="@android:color/white" />
 
                         <Button
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="@string/main_ttl_apply"
-                            android:id="@+id/set_button" />
+                            android:id="@+id/set_button"
+                            android:background="@android:color/white"
+                            android:textColor="@color/blue"/>
 
                     </LinearLayout>
 
@@ -139,11 +150,13 @@
                 android:layout_marginRight="8dp">
 
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/main_usb_button"
-                    android:id="@+id/usb_button"
-                    android:layout_gravity="center_horizontal" />
+                    android:text="@string/main_settings_button"
+                    android:id="@+id/settings_button"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/white"
+                    android:textColor="@color/blue"/>
 
             </android.support.v7.widget.CardView>
 
@@ -158,11 +171,13 @@
                 android:layout_marginRight="8dp">
 
                 <Button
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/main_iptables_button"
                     android:id="@+id/iptables_button"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/white"
+                    android:textColor="@color/blue" />
 
             </android.support.v7.widget.CardView>
 

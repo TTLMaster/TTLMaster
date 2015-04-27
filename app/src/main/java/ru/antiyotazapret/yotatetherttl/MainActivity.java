@@ -91,10 +91,6 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         toolbar.setTitle(R.string.app_name);
         ButterKnife.inject(this);
 
-        if (savedInstanceState == null) {
-            ttlField.setText("63"); //TTL в поле ввода при открытии приложения
-        }
-
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
@@ -218,10 +214,12 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (debugm ? debuginfo : "")); //Выводим отчет
     }
 
-    @OnClick(R.id.usb_button)
+    @OnClick(R.id.settings_button)
     void usbClicked() {
-        setUsbTetheringEnabled();
-    } // Включение тетеринга USB
+        Intent tetherSettings = new Intent();
+        tetherSettings.setClassName("com.android.settings", "com.android.settings.TetherSettings");
+        startActivity(tetherSettings);
+    } // Открытие настроек тетеринга
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override public void run() {

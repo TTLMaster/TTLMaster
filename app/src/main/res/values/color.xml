@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#0079a8</color>
     <color name="colorAccent">#00aeed</color>
     <color name="colorNavBar">#0079a8</color>
+    <color name="blue">#00aeed</color>
     <color name="light_blue">#00aeed</color>
     <color name="middle_blue">#6495ED</color>
     <color name="deep_blue">#0000FF</color>

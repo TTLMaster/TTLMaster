@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="lang_array" translatable="false">
-        <item>Автоматически</item>
+        <item>Auto select</item>
         <item>English</item>
         <item>Русский</item>
     </string-array>
@@ -9,5 +9,11 @@
         <item>default</item>
         <item>en</item>
         <item>ru</item>
+    </string-array>
+
+    <string-array name="method_arrayvalues" translatable="false">
+        <item>airplane</item>
+        <item>mobile</item>
+        <item>off</item>
     </string-array>
 </resources>

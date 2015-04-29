@@ -90,7 +90,9 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
         ButterKnife.inject(this);
-
+        if (savedInstanceState == null) {
+                       ttlField.setText("63"); //TTL в поле ввода при открытии приложения
+        }
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
@@ -180,17 +182,30 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             Toast.makeText(this, R.string.main_ttl_error_between, Toast.LENGTH_SHORT).show(); //...сообщаем об этом...
             return; //...и закругляемся.
         }
-
         String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
+        String methoddata=sp.getString("method", "airplane"); //Метод переподключения к сети
+        if(methoddata.equals("mobile")) //Если метод переподключения к сети - мобильные данные
+        {
+            command="svc data disable"; //Отключаем их
+        }
+        else if(methoddata.equals("off")) // Если переподключение к сети отключено
+        {
+            command=""; //Опустошаем переменую команд
+        }
         command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
         debuginfo=command+"\n"+exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
         debugm = sp.getBoolean("debugm", false); //Включен ли режим Debug
 
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
-        command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
-        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
-
+        if(methoddata.equals("airplane")) { //Если метод переподключения к сети - авиарежим
+            command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
+            command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
+        }
+        else if(methoddata.equals("mobile")) //Если вкл/выкл мобильных данных
+        {
+            command+="\nsvc data enable"; //То включаем мобильные данные
+        }
         debuginfo+="\n"+command+"\n"+exe.execute(command); //И опять заливаем
         if(sp.getBoolean("wifi",false)) //Если стоит галка на включении тетеринга
         {

@@ -23,6 +23,14 @@
         android:entryValues="@array/lang_arrayvalues"
         android:dialogTitle="@string/langdialog_title">
     </ListPreference>
+    <ListPreference
+        android:key="method"
+        android:summary="@string/selectmethod_summary"
+        android:title="@string/selectmethod_title"
+        android:entries="@array/method_array"
+        android:entryValues="@array/method_arrayvalues"
+        android:dialogTitle="@string/selectmethoddialog_title">
+    </ListPreference>
     <PreferenceScreen android:title="@string/restart" android:key="restart">
     </PreferenceScreen>
 </PreferenceScreen>

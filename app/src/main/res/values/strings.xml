@@ -26,6 +26,14 @@
     <string name="wificheckbox_summary">Turn on portable hotspot after changing the TTL (only works on some versions of Android)</string>
     <string name="langlist_title">Language</string>
     <string name="langlist_summary">Application language.\nNeed restart application to apply changes.</string>
+    <string name="selectmethod_title">Reconnect type</string>
+    <string name="selectmethod_summary">"If it's failed, try another reconnect type"</string>
     <string name="langdialog_title">Select language:</string>
+    <string name="selectmethoddialog_title">Select reconnect method:</string>
     <string name="restart">Restart application</string>
+    <string-array name="method_array">
+        <item>Airplane mode</item>
+        <item>Mobile data</item>
+        <item>"Don't reconnect"</item>
+    </string-array>
 </resources>

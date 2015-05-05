@@ -6,7 +6,7 @@
     <string name="main_version" formatted="false">Version %s</string>
     <string name="main_current_ttl">current TTL</string>
     <string name="main_ttl_windows" translatable="false">Windows, Xbox (127)</string>
-    <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS (63)</string>
+    <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS, PS (63)</string>
     <string name="main_ttl_hint">Enter TTL</string>
     <string name="main_ttl_apply">Apply</string>
     <string name="main_ttl_message_init">Choose or enter value of TTL</string>

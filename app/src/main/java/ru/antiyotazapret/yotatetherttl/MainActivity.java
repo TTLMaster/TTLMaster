@@ -21,11 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Handler;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
@@ -105,7 +103,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     }
     private void setWifiTetheringEnabled() { //Функция включения тетеринга WiFi
         WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-
+        wifiManager.setWifiEnabled(false);
         Method[] methods = wifiManager.getClass().getDeclaredMethods();
         for (Method method : methods) {
             if (method.getName().equals("setWifiApEnabled")) {
@@ -222,11 +220,14 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     } // Открытие настроек тетеринга
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 CurrentTTL.setText(exe.executenoroot()); //Обновляем поле с текущим TTL
                 //Останавливаем обновление:
                 mSwipeRefresh.setRefreshing(false)
-                ;}}, 2000);
+                ;
+            }
+        }, 2000);
     }
 }
 

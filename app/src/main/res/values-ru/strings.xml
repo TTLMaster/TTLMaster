@@ -16,6 +16,8 @@
     <string name="action_settings">Настройки</string>
     <string name="debugcheckbox_title">Режим отладки</string>
     <string name="debugcheckbox_summary">Включение режима отладки</string>
+    <string name="bootup_title">Автозапуск</string>
+    <string name="bootup_summary">Включение автоматической смены TTL при запуске устройства</string>
     <string name="wificheckbox_title">Включать точку доступа</string>
     <string name="wificheckbox_summary">Включать точку доступа после смены TTL (работает только на некоторых версиях Android)</string>
     <string name="langlist_title">Язык</string>

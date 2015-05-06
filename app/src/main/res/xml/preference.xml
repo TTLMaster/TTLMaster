@@ -10,6 +10,12 @@
     </CheckBoxPreference>
 
     <CheckBoxPreference
+        android:key="bootup"
+        android:summary="@string/bootup_summary"
+        android:title="@string/bootup_title">
+    </CheckBoxPreference>
+
+    <CheckBoxPreference
         android:key="wifi"
         android:summary="@string/wificheckbox_summary"
         android:title="@string/wificheckbox_title">

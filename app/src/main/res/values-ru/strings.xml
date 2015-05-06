@@ -22,6 +22,14 @@
     <string name="wificheckbox_summary">Включать точку доступа после смены TTL (работает только на некоторых версиях Android)</string>
     <string name="langlist_title">Язык</string>
     <string name="langlist_summary">Язык приложения.\nНеобходимо перезапустить приложение для принятия изменений.</string>
+    <string name="selectmethod_title">Метод переподключения к сети</string>
+    <string name="selectmethod_summary">Можно попробовать сменить/отключить, если текущий не работает</string>
     <string name="langdialog_title">Выберите язык:</string>
+    <string name="selectmethoddialog_title">Выберите методд переподключения:</string>
     <string name="restart">Перезапустить приложение</string>
+    <string-array name="method_array">
+        <item>Авиарежим</item>
+        <item>Мобильные данные</item>
+        <item>Не переподключаться</item>
+    </string-array>
 </resources>

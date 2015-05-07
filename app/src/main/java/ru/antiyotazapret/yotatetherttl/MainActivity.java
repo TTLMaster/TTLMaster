@@ -89,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         toolbar.setTitle(R.string.app_name);
         ButterKnife.inject(this);
         if (savedInstanceState == null) {
-                       ttlField.setText("63"); //TTL в поле ввода при открытии приложения
+                       ttlField.setText(sp.getString("onlaunch_ttl", "63")); //TTL в поле ввода при открытии приложения
         }
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);

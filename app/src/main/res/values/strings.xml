@@ -43,6 +43,8 @@
     <string name="langdialog_title">Select language:</string>
     <string name="selectmethoddialog_title">Select reconnect method:</string>
     <string name="restart">Restart application</string>
+    <string name="ttlvalue_title">TTL in field</string>
+    <string name="ttlvalue_summary">Value of TTL field, when the application starts</string>
     <string-array name="method_array">
         <item>Airplane mode</item>
         <item>Mobile data</item>

@@ -47,7 +47,12 @@
         android:summary="@string/debugcheckbox_summary"
         android:title="@string/debugcheckbox_title">
     </CheckBoxPreference>
-
+        <EditTextPreference
+            android:key="onlaunch_ttl"
+            android:summary="@string/ttlvalue_summary"
+            android:title="@string/ttlvalue_title"
+            android:inputType="number">
+        </EditTextPreference>
     <ListPreference
         android:key="lang"
         android:summary="@string/langlist_summary"

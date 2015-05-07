@@ -37,6 +37,8 @@
     <string name="langdialog_title">Выберите язык:</string>
     <string name="selectmethoddialog_title">Выберите методд переподключения:</string>
     <string name="restart">Перезапустить приложение</string>
+    <string name="ttlvalue_title">TTL в поле</string>
+    <string name="ttlvalue_summary">Значение TTL в поле при запуске приложения</string>
     <string-array name="method_array">
         <item>Авиарежим</item>
         <item>Мобильные данные</item>

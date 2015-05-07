@@ -41,6 +41,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+        <service android:enabled="true" android:name=".BootUpService"/>
     </application>
 
 </manifest>

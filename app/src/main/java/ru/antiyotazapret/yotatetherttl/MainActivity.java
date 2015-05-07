@@ -192,7 +192,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             command=""; //Опустошаем переменую команд
         }
         command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
-        debuginfo=command+"\n"+exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
+        debuginfo="\n\n"+getString(R.string.log)+command+"\n"+exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
         debugm = sp.getBoolean("debugm", false); //Включен ли режим Debug
 
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
@@ -209,10 +209,10 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         {
             setWifiTetheringEnabled(); //Тогда включаем
 
-            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + ("\n\n") + (debugm ? debuginfo : "")); //И пишем об этом
+            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (debugm ? debuginfo : "")); //И пишем об этом
         }
         else //А если нет
-            messageTextView.setText(getString(R.string.main_ttl_message_done) + ("\n\n") + (debugm ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
+            messageTextView.setText(getString(R.string.main_ttl_message_done) + (debugm ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
 
         CurrentTTL.setText(exe.executenoroot()); //И обновляем поле с текущим TTL
     }

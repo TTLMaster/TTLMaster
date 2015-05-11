@@ -5,8 +5,8 @@
     <string name="app_web_address" translatable="false">http://4pda.ru/forum/index.php?showtopic=647126</string>
     <string name="main_version" formatted="false">Version %s</string>
     <string name="main_current_ttl">current TTL</string>
-    <string name="main_ttl_windows" translatable="false">Windows, Xbox (127)</string>
-    <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS, PS (63)</string>
+    <string name="main_ttl_windows" translatable="false">Windows (127)</string>
+    <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS, PS, Xbox (63)</string>
     <string name="main_ttl_hint">Enter TTL</string>
     <string name="main_ttl_apply">Apply</string>
     <string name="main_ttl_message_init">Choose or enter value of TTL</string>
@@ -16,7 +16,7 @@
     <string name="main_ttl_error_empty">Enter value of TTL</string>
     <string name="main_ttl_error_between">The value must be from 1 to 255</string>
     <string name="main_iptables_button">Try IPTables rule</string>
-    <string name="main_iptables_message_done">Done! Reboot the device and test the rule.</string>
+    <string name="main_iptables_message_done">Done!</string>
     <string name="main_settings_button">Open \"Tethering &amp; portable hotspot\" in Settings</string>
     <string name="action_4pda" translatable="false">4PDA</string>
     <string name="applying">Applying TTL…</string>

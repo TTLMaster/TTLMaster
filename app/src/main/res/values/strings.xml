@@ -4,7 +4,7 @@
     <string name="app_name" translatable="false">YOTA Tether TTL</string>
     <string name="app_web_address" translatable="false">http://4pda.ru/forum/index.php?showtopic=647126</string>
     <string name="main_version" formatted="false">Version %s</string>
-    <string name="main_current_ttl">current TTL</string>
+    <string name="main_current_ttl">Current TTL</string>
     <string name="main_ttl_windows" translatable="false">Windows (127)</string>
     <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS, PS, Xbox (63)</string>
     <string name="main_ttl_hint">Enter TTL</string>

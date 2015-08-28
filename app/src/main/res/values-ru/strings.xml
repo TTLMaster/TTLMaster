@@ -2,7 +2,7 @@
 <resources>
 
     <string name="main_version" formatted="false">Версия %s</string>
-    <string name="main_current_ttl">текущий TTL</string>
+    <string name="main_current_ttl">Текущий TTL</string>
     <string name="main_ttl_hint">Введите TTL</string>
     <string name="main_ttl_apply">Применить</string>
     <string name="main_ttl_message_init">Выберите или введите значение TTL</string>

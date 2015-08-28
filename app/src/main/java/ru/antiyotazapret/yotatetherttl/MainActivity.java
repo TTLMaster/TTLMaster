@@ -32,8 +32,8 @@ import butterknife.OnClick;
 
 public class MainActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    @InjectView(R.id.current_TTL)
-    TextView CurrentTTL;
+    @InjectView(R.id.current_ttl_view)
+    TextView currentTtlView;
 
     @InjectView(R.id.ttl_field)
     EditText ttlField;
@@ -98,7 +98,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         mSwipeRefresh.setColorSchemeResources
                 (R.color.light_blue, R.color.middle_blue, R.color.deep_blue);  // Настраиваем цветовую тему значка обновления:
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
 
@@ -112,7 +112,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;
             toolbar.setSubtitle(getString(R.string.main_version, version));
-            CurrentTTL.setText(exe.executenoroot()); //Отображение версии
+            currentTtlView.setText(exe.executenoroot().trim()); //Отображение версии
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -193,7 +193,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     /**
      * Событие нажатия кнопки задания TTL
      */
-    @OnClick(R.id.set_button)
+    @OnClick(R.id.apply_ttl_method_button)
     void ttlClicked() {
         //messageTextView.setText(R.string.main_wait);
         if (TextUtils.isEmpty(ttlField.getText().toString())) { //Если поле TTL пустое
@@ -251,14 +251,14 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         } else //А если нет
             messageTextView.setText(getString(R.string.main_ttl_message_done) + (debugm ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
 
-        CurrentTTL.setText(exe.executenoroot()); //И обновляем поле с текущим TTL
+        currentTtlView.setText(exe.executenoroot().trim()); //И обновляем поле с текущим TTL
     }
 
     /**
      * IPTABLES правило
      */
-    @OnClick(R.id.iptables_button)
-    void iptablesClicked() {
+    @OnClick(R.id.try_iptables_method_button)
+    void tryIptablesMethodButton() {
         //messageTextView.setText(R.string.main_wait);
         String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64"; //Само правило
 
@@ -270,8 +270,8 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     /**
      * Открытие настроек тетеринга
      */
-    @OnClick(R.id.settings_button)
-    void usbClicked() {
+    @OnClick(R.id.open_tethering_settings_button)
+    void openTetheringSettingsButton() {
         Intent tetherSettings = new Intent();
         tetherSettings.setClassName("com.android.settings", "com.android.settings.TetherSettings");
         startActivity(tetherSettings);
@@ -281,7 +281,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                CurrentTTL.setText(exe.executenoroot()); //Обновляем поле с текущим TTL
+                currentTtlView.setText(exe.executenoroot().trim()); //Обновляем поле с текущим TTL
                 //Останавливаем обновление:
                 mSwipeRefresh.setRefreshing(false)
                 ;

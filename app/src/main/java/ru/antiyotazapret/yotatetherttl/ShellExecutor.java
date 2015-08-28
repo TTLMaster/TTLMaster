@@ -16,7 +16,7 @@ class ShellExecutor {
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String line;
-            while ((line = reader.readLine())!= null) {
+            while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
             }
 
@@ -26,6 +26,7 @@ class ShellExecutor {
         return output.toString();
 
     }
+
     public String executenoroot() {
 
         StringBuilder output = new StringBuilder();
@@ -37,15 +38,15 @@ class ShellExecutor {
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String line;
-            while ((line = reader.readLine())!= null) {
+            while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return output.toString();
 
+        return output.toString();
     }
 
 }

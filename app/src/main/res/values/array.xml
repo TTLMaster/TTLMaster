@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="lang_array" translatable="false">
         <item>Auto select</item>
         <item>English</item>
         <item>Русский</item>
     </string-array>
+
     <string-array name="lang_arrayvalues" translatable="false">
         <item>default</item>
         <item>en</item>
@@ -16,4 +18,5 @@
         <item>mobile</item>
         <item>off</item>
     </string-array>
+
 </resources>

@@ -1,9 +1,7 @@
 package ru.antiyotazapret.yotatetherttl;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -14,12 +12,14 @@ import android.view.View;
 
 @SuppressWarnings("ALL")
 public class SettingsActivity extends PreferenceActivity {
+
     private PendingIntent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.settings);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
@@ -28,7 +28,6 @@ public class SettingsActivity extends PreferenceActivity {
 
         intent = PendingIntent.getActivity(getApplicationContext(), 0,
                 new Intent(getIntent()), 0);
-
 
         restart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -42,13 +41,11 @@ public class SettingsActivity extends PreferenceActivity {
         toolbar.setNavigationIcon(getResIdFromAttribute(this));
         toolbar.setTitle(R.string.action_settings);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
     }
 
     private static int getResIdFromAttribute(final Activity activity) {
@@ -59,4 +56,5 @@ public class SettingsActivity extends PreferenceActivity {
         activity.getTheme().resolveAttribute(R.attr.homeAsUpIndicator, typedvalueattr, true);
         return typedvalueattr.resourceId;
     }
+
 }

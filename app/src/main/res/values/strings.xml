@@ -45,9 +45,11 @@
     <string name="restart">Restart application</string>
     <string name="ttlvalue_title">TTL in field</string>
     <string name="ttlvalue_summary">Value of TTL field, when the application starts</string>
+
     <string-array name="method_array">
         <item>Airplane mode</item>
         <item>Mobile data</item>
         <item>"Don't reconnect"</item>
     </string-array>
+
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="main_version" formatted="false">Версия %s</string>
     <string name="main_current_ttl">текущий TTL</string>
     <string name="main_ttl_hint">Введите TTL</string>
@@ -39,9 +40,11 @@
     <string name="restart">Перезапустить приложение</string>
     <string name="ttlvalue_title">TTL в поле</string>
     <string name="ttlvalue_summary">Значение TTL в поле при запуске приложения</string>
+
     <string-array name="method_array">
         <item>Авиарежим</item>
         <item>Мобильные данные</item>
         <item>Не переподключаться</item>
     </string-array>
+
 </resources>

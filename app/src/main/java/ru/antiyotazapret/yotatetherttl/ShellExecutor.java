@@ -3,7 +3,7 @@ package ru.antiyotazapret.yotatetherttl;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-class ShellExecutor {
+public class ShellExecutor {
 
     public String execute(String command) {
 

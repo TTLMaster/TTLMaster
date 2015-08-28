@@ -1,4 +1,4 @@
-package ru.antiyotazapret.yotatetherttl;
+package ru.antiyotazapret.yotatetherttl.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +29,8 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import ru.antiyotazapret.yotatetherttl.R;
+import ru.antiyotazapret.yotatetherttl.ShellExecutor;
 
 public class MainActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -49,41 +51,16 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     private final ShellExecutor exe = new ShellExecutor();
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        setTitle(R.string.app_name);
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_4pda:
-                Uri uri = Uri.parse(getString(R.string.app_web_address)); //Ссылка на тему 4PDA
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                return true;
-
-            case R.id.action_settings: //Кнопка настроек
-                Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(settings);
-                return true;
-
-        }
-        return false;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         sp = PreferenceManager.getDefaultSharedPreferences(this); //Настройки
 
         String lang = sp.getString("lang", "default"); //Настройка языка
-        assert lang != null;
         if (lang.equals("default")) {
+            //Автоматическое назначение языка
             lang = getResources().getConfiguration().locale.getCountry();
-        } //Автоматическое назначение языка
+        }
 
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
@@ -121,57 +98,29 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         ttlField = (EditText) findViewById(R.id.ttl_field); //Поле ввода TTL
     }
 
-    /**
-     * Функция включения тетеринга WiFi
-     */
-    private void setWifiTetheringEnabled() {
-        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        wifiManager.setWifiEnabled(false);
-        Method[] methods = wifiManager.getClass().getDeclaredMethods();
-        for (Method method : methods) {
-            if (method.getName().equals("setWifiApEnabled")) {
-                try {
-                    method.invoke(wifiManager, null, true);
-                } catch (Exception ignored) {
-                }
-                break;
-            }
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        setTitle(R.string.app_name);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
-    /**
-     * Функция включения тетеринга USB
-     */
-    private void setUsbTetheringEnabled() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        String[] available = null;
-        Method[] methods = cm.getClass().getDeclaredMethods();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_4pda:
+                Uri uri = Uri.parse(getString(R.string.app_web_address)); //Ссылка на тему 4PDA
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                return true;
 
-        for (Method method : methods) {
-            if (method.getName().equals("getTetherableIfaces")) {
-                try {
-                    available = (String[]) method.invoke(cm);
-                    break;
-                } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
-                    e.printStackTrace();
-                    return;
-                }
-            }
+            case R.id.action_settings: //Кнопка настроек
+                Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(settings);
+                return true;
+
         }
-
-        for (Method method : methods) {
-            if (method.getName().equals("tether")) {
-                try {
-                    method.invoke(cm, "rndis0");
-                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                break;
-            }
-        }
-
+        return false;
     }
 
     /**
@@ -229,6 +178,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             // Если переподключение к сети отключено
             command = ""; //Опустошаем переменую команд
         }
+
         command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
         debuginfo = "\n\n" + getString(R.string.log) + command + "\n" + exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
         debugm = sp.getBoolean("debugm", false); //Включен ли режим Debug
@@ -242,14 +192,16 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             //Если вкл/выкл мобильных данных
             command += "\nsvc data enable"; //То включаем мобильные данные
         }
-        debuginfo += "\n" + command + "\n" + exe.execute(command); //И опять заливаем
-        if (sp.getBoolean("wifi", false)) //Если стоит галка на включении тетеринга
-        {
-            setWifiTetheringEnabled(); //Тогда включаем
 
+        debuginfo += "\n" + command + "\n" + exe.execute(command); //И опять заливаем
+        if (sp.getBoolean("wifi", false)) {
+            //Если стоит галка на включении тетеринга
+            setWifiTetheringEnabled(); //Тогда включаем
             messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (debugm ? debuginfo : "")); //И пишем об этом
-        } else //А если нет
+        } else {
+            //А если нет
             messageTextView.setText(getString(R.string.main_ttl_message_done) + (debugm ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
+        }
 
         currentTtlView.setText(exe.executenoroot().trim()); //И обновляем поле с текущим TTL
     }
@@ -265,6 +217,24 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         debugm = sp.getBoolean("debugm", false); // Включен ли Debug mode?
         debuginfo = "\n" + command + "\n" + exe.execute(command); // Заливаем команду
         messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (debugm ? debuginfo : "")); //Выводим отчет
+    }
+
+    /**
+     * Функция включения тетеринга WiFi
+     */
+    private void setWifiTetheringEnabled() {
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        wifiManager.setWifiEnabled(false);
+        Method[] methods = wifiManager.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getName().equals("setWifiApEnabled")) {
+                try {
+                    method.invoke(wifiManager, null, true);
+                } catch (Exception ignored) {
+                }
+                break;
+            }
+        }
     }
 
     /**
@@ -287,6 +257,41 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
                 ;
             }
         }, 2000);
+    }
+
+    /**
+     * Функция включения тетеринга USB
+     */
+    private void setUsbTetheringEnabled() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        String[] available = null;
+        Method[] methods = cm.getClass().getDeclaredMethods();
+
+        for (Method method : methods) {
+            if (method.getName().equals("getTetherableIfaces")) {
+                try {
+                    available = (String[]) method.invoke(cm);
+                    break;
+                } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        }
+
+        for (Method method : methods) {
+            if (method.getName().equals("tether")) {
+                try {
+                    method.invoke(cm, "rndis0");
+                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                break;
+            }
+        }
+
     }
 
 }

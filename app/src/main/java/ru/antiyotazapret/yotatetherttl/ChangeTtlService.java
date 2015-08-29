@@ -25,13 +25,13 @@ public class ChangeTtlService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        if (!preferences.isBootup()) {
+        if (!preferences.autoStartOnBoot()) {
             return;
         }
 
-        int ttl = Integer.parseInt(preferences.bootupTtl());
+        int ttl = Integer.parseInt(preferences.onBootTtlValue());
 
-        if (preferences.bootupToast()) {
+        if (preferences.showToastsOnBoot()) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -43,7 +43,7 @@ public class ChangeTtlService extends IntentService {
         String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
 
-        String methoddata = preferences.method(); //Метод переподключения к сети
+        String methoddata = preferences.reconnectType(); //Метод переподключения к сети
 
         if (methoddata.equals("mobile")) {
             //Если метод переподключения к сети - мобильные данные
@@ -70,7 +70,7 @@ public class ChangeTtlService extends IntentService {
 
         exe.execute(command); //И опять заливаем
 
-        if (preferences.bootupToast()) {
+        if (preferences.showToastsOnBoot()) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {

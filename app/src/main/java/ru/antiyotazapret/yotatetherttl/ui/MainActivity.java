@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
 
         if (savedInstanceState == null) {
             //TTL в поле ввода при открытии приложения
-            ttlField.setText(preferences.getOnLaunchTtl());
+            ttlField.setText(preferences.getTtlValueForMainScreen());
         }
 
         currentTtlView.setText(exe.executenoroot().trim());
@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
 
     private void tuneLanguage() {
         //Настройка языка
-        String lang = preferences.getLanguage();
+        String lang = preferences.getSelectedLanguage();
         if (lang.equals("default")) {
             //Автоматическое назначение языка
             lang = getResources().getConfiguration().locale.getCountry();
@@ -187,7 +187,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
 
         //Метод переподключения к сети
-        String methoddata = preferences.method();
+        String methoddata = preferences.reconnectType();
 
         if (getString(R.string.prefs_general_reconnectType_mobile).equals(methoddata)) {
             //Если метод переподключения к сети - мобильные данные
@@ -212,13 +212,13 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
 
         debuginfo += "\n" + command + "\n" + exe.execute(command); //И опять заливаем
 
-        if (preferences.getWiFi()) {
+        if (preferences.startWifiHotspotOnApplyTtl()) {
             //Если стоит галка на включении тетеринга
             setWifiTetheringEnabled(); //Тогда включаем
-            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (preferences.getDebugM() ? debuginfo : "")); //И пишем об этом
+            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (preferences.isDebugMode() ? debuginfo : "")); //И пишем об этом
         } else {
             //А если нет
-            messageTextView.setText(getString(R.string.main_ttl_message_done) + (preferences.getDebugM() ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
+            messageTextView.setText(getString(R.string.main_ttl_message_done) + (preferences.isDebugMode() ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
         }
 
         currentTtlView.setText(exe.executenoroot().trim()); //И обновляем поле с текущим TTL
@@ -233,7 +233,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64"; //Само правило
 
         debuginfo = "\n" + command + "\n" + exe.execute(command); // Заливаем команду
-        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (preferences.getDebugM() ? debuginfo : "")); //Выводим отчет
+        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (preferences.isDebugMode() ? debuginfo : "")); //Выводим отчет
     }
 
     /**

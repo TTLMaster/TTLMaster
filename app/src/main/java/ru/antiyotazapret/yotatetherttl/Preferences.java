@@ -1,7 +1,7 @@
 package ru.antiyotazapret.yotatetherttl;
 
 import net.orange_box.storebox.annotations.method.DefaultValue;
-import net.orange_box.storebox.annotations.method.KeyByString;
+import net.orange_box.storebox.annotations.method.KeyByResource;
 
 /**
  * Настройки приложения.
@@ -15,26 +15,27 @@ public interface Preferences {
      *
      * @return {@code true} если авто-применение включено.
      */
-    @KeyByString("bootup")
+    @KeyByResource(R.string.prefs_boot_autoStart_key)
     @DefaultValue(R.bool.prefs_boot_autoStart_default)
-    boolean isBootup();
+    boolean autoStartOnBoot();
 
     /**
      * Значение TTL которое надо применить при загрузке системы.
      *
      * @return значение TLL
      */
-    @KeyByString("bootup_ttl")
-    String bootupTtl();
+    @KeyByResource(R.string.prefs_boot_ttlValue_key)
+    @DefaultValue(R.string.prefs_boot_ttlValue_default)
+    String onBootTtlValue();
 
     /**
      * Отображение процесса применения TTL.
      *
      * @return {@code true} если включено
      */
-    @KeyByString("bootup_toast")
+    @KeyByResource(R.string.prefs_boot_showToasts_key)
     @DefaultValue(R.bool.prefs_boot_showToasts_default)
-    boolean bootupToast();
+    boolean showToastsOnBoot();
 
     /**
      * Метод активации TTL после установки.
@@ -44,44 +45,44 @@ public interface Preferences {
      * @see ru.antiyotazapret.yotatetherttl.R.string#prefs_general_reconnectType_mobile
      * @see ru.antiyotazapret.yotatetherttl.R.string#prefs_general_reconnectType_off
      */
-    @KeyByString("method")
+    @KeyByResource(R.string.prefs_general_reconnectType_key)
     @DefaultValue(R.string.prefs_general_reconnectType_airplane)
-    String method();
+    String reconnectType();
 
     /**
      * Выбранный язык приложения.
      *
      * @return выбранный язык, либо {@code default} если автоматически
      */
-    @KeyByString("lang")
+    @KeyByResource(R.string.prefs_misc_language_key)
     @DefaultValue(R.string.prefs_misc_language_default)
-    String getLanguage();
+    String getSelectedLanguage();
 
     /**
      * Значение поля TTL на главном экране при старте приложения.
      *
      * @return значение поля TTL
      */
-    @KeyByString("onlaunch_ttl")
-    @DefaultValue(R.string.prefs_boot_ttlValue_default)
-    String getOnLaunchTtl();
+    @KeyByResource(R.string.prefs_misc_ttlValue_key)
+    @DefaultValue(R.string.prefs_misc_ttlValue_default)
+    String getTtlValueForMainScreen();
 
     /**
      * Включен ли режим Debug.
      *
      * @return {@code true} если включен
      */
-    @KeyByString("debugm")
+    @KeyByResource(R.string.prefs_misc_debugMode_key)
     @DefaultValue(R.bool.prefs_misc_debugMode_default)
-    boolean getDebugM();
+    boolean isDebugMode();
 
     /**
      * Нужно ли включать точку доступа после применения TTL.
      *
      * @return {@code true} если нужно включать
      */
-    @KeyByString("wifi")
+    @KeyByResource(R.string.prefs_general_wifiHotspotOn_key)
     @DefaultValue(R.bool.prefs_general_wifiHotspotOn_default)
-    boolean getWiFi();
+    boolean startWifiHotspotOnApplyTtl();
 
 }

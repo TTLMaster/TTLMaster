@@ -58,11 +58,11 @@ public class ChangeTtlService extends IntentService {
 
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
 
-        if (getString(R.string.prefs_method_airplane).equals(methoddata)) {
+        if (getString(R.string.prefs_general_reconnectType_airplane).equals(methoddata)) {
             //Если метод переподключения к сети - авиарежим
             command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
             command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
-        } else if (getString(R.string.prefs_method_mobile).equals(methoddata)) {
+        } else if (getString(R.string.prefs_general_reconnectType_mobile).equals(methoddata)) {
             //Если вкл/выкл мобильных данных
             //То включаем мобильные данные
             command += "\nsvc data enable";

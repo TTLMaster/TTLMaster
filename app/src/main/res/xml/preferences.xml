@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <PreferenceCategory android:title="@string/prefs_boot_title">
+
+        <CheckBoxPreference
+            android:key="bootup"
+            android:summary="@string/prefs_boot_autoStart_summary"
+            android:title="@string/prefs_boot_autoStart_title" />
+
+        <CheckBoxPreference
+            android:key="bootup_toast"
+            android:summary="@string/prefs_boot_showToasts_summary"
+            android:title="@string/prefs_boot_showToasts_title" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="bootup_ttl"
+            android:summary="@string/prefs_boot_ttlValue_summary"
+            android:title="@string/prefs_boot_ttlValue_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prefs_general_title">
+
+        <CheckBoxPreference
+            android:key="wifi"
+            android:summary="@string/prefs_general_wifiHotspotOn_summary"
+            android:title="@string/prefs_general_wifiHotspotOn_title" />
+
+        <ListPreference
+            android:dialogTitle="@string/prefs_general_reconnectType_dialog_title"
+            android:entries="@array/prefs_general_reconnectType_titles"
+            android:entryValues="@array/prefs_general_reconnectType_values"
+            android:key="method"
+            android:summary="@string/prefs_general_reconnectType_summary"
+            android:title="@string/prefs_general_reconnectType_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prefs_misc_title">
+
+        <CheckBoxPreference
+            android:key="debugm"
+            android:summary="@string/prefs_misc_debugMode_summary"
+            android:title="@string/prefs_misc_debugMode_title" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="onlaunch_ttl"
+            android:summary="@string/prefs_misc_ttlValue_summary"
+            android:title="@string/prefs_misc_ttlValue_title" />
+
+        <ListPreference
+            android:dialogTitle="@string/prefs_misc_language_dialog_title"
+            android:entries="@array/prefs_misc_language_titles"
+            android:entryValues="@array/prefs_misc_language_values"
+            android:key="lang"
+            android:summary="@string/prefs_misc_language_summary"
+            android:title="@string/prefs_misc_language_title" />
+
+        <PreferenceScreen
+            android:key="restart"
+            android:title="@string/prefs_misc_restart_title" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

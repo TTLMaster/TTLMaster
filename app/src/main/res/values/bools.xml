@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <bool name="prefs_bootup_default">false</bool>
-    <bool name="prefs_bootup_toast_default">false</bool>
-    <bool name="prefs_debugm_default">false</bool>
-    <bool name="prefs_wifi_default">false</bool>
-</resources>

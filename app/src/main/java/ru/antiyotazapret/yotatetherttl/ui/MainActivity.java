@@ -189,10 +189,10 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         //Метод переподключения к сети
         String methoddata = preferences.method();
 
-        if (getString(R.string.prefs_method_mobile).equals(methoddata)) {
+        if (getString(R.string.prefs_general_reconnectType_mobile).equals(methoddata)) {
             //Если метод переподключения к сети - мобильные данные
             command = "svc data disable"; //Отключаем их
-        } else if (getString(R.string.prefs_method_off).equals(methoddata)) {
+        } else if (getString(R.string.prefs_general_reconnectType_off).equals(methoddata)) {
             // Если переподключение к сети отключено
             command = ""; //Опустошаем переменую команд
         }

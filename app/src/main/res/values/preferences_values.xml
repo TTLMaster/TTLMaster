@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="prefs_general_wifiHotspotOn_default">false</bool>
+
+    <string-array name="prefs_general_reconnectType_values" translatable="false">
+        <item>@string/prefs_general_reconnectType_airplane</item>
+        <item>@string/prefs_general_reconnectType_mobile</item>
+        <item>@string/prefs_general_reconnectType_off</item>
+    </string-array>
+
+    <string name="prefs_general_reconnectType_airplane" translatable="false">airplane</string>
+    <string name="prefs_general_reconnectType_mobile" translatable="false">mobile</string>
+    <string name="prefs_general_reconnectType_off" translatable="false">off</string>
+
+    <bool name="prefs_boot_autoStart_default">false</bool>
+
+    <bool name="prefs_boot_showToasts_default">false</bool>
+
+    <string name="prefs_boot_ttlValue_default" translatable="false">63</string>
+
+    <bool name="prefs_misc_debugMode_default">false</bool>
+
+    <string name="prefs_misc_language_default" translatable="false">default</string>
+
+    <string-array name="prefs_misc_language_values" translatable="false">
+        <item>@string/prefs_misc_language_default</item>
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
+
+</resources>

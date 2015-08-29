@@ -25,7 +25,7 @@ public class SettingsActivity extends PreferenceActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        addPreferencesFromResource(R.xml.preference);
+        addPreferencesFromResource(R.xml.preferences);
         Preference restart = findPreference("restart");
 
         intent = PendingIntent.getActivity(getApplicationContext(), 0,

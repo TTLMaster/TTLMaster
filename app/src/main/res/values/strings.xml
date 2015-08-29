@@ -23,33 +23,10 @@
     <string name="done">Done!</string>
     <string name="log">Log:</string>
     <string name="action_settings">Settings</string>
-    <string name="bootup">Autostart</string>
-    <string name="general">General</string>
-    <string name="misc">Miscellaneous</string>
-    <string name="debugcheckbox_title">Debug mode</string>
-    <string name="debugcheckbox_summary">Enabling debug mode</string>
-    <string name="bootup_title">Autostart</string>
-    <string name="bootup_summary">Enabling automatic applying TTL on device\'s startup</string>
-    <string name="bootup_toast_title">Toasts</string>
-    <string name="bootup_toast_summary">Enabling toasts about applying TTL</string>
-    <string name="bootup_ttl_title">Value of TTL</string>
-    <string name="bootup_ttl_summary">Value of TTL that applied at startup </string>
-    <string name="wificheckbox_title">Turn on portable hotspot</string>
-    <string name="wificheckbox_summary">Turn on portable hotspot after changing the TTL (only works on some versions of Android)</string>
-    <string name="langlist_title">Language</string>
-    <string name="langlist_summary">Application language.\nNeed restart application to apply changes.</string>
-    <string name="selectmethod_title">Reconnect type</string>
-    <string name="selectmethod_summary">"If it's failed, try another reconnect type"</string>
-    <string name="langdialog_title">Select language:</string>
-    <string name="selectmethoddialog_title">Select reconnect method:</string>
-    <string name="restart">Restart application</string>
-    <string name="ttlvalue_title">TTL in field</string>
-    <string name="ttlvalue_summary">Value of TTL field, when the application starts</string>
 
-    <string-array name="method_array">
-        <item>Airplane mode</item>
-        <item>Mobile data</item>
-        <item>"Don't reconnect"</item>
-    </string-array>
+
+
+
+
 
 </resources>

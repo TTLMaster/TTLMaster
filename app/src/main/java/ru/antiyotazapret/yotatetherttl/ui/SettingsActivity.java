@@ -24,21 +24,6 @@ public class SettingsActivity extends PreferenceActivity {
         setContentView(R.layout.settings);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        addPreferencesFromResource(R.xml.preference);
-        Preference restart = findPreference("restart");
-
-        intent = PendingIntent.getActivity(getApplicationContext(), 0,
-                new Intent(getIntent()), 0);
-
-        restart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                System.exit(1);
-                return true;
-            }
-        });
-
         toolbar.setTitle(R.string.action_settings);
         toolbar.setClickable(true);
         toolbar.setNavigationIcon(getResIdFromAttribute(this));
@@ -48,6 +33,20 @@ public class SettingsActivity extends PreferenceActivity {
                 finish();
             }
         });
+
+        intent = PendingIntent.getActivity(getApplicationContext(), 0,
+                new Intent(getIntent()), 0);
+
+        addPreferencesFromResource(R.xml.preferences);
+
+        findPreference(getString(R.string.prefs_misc_restart_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                System.exit(1);
+                return true;
+            }
+        });
+
     }
 
     private static int getResIdFromAttribute(final Activity activity) {

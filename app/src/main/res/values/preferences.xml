@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="prefs_general_title">General</string>
+
+    <string name="prefs_general_wifiHotspotOn_title">Turn on portable hotspot</string>
+    <string name="prefs_general_wifiHotspotOn_summary">Turn on portable hotspot after changing the TTL (only works on some versions of Android)</string>
+
+    <string name="prefs_general_reconnectType_title">Reconnect type</string>
+    <string name="prefs_general_reconnectType_summary">If it\'s failed, try another reconnect type</string>
+    <string name="prefs_general_reconnectType_dialog_title">Select reconnect method:</string>
+
+    <string-array name="prefs_general_reconnectType_titles">
+        <item>Airplane mode</item>
+        <item>Mobile data</item>
+        <item>Don\'t reconnect</item>
+    </string-array>
+
+
+
+    <string name="prefs_boot_title">Autostart</string>
+
+    <string name="prefs_boot_autoStart_title">Autostart</string>
+    <string name="prefs_boot_autoStart_summary">Enabling automatic applying TTL on device\'s startup</string>
+
+    <string name="prefs_boot_showToasts_title">Toasts</string>
+    <string name="prefs_boot_showToasts_summary">Enabling toasts about applying TTL</string>
+
+    <string name="prefs_boot_ttlValue_title">Value of TTL</string>
+    <string name="prefs_boot_ttlValue_summary">Value of TTL that applied at startup </string>
+
+
+
+    <string name="prefs_misc_title">Miscellaneous</string>
+
+    <string name="prefs_misc_debugMode_title">Debug mode</string>
+    <string name="prefs_misc_debugMode_summary">Enabling debug mode</string>
+
+    <string name="prefs_misc_ttlValue_title">TTL in field</string>
+    <string name="prefs_misc_ttlValue_summary">Value of TTL field, when the application starts</string>
+
+    <string name="prefs_misc_restart_title">Restart application</string>
+
+    <string name="prefs_misc_language_title">Application language</string>
+    <string name="prefs_misc_language_summary">Need restart application to apply changes.</string>
+    <string name="prefs_misc_language_dialog_title">Select language:</string>
+
+    <string-array name="prefs_misc_language_titles" translatable="false">
+        <item>Auto select</item>
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+
+
+</resources>

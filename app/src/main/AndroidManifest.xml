@@ -14,6 +14,7 @@
     <uses-permission android:name="WRITE_SECURE_SETTINGS" />
 
     <application
+        android:name=".TtlApplication"
         android:allowBackup="true"
         android:configChanges="locale"
         android:icon="@drawable/ic_launcher"
@@ -45,6 +46,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

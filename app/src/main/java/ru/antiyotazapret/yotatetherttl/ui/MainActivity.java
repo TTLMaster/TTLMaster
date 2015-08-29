@@ -26,8 +26,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
@@ -35,19 +35,19 @@ import ru.antiyotazapret.yotatetherttl.ShellExecutor;
 
 public class MainActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    @InjectView(R.id.toolbar)
+    @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    @InjectView(R.id.current_ttl_view)
+    @Bind(R.id.current_ttl_view)
     TextView currentTtlView;
 
-    @InjectView(R.id.ttl_field)
+    @Bind(R.id.ttl_field)
     EditText ttlField;
 
-    @InjectView(R.id.message_text_view)
+    @Bind(R.id.message_text_view)
     TextView messageTextView;
 
-    @InjectView(R.id.swipe_refresh)
+    @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
     private Preferences preferences;
@@ -64,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         tuneLanguage();
 
         setContentView(R.layout.main);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         String version = getAppVersion();
 

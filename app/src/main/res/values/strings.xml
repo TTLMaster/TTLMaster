@@ -46,6 +46,12 @@
     <string name="ttlvalue_title">TTL in field</string>
     <string name="ttlvalue_summary">Value of TTL field, when the application starts</string>
 
+    <string name="prefs_method_airplane">airplane</string>
+    <string name="prefs_method_mobile">mobile</string>
+    <string name="prefs_lang_default">default</string>
+    <string name="prefs_onlaunch_ttl_default">63</string>
+    <string name="prefs_method_off">off</string>
+
     <string-array name="method_array">
         <item>Airplane mode</item>
         <item>Mobile data</item>

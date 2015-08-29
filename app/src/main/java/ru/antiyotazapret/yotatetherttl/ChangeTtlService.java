@@ -2,14 +2,14 @@ package ru.antiyotazapret.yotatetherttl;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
+
+import net.orange_box.storebox.StoreBox;
 
 public class ChangeTtlService extends IntentService {
 
-    private SharedPreferences preferences;
+    private Preferences preferences;
     private Handler mHandler = new Handler();
     private final ShellExecutor exe = new ShellExecutor();
 
@@ -19,19 +19,19 @@ public class ChangeTtlService extends IntentService {
 
     public void onCreate() {
         super.onCreate();
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = StoreBox.create(this, Preferences.class);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        if (!preferences.getBoolean("bootup", false)) {
+        if (!preferences.isBootup()) {
             return;
         }
 
-        int ttl = Integer.parseInt(preferences.getString("bootup_ttl", null));
+        int ttl = Integer.parseInt(preferences.bootupTtl());
 
-        if (preferences.getBoolean("bootup_toast", false)) {
+        if (preferences.bootupToast()) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -43,7 +43,7 @@ public class ChangeTtlService extends IntentService {
         String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
 
-        String methoddata = preferences.getString("method", "airplane"); //Метод переподключения к сети
+        String methoddata = preferences.method(); //Метод переподключения к сети
 
         if (methoddata.equals("mobile")) {
             //Если метод переподключения к сети - мобильные данные
@@ -58,11 +58,11 @@ public class ChangeTtlService extends IntentService {
 
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
 
-        if (methoddata.equals("airplane")) {
+        if (getString(R.string.prefs_method_airplane).equals(methoddata)) {
             //Если метод переподключения к сети - авиарежим
             command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
             command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
-        } else if (methoddata.equals("mobile")) {
+        } else if (getString(R.string.prefs_method_mobile).equals(methoddata)) {
             //Если вкл/выкл мобильных данных
             //То включаем мобильные данные
             command += "\nsvc data enable";
@@ -70,7 +70,7 @@ public class ChangeTtlService extends IntentService {
 
         exe.execute(command); //И опять заливаем
 
-        if (preferences.getBoolean("bootup_toast", false)) {
+        if (preferences.bootupToast()) {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {

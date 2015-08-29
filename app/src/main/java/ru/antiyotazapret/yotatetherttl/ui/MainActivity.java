@@ -2,7 +2,6 @@ package ru.antiyotazapret.yotatetherttl.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.orange_box.storebox.StoreBox;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
@@ -29,10 +29,14 @@ import java.util.Locale;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
 import ru.antiyotazapret.yotatetherttl.ShellExecutor;
 
 public class MainActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
 
     @InjectView(R.id.current_ttl_view)
     TextView currentTtlView;
@@ -43,10 +47,11 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     @InjectView(R.id.message_text_view)
     TextView messageTextView;
 
-    private SwipeRefreshLayout mSwipeRefresh;
-    private SharedPreferences sp;
+    @InjectView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    private Preferences preferences;
     private String debuginfo;
-    private boolean debugm;
 
     private final ShellExecutor exe = new ShellExecutor();
 
@@ -54,9 +59,48 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sp = PreferenceManager.getDefaultSharedPreferences(this); //Настройки
+        preferences = StoreBox.create(this, Preferences.class);
 
-        String lang = sp.getString("lang", "default"); //Настройка языка
+        tuneLanguage();
+
+        setContentView(R.layout.main);
+        ButterKnife.inject(this);
+
+        String version = getAppVersion();
+
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setSubtitle(getString(R.string.main_version, version));
+        setSupportActionBar(toolbar);
+
+        //Настраиваем выполнение OnRefreshListener для activity:
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        // Настраиваем цветовую тему значка обновления:
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.light_blue,
+                R.color.middle_blue,
+                R.color.deep_blue);
+
+        if (savedInstanceState == null) {
+            //TTL в поле ввода при открытии приложения
+            ttlField.setText(preferences.getOnLaunchTtl());
+        }
+
+        currentTtlView.setText(exe.executenoroot().trim());
+    }
+
+    private String getAppVersion() {
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void tuneLanguage() {
+        //Настройка языка
+        String lang = preferences.getLanguage();
         if (lang.equals("default")) {
             //Автоматическое назначение языка
             lang = getResources().getConfiguration().locale.getCountry();
@@ -68,34 +112,6 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, null);
-        setContentView(R.layout.main);
-
-        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh); //Pull to refresh
-        mSwipeRefresh.setOnRefreshListener(this); //Настраиваем выполнение OnRefreshListener для activity:
-        mSwipeRefresh.setColorSchemeResources
-                (R.color.light_blue, R.color.middle_blue, R.color.deep_blue);  // Настраиваем цветовую тему значка обновления:
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(R.string.app_name);
-
-        ButterKnife.inject(this);
-
-        if (savedInstanceState == null) {
-            ttlField.setText(sp.getString("onlaunch_ttl", "63")); //TTL в поле ввода при открытии приложения
-        }
-
-        try {
-            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            toolbar.setSubtitle(getString(R.string.main_version, version));
-            currentTtlView.setText(exe.executenoroot().trim()); //Отображение версии
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        messageTextView = (TextView) findViewById(R.id.message_text_view); //Поле вывода
-        ttlField = (EditText) findViewById(R.id.ttl_field); //Поле ввода TTL
     }
 
     @Override
@@ -169,19 +185,20 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
 
         String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
-        String methoddata = sp.getString("method", "airplane"); //Метод переподключения к сети
 
-        if (methoddata.equals("mobile")) {
+        //Метод переподключения к сети
+        String methoddata = preferences.method();
+
+        if (getString(R.string.prefs_method_mobile).equals(methoddata)) {
             //Если метод переподключения к сети - мобильные данные
             command = "svc data disable"; //Отключаем их
-        } else if (methoddata.equals("off")) {
+        } else if (getString(R.string.prefs_method_off).equals(methoddata)) {
             // Если переподключение к сети отключено
             command = ""; //Опустошаем переменую команд
         }
 
         command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
         debuginfo = "\n\n" + getString(R.string.log) + command + "\n" + exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
-        debugm = sp.getBoolean("debugm", false); //Включен ли режим Debug
 
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
         if (methoddata.equals("airplane")) {
@@ -194,13 +211,14 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         }
 
         debuginfo += "\n" + command + "\n" + exe.execute(command); //И опять заливаем
-        if (sp.getBoolean("wifi", false)) {
+
+        if (preferences.getWiFi()) {
             //Если стоит галка на включении тетеринга
             setWifiTetheringEnabled(); //Тогда включаем
-            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (debugm ? debuginfo : "")); //И пишем об этом
+            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (preferences.getDebugM() ? debuginfo : "")); //И пишем об этом
         } else {
             //А если нет
-            messageTextView.setText(getString(R.string.main_ttl_message_done) + (debugm ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
+            messageTextView.setText(getString(R.string.main_ttl_message_done) + (preferences.getDebugM() ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
         }
 
         currentTtlView.setText(exe.executenoroot().trim()); //И обновляем поле с текущим TTL
@@ -214,9 +232,8 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         //messageTextView.setText(R.string.main_wait);
         String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64"; //Само правило
 
-        debugm = sp.getBoolean("debugm", false); // Включен ли Debug mode?
         debuginfo = "\n" + command + "\n" + exe.execute(command); // Заливаем команду
-        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (debugm ? debuginfo : "")); //Выводим отчет
+        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (preferences.getDebugM() ? debuginfo : "")); //Выводим отчет
     }
 
     /**
@@ -253,7 +270,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             public void run() {
                 currentTtlView.setText(exe.executenoroot().trim()); //Обновляем поле с текущим TTL
                 //Останавливаем обновление:
-                mSwipeRefresh.setRefreshing(false)
+                swipeRefreshLayout.setRefreshing(false)
                 ;
             }
         }, 2000);

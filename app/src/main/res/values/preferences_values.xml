@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="prefs_general_wifiHotspotOn_key">wifi</string>
+    <string name="prefs_general_wifiHotspotOn_key" translatable="false">hotspot_after_ttl</string>
     <bool name="prefs_general_wifiHotspotOn_default">false</bool>
 
-    <string name="prefs_general_reconnectType_key">method</string>
+    <string name="prefs_general_reconnectType_key" translatable="false">reconnect_type</string>
+    <string name="prefs_general_reconnectType_airplane" translatable="false">airplane</string>
+    <string name="prefs_general_reconnectType_mobile" translatable="false">mobile</string>
+    <string name="prefs_general_reconnectType_off" translatable="false">off</string>
+    <string name="prefs_general_reconnectType_default" translatable="false">@string/prefs_general_reconnectType_airplane</string>
     <string-array name="prefs_general_reconnectType_values" translatable="false">
         <item>@string/prefs_general_reconnectType_airplane</item>
         <item>@string/prefs_general_reconnectType_mobile</item>
         <item>@string/prefs_general_reconnectType_off</item>
     </string-array>
 
-    <string name="prefs_general_reconnectType_airplane" translatable="false">airplane</string>
-    <string name="prefs_general_reconnectType_mobile" translatable="false">mobile</string>
-    <string name="prefs_general_reconnectType_off" translatable="false">off</string>
 
-    <string name="prefs_boot_autoStart_key">bootup</string>
+    <string name="prefs_boot_autoStart_key" translatable="false">boot_auto</string>
     <bool name="prefs_boot_autoStart_default">false</bool>
 
-    <string name="prefs_boot_showToasts_key">bootup_toast</string>
+    <string name="prefs_boot_showToasts_key" translatable="false">boot_toasts</string>
     <bool name="prefs_boot_showToasts_default">false</bool>
 
-    <string name="prefs_boot_ttlValue_key">bootup_ttl</string>
-    <string name="prefs_boot_ttlValue_default" translatable="false">63</string>
+    <string name="prefs_boot_ttlValue_key" translatable="false">boot_ttl</string>
+    <integer name="prefs_boot_ttlValue_default">63</integer>
 
-    <string name="prefs_misc_debugMode_key">debugm</string>
+    <string name="prefs_misc_debugMode_key" translatable="false">debug_mode</string>
     <bool name="prefs_misc_debugMode_default">false</bool>
 
-    <string name="prefs_misc_ttlValue_key">onlaunch_ttl</string>
-    <string name="prefs_misc_ttlValue_default">@string/prefs_boot_ttlValue_default</string>
+    <string name="prefs_misc_ttlValue_key" translatable="false">main_screen_ttl</string>
+    <integer name="prefs_misc_ttlValue_default">@integer/prefs_boot_ttlValue_default</integer>
 
-    <string name="prefs_misc_restart_key">restart</string>
+    <string name="prefs_misc_restart_key" translatable="false">restart</string>
 
-    <string name="prefs_misc_language_key">lang</string>
+    <string name="prefs_misc_language_key" translatable="false">language</string>
     <string name="prefs_misc_language_default" translatable="false">default</string>
     <string-array name="prefs_misc_language_values" translatable="false">
         <item>@string/prefs_misc_language_default</item>

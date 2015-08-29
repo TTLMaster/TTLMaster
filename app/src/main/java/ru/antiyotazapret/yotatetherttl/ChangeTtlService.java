@@ -29,8 +29,6 @@ public class ChangeTtlService extends IntentService {
             return;
         }
 
-        int ttl = Integer.parseInt(preferences.onBootTtlValue());
-
         if (preferences.showToastsOnBoot()) {
             mHandler.post(new Runnable() {
                 @Override
@@ -56,6 +54,7 @@ public class ChangeTtlService extends IntentService {
         command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
         exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
 
+        int ttl = preferences.onBootTtlValue();
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
 
         if (getString(R.string.prefs_general_reconnectType_airplane).equals(methoddata)) {

@@ -83,7 +83,8 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
 
         if (savedInstanceState == null) {
             //TTL в поле ввода при открытии приложения
-            ttlField.setText(preferences.getTtlValueForMainScreen());
+            int ttl = preferences.getTtlValueForMainScreen();
+            ttlField.setText(String.valueOf(ttl));
         }
 
         currentTtlView.setText(exe.executenoroot().trim());

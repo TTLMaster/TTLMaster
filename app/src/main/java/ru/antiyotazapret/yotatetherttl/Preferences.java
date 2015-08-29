@@ -25,8 +25,8 @@ public interface Preferences {
      * @return значение TLL
      */
     @KeyByResource(R.string.prefs_boot_ttlValue_key)
-    @DefaultValue(R.string.prefs_boot_ttlValue_default)
-    String onBootTtlValue();
+    @DefaultValue(R.integer.prefs_boot_ttlValue_default)
+    int onBootTtlValue();
 
     /**
      * Отображение процесса применения TTL.
@@ -46,7 +46,7 @@ public interface Preferences {
      * @see ru.antiyotazapret.yotatetherttl.R.string#prefs_general_reconnectType_off
      */
     @KeyByResource(R.string.prefs_general_reconnectType_key)
-    @DefaultValue(R.string.prefs_general_reconnectType_airplane)
+    @DefaultValue(R.string.prefs_general_reconnectType_default)
     String reconnectType();
 
     /**
@@ -64,8 +64,8 @@ public interface Preferences {
      * @return значение поля TTL
      */
     @KeyByResource(R.string.prefs_misc_ttlValue_key)
-    @DefaultValue(R.string.prefs_misc_ttlValue_default)
-    String getTtlValueForMainScreen();
+    @DefaultValue(R.integer.prefs_misc_ttlValue_default)
+    int getTtlValueForMainScreen();
 
     /**
      * Включен ли режим Debug.

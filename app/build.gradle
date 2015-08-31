@@ -9,8 +9,8 @@ android {
         applicationId 'ru.antiyotazapret.yotatetherttl'
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 300
-        versionName '3.0.0'
+        versionCode 400
+        versionName '4.0.0-DEV'
     }
 
     buildTypes {

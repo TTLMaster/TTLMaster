@@ -4,10 +4,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import net.orange_box.storebox.StoreBox;
+
+import ru.antiyotazapret.yotatetherttl.method.device_ttl.ChangeDeviceTtlService;
+
 public class BootUpReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        Preferences preferences = StoreBox.create(context, Preferences.class);
+
+        if (!preferences.autoStartOnBoot()) {
+            return;
+        }
 
         String action = intent.getAction();
 
@@ -15,7 +25,7 @@ public class BootUpReceiver extends BroadcastReceiver {
 
             case Intent.ACTION_BOOT_COMPLETED:
             case "android.intent.action.QUICKBOOT_POWERON":
-                Intent boot = new Intent(context, ChangeTtlService.class);
+                Intent boot = new Intent(context, ChangeDeviceTtlService.class);
                 context.startService(boot);
                 break;
 

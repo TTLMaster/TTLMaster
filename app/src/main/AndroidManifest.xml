@@ -52,7 +52,7 @@
         </receiver>
 
         <service
-            android:name=".ChangeTtlService"
+            android:name=".method.device_ttl.ChangeDeviceTtlService"
             android:enabled="true" />
 
     </application>

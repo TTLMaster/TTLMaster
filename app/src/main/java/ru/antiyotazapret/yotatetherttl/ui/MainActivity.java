@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -24,7 +23,6 @@ import net.orange_box.storebox.StoreBox;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,8 +30,9 @@ import butterknife.OnClick;
 import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
 import ru.antiyotazapret.yotatetherttl.ShellExecutor;
+import ru.antiyotazapret.yotatetherttl.method.device_ttl.ChangeDeviceTtlService;
 
-public class MainActivity extends ActionBarActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends ActionBarActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -61,8 +60,6 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
 
         preferences = StoreBox.create(this, Preferences.class);
 
-        tuneLanguage();
-
         setContentView(R.layout.main);
         ButterKnife.bind(this);
 
@@ -73,7 +70,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         setSupportActionBar(toolbar);
 
         //Настраиваем выполнение OnRefreshListener для activity:
-        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setOnRefreshListener(new RefreshListener());
 
         // Настраиваем цветовую тему значка обновления:
         swipeRefreshLayout.setColorSchemeResources(
@@ -99,25 +96,8 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         }
     }
 
-    private void tuneLanguage() {
-        //Настройка языка
-        String lang = preferences.getSelectedLanguage();
-        if (lang.equals("default")) {
-            //Автоматическое назначение языка
-            lang = getResources().getConfiguration().locale.getCountry();
-        }
-
-        Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
-
-        Configuration config = new Configuration();
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, null);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        setTitle(R.string.app_name);
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -161,8 +141,9 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
      */
     @OnClick(R.id.apply_ttl_method_button)
     void ttlClicked() {
-        //messageTextView.setText(R.string.main_wait);
-        if (TextUtils.isEmpty(ttlField.getText().toString())) { //Если поле TTL пустое
+
+        if (TextUtils.isEmpty(ttlField.getText().toString())) {
+            //Если поле TTL пустое
             Toast.makeText(this, R.string.main_ttl_error_empty, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -170,7 +151,8 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         int ttl;
 
         try {
-            ttl = Integer.parseInt(ttlField.getText().toString()); //Парсинг поля TTL
+            //Парсинг поля TTL
+            ttl = Integer.parseInt(ttlField.getText().toString());
         } catch (Exception e) {
             //Исключение: невозможность прочтения поля TTL
             e.printStackTrace();
@@ -180,40 +162,15 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
 
         if (ttl <= 1 || ttl >= 255) {
             //Если TTL находится вне диапазона допустимых значений...
-            Toast.makeText(this, R.string.main_ttl_error_between, Toast.LENGTH_SHORT).show(); //...сообщаем об этом...
-            return; //...и закругляемся.
+            //...сообщаем об этом...
+            Toast.makeText(this, R.string.main_ttl_error_between, Toast.LENGTH_SHORT).show();
+            //...и закругляемся.
+            return;
         }
 
-        String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
-        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
+        startService(new Intent(this, ChangeDeviceTtlService.class));
 
-        //Метод переподключения к сети
-        String methoddata = preferences.reconnectType();
-
-        if (getString(R.string.prefs_general_reconnectType_mobile).equals(methoddata)) {
-            //Если метод переподключения к сети - мобильные данные
-            command = "svc data disable"; //Отключаем их
-        } else if (getString(R.string.prefs_general_reconnectType_off).equals(methoddata)) {
-            // Если переподключение к сети отключено
-            command = ""; //Опустошаем переменую команд
-        }
-
-        command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
-        debuginfo = "\n\n" + getString(R.string.log) + command + "\n" + exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
-
-        command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
-        if (methoddata.equals("airplane")) {
-            //Если метод переподключения к сети - авиарежим
-            command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
-            command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
-        } else if (methoddata.equals("mobile")) {
-            //Если вкл/выкл мобильных данных
-            command += "\nsvc data enable"; //То включаем мобильные данные
-        }
-
-        debuginfo += "\n" + command + "\n" + exe.execute(command); //И опять заливаем
-
-        if (preferences.startWifiHotspotOnApplyTtl()) {
+        /*TODO if (preferences.startWifiHotspotOnApplyTtl()) {
             //Если стоит галка на включении тетеринга
             setWifiTetheringEnabled(); //Тогда включаем
             messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (preferences.isDebugMode() ? debuginfo : "")); //И пишем об этом
@@ -222,7 +179,7 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             messageTextView.setText(getString(R.string.main_ttl_message_done) + (preferences.isDebugMode() ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
         }
 
-        currentTtlView.setText(exe.executenoroot().trim()); //И обновляем поле с текущим TTL
+        currentTtlView.setText(exe.executenoroot().trim()); //И обновляем поле с текущим TTL*/
     }
 
     /**
@@ -265,18 +222,6 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
         startActivity(tetherSettings);
     }
 
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                currentTtlView.setText(exe.executenoroot().trim()); //Обновляем поле с текущим TTL
-                //Останавливаем обновление:
-                swipeRefreshLayout.setRefreshing(false)
-                ;
-            }
-        }, 2000);
-    }
-
     /**
      * Функция включения тетеринга USB
      */
@@ -310,6 +255,21 @@ public class MainActivity extends ActionBarActivity implements SwipeRefreshLayou
             }
         }
 
+    }
+
+    private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    currentTtlView.setText(exe.executenoroot().trim()); //Обновляем поле с текущим TTL
+                    //Останавливаем обновление:
+                    swipeRefreshLayout.setRefreshing(false)
+                    ;
+                }
+            }, 2000);
+        }
     }
 
 }

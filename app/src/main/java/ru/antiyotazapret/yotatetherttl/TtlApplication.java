@@ -2,17 +2,42 @@ package ru.antiyotazapret.yotatetherttl;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+
+import net.orange_box.storebox.StoreBox;
+
+import java.util.Locale;
 
 /**
  * @author Pavel Savinov (swapii@gmail.com)
  */
 public class TtlApplication extends Application {
 
+    private Preferences preferences;
+
     @Override
     public void onCreate() {
         super.onCreate();
         upgradePreferences();
+        preferences = StoreBox.create(this, Preferences.class);
+        tuneLanguage();
+    }
+
+    private void tuneLanguage() {
+        //Настройка языка
+        String lang = preferences.getSelectedLanguage();
+        if (lang.equals("default")) {
+            //Автоматическое назначение языка
+            lang = getResources().getConfiguration().locale.getCountry();
+        }
+
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, null);
     }
 
     private void upgradePreferences() {

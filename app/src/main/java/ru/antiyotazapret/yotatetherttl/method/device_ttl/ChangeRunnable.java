@@ -1,52 +1,52 @@
-package ru.antiyotazapret.yotatetherttl;
+package ru.antiyotazapret.yotatetherttl.method.device_ttl;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.os.Handler;
-import android.widget.Toast;
+import android.content.Context;
 
-import net.orange_box.storebox.StoreBox;
+import de.greenrobot.event.EventBus;
+import ru.antiyotazapret.yotatetherttl.Preferences;
+import ru.antiyotazapret.yotatetherttl.R;
+import ru.antiyotazapret.yotatetherttl.ShellExecutor;
 
-public class ChangeTtlService extends IntentService {
+/**
+ * @author Pavel Savinov (swapii@gmail.com)
+ */
+class ChangeRunnable implements Runnable {
 
-    private Preferences preferences;
-    private Handler mHandler = new Handler();
+    private final Context context;
+    private final EventBus eventBus;
+    private final Preferences preferences;
+
     private final ShellExecutor exe = new ShellExecutor();
 
-    public ChangeTtlService() {
-        super("BootUpService");
-    }
-
-    public void onCreate() {
-        super.onCreate();
-        preferences = StoreBox.create(this, Preferences.class);
+    public ChangeRunnable(Context context, EventBus eventBus, Preferences preferences) {
+        this.context = context;
+        this.eventBus = eventBus;
+        this.preferences = preferences;
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void run() {
 
-        if (!preferences.autoStartOnBoot()) {
-            return;
-        }
+        ChangeDeviceTtlState state = new ChangeDeviceTtlState();
 
+        /*
+        TODO Заменить на нотификации
         if (preferences.showToastsOnBoot()) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(ChangeTtlService.this, R.string.applying, Toast.LENGTH_LONG).show(); //Оповещения
-                }
-            });
+            Toast.makeText(context, R.string.applying, Toast.LENGTH_LONG).show();
         }
+        */
 
         String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
         command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
 
-        String methoddata = preferences.reconnectType(); //Метод переподключения к сети
+        String reconnectType = preferences.reconnectType(); //Метод переподключения к сети
 
-        if (methoddata.equals("mobile")) {
+        if (reconnectType.equals("mobile")) {
             //Если метод переподключения к сети - мобильные данные
             command = "svc data disable"; //Отключаем их
-        } else if (methoddata.equals("off")) {
+        }
+
+        if (reconnectType.equals("off")) {
             // Если переподключение к сети отключено
             command = ""; //Опустошаем переменую команд
         }
@@ -57,11 +57,13 @@ public class ChangeTtlService extends IntentService {
         int ttl = preferences.onBootTtlValue();
         command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
 
-        if (getString(R.string.prefs_general_reconnectType_airplane).equals(methoddata)) {
+        if (context.getString(R.string.prefs_general_reconnectType_airplane).equals(reconnectType)) {
             //Если метод переподключения к сети - авиарежим
             command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
             command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
-        } else if (getString(R.string.prefs_general_reconnectType_mobile).equals(methoddata)) {
+        }
+
+        if (context.getString(R.string.prefs_general_reconnectType_mobile).equals(reconnectType)) {
             //Если вкл/выкл мобильных данных
             //То включаем мобильные данные
             command += "\nsvc data enable";
@@ -69,15 +71,15 @@ public class ChangeTtlService extends IntentService {
 
         exe.execute(command); //И опять заливаем
 
+        /*
+        TODO Заменить на нотификации
         if (preferences.showToastsOnBoot()) {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(ChangeTtlService.this, R.string.done, Toast.LENGTH_LONG).show(); //Оповещения
-                }
-            });
+            Toast.makeText(context, R.string.done, Toast.LENGTH_LONG).show();
         }
+        */
 
+        state.setFinished(true);
+        eventBus.post(state);
     }
 
 }

@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,15 +20,16 @@ import android.widget.Toast;
 
 import net.orange_box.storebox.StoreBox;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ru.antiyotazapret.yotatetherttl.Android;
 import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
-import ru.antiyotazapret.yotatetherttl.ShellExecutor;
 import ru.antiyotazapret.yotatetherttl.method.device_ttl.ChangeDeviceTtlService;
 
 public class MainActivity extends ActionBarActivity {
@@ -50,9 +50,8 @@ public class MainActivity extends ActionBarActivity {
     SwipeRefreshLayout swipeRefreshLayout;
 
     private Preferences preferences;
-    private String debuginfo;
 
-    private final ShellExecutor exe = new ShellExecutor();
+    private final Android android = new Android();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +83,11 @@ public class MainActivity extends ActionBarActivity {
             ttlField.setText(String.valueOf(ttl));
         }
 
-        currentTtlView.setText(exe.executenoroot().trim());
+        try {
+            currentTtlView.setText(String.valueOf(android.getDeviceTtl()));
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getAppVersion() {
@@ -179,7 +182,7 @@ public class MainActivity extends ActionBarActivity {
             messageTextView.setText(getString(R.string.main_ttl_message_done) + (preferences.isDebugMode() ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
         }
 
-        currentTtlView.setText(exe.executenoroot().trim()); //И обновляем поле с текущим TTL*/
+        currentTtlView.setText(exe.execute().trim()); //И обновляем поле с текущим TTL*/
     }
 
     /**
@@ -190,8 +193,9 @@ public class MainActivity extends ActionBarActivity {
         //messageTextView.setText(R.string.main_wait);
         String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64"; //Само правило
 
-        debuginfo = "\n" + command + "\n" + exe.execute(command); // Заливаем команду
-        messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (preferences.isDebugMode() ? debuginfo : "")); //Выводим отчет
+        //TODO Раскомментировать когда дойдет пора метода iptables
+        //debuginfo = "\n" + command + "\n" + exe.executeAsRoot(command); // Заливаем команду
+        //messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (preferences.isDebugMode() ? debuginfo : "")); //Выводим отчет
     }
 
     /**
@@ -260,15 +264,13 @@ public class MainActivity extends ActionBarActivity {
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    currentTtlView.setText(exe.executenoroot().trim()); //Обновляем поле с текущим TTL
-                    //Останавливаем обновление:
-                    swipeRefreshLayout.setRefreshing(false)
-                    ;
-                }
-            }, 2000);
+            try {
+                int ttl = android.getDeviceTtl();
+                currentTtlView.setText(String.valueOf(ttl));
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

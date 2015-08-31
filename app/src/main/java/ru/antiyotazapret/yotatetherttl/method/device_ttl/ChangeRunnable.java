@@ -2,10 +2,12 @@ package ru.antiyotazapret.yotatetherttl.method.device_ttl;
 
 import android.content.Context;
 
+import java.io.IOException;
+
 import de.greenrobot.event.EventBus;
+import ru.antiyotazapret.yotatetherttl.Android;
 import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
-import ru.antiyotazapret.yotatetherttl.ShellExecutor;
 
 /**
  * @author Pavel Savinov (swapii@gmail.com)
@@ -16,7 +18,7 @@ class ChangeRunnable implements Runnable {
     private final EventBus eventBus;
     private final Preferences preferences;
 
-    private final ShellExecutor exe = new ShellExecutor();
+    private final Android android = new Android();
 
     public ChangeRunnable(Context context, EventBus eventBus, Preferences preferences) {
         this.context = context;
@@ -36,40 +38,39 @@ class ChangeRunnable implements Runnable {
         }
         */
 
-        String command = "settings put global airplane_mode_on 1"; //Включение авиарежима
-        command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state true"; //И это тоже
+        String airplaneReconnectType = context.getString(R.string.prefs_general_reconnectType_airplane);
+        String mobileReconnectType = context.getString(R.string.prefs_general_reconnectType_mobile);
 
-        String reconnectType = preferences.reconnectType(); //Метод переподключения к сети
+        try {
 
-        if (reconnectType.equals("mobile")) {
-            //Если метод переподключения к сети - мобильные данные
-            command = "svc data disable"; //Отключаем их
+
+            String reconnectType = preferences.reconnectType();
+
+            if (airplaneReconnectType.equals(reconnectType)) {
+                android.enabledAirplaneMode();
+            }
+
+            if (mobileReconnectType.equals(reconnectType)) {
+                android.disableMobileData();
+            }
+
+            android.disableTetheringNotification();
+
+            int ttl = preferences.onBootTtlValue();
+            android.changeDeviceTtl(ttl);
+
+            if (airplaneReconnectType.equals(reconnectType)) {
+                android.disableAirplaneMode();
+            }
+
+            if (mobileReconnectType.equals(reconnectType)) {
+                android.enabledMobileData();
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            state.setException(e);
         }
-
-        if (reconnectType.equals("off")) {
-            // Если переподключение к сети отключено
-            command = ""; //Опустошаем переменую команд
-        }
-
-        command += "\nsettings put global tether_dun_required 0"; //Отключение оповещения андроидом оператора о тетеринге
-        exe.execute(command); //Заливаем все это дело и записываем в переменную дебага
-
-        int ttl = preferences.onBootTtlValue();
-        command = String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl); //Меняем TTL
-
-        if (context.getString(R.string.prefs_general_reconnectType_airplane).equals(reconnectType)) {
-            //Если метод переподключения к сети - авиарежим
-            command += "\nsettings put global airplane_mode_on 0"; //Выключаем авиарежим
-            command += "\nam broadcast -a android.intent.action.AIRPLANE_MODE --ez state false"; //Тут тоже выключаем
-        }
-
-        if (context.getString(R.string.prefs_general_reconnectType_mobile).equals(reconnectType)) {
-            //Если вкл/выкл мобильных данных
-            //То включаем мобильные данные
-            command += "\nsvc data enable";
-        }
-
-        exe.execute(command); //И опять заливаем
 
         /*
         TODO Заменить на нотификации

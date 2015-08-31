@@ -1,52 +1,68 @@
 package ru.antiyotazapret.yotatetherttl;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import org.apache.commons.io.IOUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Класс для запуска консольных команд.
+ *
+ * @author Pavel Savinov (swapii@gmail.com)
+ */
 public class ShellExecutor {
 
-    public String execute(String command) {
-
-        StringBuilder output = new StringBuilder();
-
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec(new String[]{"su", "-c", command});
-            p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return output.toString();
-
+    /**
+     * Запуск команды с привелегиями суперпользователя.
+     *
+     * @param command команда.
+     * @return результат выполнения.
+     */
+    public Result executeAsRoot(String command) throws IOException, InterruptedException {
+        return execute("su -c " + command);
     }
 
-    public String executenoroot() {
+    /**
+     * Запуск команды.
+     *
+     * @param command команда.
+     * @return результат выполнения.
+     */
+    public Result execute(String command) throws IOException, InterruptedException {
 
-        StringBuilder output = new StringBuilder();
+        Process process = Runtime.getRuntime().exec(command);
+        process.waitFor();
 
-        Process p;
+        Result result = new Result();
+
+        InputStream inputStream = process.getInputStream();
         try {
-            p = Runtime.getRuntime().exec("cat /proc/sys/net/ipv4/ip_default_ttl");
-            p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            result.output = IOUtils.toString(inputStream);
+        } finally {
+            inputStream.close();
         }
 
-        return output.toString();
+        result.exitCode = process.exitValue();
+
+        return result;
+    }
+
+    /**
+     * Модель с результатами выполнения команды.
+     */
+    public static class Result {
+
+        private int exitCode;
+        private String output;
+
+        public int getExitCode() {
+            return exitCode;
+        }
+
+        public String getOutput() {
+            return output;
+        }
+
     }
 
 }

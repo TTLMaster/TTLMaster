@@ -68,8 +68,8 @@ public class Android {
     }
 
     public static boolean hasRoot() throws IOException, InterruptedException {
-        ShellExecutor.Result r = executor.executeAsRoot("echo ok");
-        return r.getOutput().startsWith("ok");
+        return executor.executeAsRoot("echo ok")
+                .getOutput().startsWith("ok");
     }
 
 }

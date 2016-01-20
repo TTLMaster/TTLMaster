@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -260,15 +261,44 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
     }
 
     private void updateTtl() throws IOException, InterruptedException {
-        int ttl = 0;
-        if (!android.isTtlForced()) {
-            ttl = android.getDeviceTtl();
-            ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_this_device));
-        } else {
-            ttl = 64;
-            ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables));
+        class TtlStatus {
+            int ttl;
+
+            public TtlStatus(int ttl, boolean forced) {
+                this.ttl = ttl;
+                this.forced = forced;
+            }
+
+            boolean forced;
         }
-        currentTtlView.setText(String.valueOf(ttl));
+
+        new AsyncTask<Void, Void, TtlStatus>() {
+            @Override
+            protected TtlStatus doInBackground(Void... params) {
+                try {
+                    return new TtlStatus(android.getDeviceTtl(), android.isTtlForced());
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(TtlStatus ttlStatus) {
+                if (ttlStatus == null) {
+                    currentTtlView.setText("?");
+                    return;
+                }
+                if (!ttlStatus.forced) {
+                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_this_device));
+                } else {
+                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables));
+                    ttlStatus.ttl = 64;
+                }
+                currentTtlView.setText(String.valueOf(ttlStatus.ttl));
+            }
+        }.execute();
+
     }
 
     @Override

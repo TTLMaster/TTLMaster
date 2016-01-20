@@ -10,8 +10,8 @@ import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -32,9 +32,9 @@ import butterknife.OnClick;
 import ru.antiyotazapret.yotatetherttl.Android;
 import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
-import ru.antiyotazapret.yotatetherttl.method.device_ttl.ChangeDeviceTtlService;
+import ru.antiyotazapret.yotatetherttl.method.device_ttl.ChangeTask;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity implements ChangeTask.ChangeTaskParameters.OnResult {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -55,6 +55,8 @@ public class MainActivity extends ActionBarActivity {
     TextView ttlScopeTextView;
 
     private Preferences preferences;
+
+    private Thread thread;
 
     private final Android android = new Android();
 
@@ -192,20 +194,9 @@ public class MainActivity extends ActionBarActivity {
             return;
         }
 
-        startService(new Intent(this, ChangeDeviceTtlService.class));
+        new ChangeTask().execute(new ChangeTask.ChangeTaskParameters(preferences, this, ttl));
 
-        /*TODO if (preferences.startWifiHotspotOnApplyTtl()) {
-            //Если стоит галка на включении тетеринга
-            setWifiTetheringEnabled(); //Тогда включаем
-            messageTextView.setText(getString(R.string.main_ttl_message_done_auto) + (preferences.isDebugMode() ? debuginfo : "")); //И пишем об этом
-        } else {
-            //А если нет
-            messageTextView.setText(getString(R.string.main_ttl_message_done) + (preferences.isDebugMode() ? debuginfo : "")); //Тогда просто пишем о том, что все хорошо.
-        }
-
-        currentTtlView.setText(exe.execute().trim()); //И обновляем поле с текущим TTL*/
     }
-
 
     /**
      * Функция включения тетеринга WiFi
@@ -280,6 +271,15 @@ public class MainActivity extends ActionBarActivity {
             ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables));
         }
         currentTtlView.setText(String.valueOf(ttl));
+    }
+
+    @Override
+    public void OnResult() {
+        try {
+            updateTtl();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {

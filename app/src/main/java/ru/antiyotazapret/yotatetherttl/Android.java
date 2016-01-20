@@ -54,7 +54,8 @@ public class Android {
      * Проверка возможности использования ttl-set
      */
     public boolean canForceTtl() throws IOException, InterruptedException {
-        return executor.executeAsRoot("cat /proc/net/ip_tables_matches | grep -q ttl").getExitCode() == 0;
+        return executor.executeAsRoot("cat /proc/net/ip_tables_matches | grep -q ttl && echo 'ok'")
+                .getOutput().startsWith("ok");
     }
 
     public void forceSetTtl() throws  IOException, InterruptedException {
@@ -62,11 +63,15 @@ public class Android {
     }
 
     public boolean isTtlForced() throws IOException, InterruptedException {
-        return executor.executeAsRoot("iptables -t mangle -L | grep 'TTL set to 64").getExitCode() == 0;
+        ShellExecutor.Result r = executor.executeAsRoot("iptables -t mangle -L | grep -q 'TTL set to 64' && echo 'ok'");
+
+        return r
+                .getOutput().startsWith("ok");
     }
 
     public boolean hasRoot() throws IOException, InterruptedException {
-        return executor.executeAsRoot("true").getExitCode() == 0;
+        ShellExecutor.Result r = executor.executeAsRoot("echo ok");
+        return r.getOutput().startsWith("ok");
     }
 
 }

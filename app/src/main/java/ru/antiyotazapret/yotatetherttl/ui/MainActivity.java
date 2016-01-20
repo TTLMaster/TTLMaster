@@ -1,6 +1,7 @@
 package ru.antiyotazapret.yotatetherttl.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -49,6 +51,9 @@ public class MainActivity extends ActionBarActivity {
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    @Bind(R.id.current_ttl_scope)
+    TextView ttlScopeTextView;
+
     private Preferences preferences;
 
     private final Android android = new Android();
@@ -84,10 +89,26 @@ public class MainActivity extends ActionBarActivity {
         }
 
         try {
-            currentTtlView.setText(String.valueOf(android.getDeviceTtl()));
+            updateTtl();
+        if (!android.hasRoot()) {
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+            builder1.setTitle(R.string.root_no_root_rights);
+            builder1.setMessage(R.string.root_no_root_rights_message);
+            builder1.setCancelable(false);
+            builder1.setPositiveButton(R.string.root_exit,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            MainActivity.this.finish();
+                        }
+                    });
+
+            AlertDialog alert11 = builder1.create();
+            alert11.show();
+        }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 
     private String getAppVersion() {
@@ -185,18 +206,6 @@ public class MainActivity extends ActionBarActivity {
         currentTtlView.setText(exe.execute().trim()); //И обновляем поле с текущим TTL*/
     }
 
-    /**
-     * IPTABLES правило
-     */
-    @OnClick(R.id.try_iptables_method_button)
-    void tryIptablesMethodButton() {
-        //messageTextView.setText(R.string.main_wait);
-        String command = "iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64"; //Само правило
-
-        //TODO Раскомментировать когда дойдет пора метода iptables
-        //debuginfo = "\n" + command + "\n" + exe.executeAsRoot(command); // Заливаем команду
-        //messageTextView.setText(getString(R.string.main_iptables_message_done) + ("\n\n") + (preferences.isDebugMode() ? debuginfo : "")); //Выводим отчет
-    }
 
     /**
      * Функция включения тетеринга WiFi
@@ -261,12 +270,23 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    private void updateTtl() throws IOException, InterruptedException {
+        int ttl = 0;
+        if (!android.isTtlForced()) {
+            ttl = android.getDeviceTtl();
+            ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_this_device));
+        } else {
+            ttl = 64;
+            ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables));
+        }
+        currentTtlView.setText(String.valueOf(ttl));
+    }
+
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
             try {
-                int ttl = android.getDeviceTtl();
-                currentTtlView.setText(String.valueOf(ttl));
+                updateTtl();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }

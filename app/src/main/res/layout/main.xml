@@ -56,6 +56,14 @@
                             android:text="@string/main_current_ttl"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+                        <TextView
+                            android:id="@+id/current_ttl_scope"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/main_ttl_this_device"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
                     </LinearLayout>
 
                 </android.support.v7.widget.CardView>
@@ -115,16 +123,6 @@
                         style="@style/Main_Button"
                         android:layout_width="match_parent"
                         android:text="@string/main_settings_button" />
-
-                </android.support.v7.widget.CardView>
-
-                <android.support.v7.widget.CardView style="@style/Main_Card">
-
-                    <Button
-                        android:id="@+id/try_iptables_method_button"
-                        style="@style/Main_Button"
-                        android:layout_width="match_parent"
-                        android:text="@string/main_iptables_button" />
 
                 </android.support.v7.widget.CardView>
 

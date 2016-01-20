@@ -85,4 +85,16 @@ public interface Preferences {
     @DefaultValue(R.bool.prefs_general_wifiHotspotOn_default)
     boolean startWifiHotspotOnApplyTtl();
 
+
+    /**
+     * Игорирование  iptables.
+     *
+     * @return {@code true} если нужно buyjhbhjdfnm
+     */
+    @KeyByResource(R.string.prefs_general_ignoreIptables_key)
+    @DefaultValue(R.bool.prefs_general_ignoreIptables_default)
+    boolean ignoreIptables();
+
+
+
 }

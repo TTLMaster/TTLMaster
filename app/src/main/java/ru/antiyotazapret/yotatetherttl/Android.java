@@ -50,4 +50,23 @@ public class Android {
         return Integer.parseInt(result.getOutput().trim());
     }
 
+    /**
+     * Проверка возможности использования ttl-set
+     */
+    public boolean canForceTtl() throws IOException, InterruptedException {
+        return executor.executeAsRoot("cat /proc/net/ip_tables_matches | grep -q ttl").getExitCode() == 0;
+    }
+
+    public void forceSetTtl() throws  IOException, InterruptedException {
+        executor.executeAsRoot("iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64");
+    }
+
+    public boolean isTtlForced() throws IOException, InterruptedException {
+        return executor.executeAsRoot("iptables -t mangle -L | grep 'TTL set to 64").getExitCode() == 0;
+    }
+
+    public boolean hasRoot() throws IOException, InterruptedException {
+        return executor.executeAsRoot("true").getExitCode() == 0;
+    }
+
 }

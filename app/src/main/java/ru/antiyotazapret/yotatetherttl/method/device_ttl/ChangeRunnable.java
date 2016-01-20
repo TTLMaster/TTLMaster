@@ -57,7 +57,14 @@ class ChangeRunnable implements Runnable {
             android.disableTetheringNotification();
 
             int ttl = preferences.onBootTtlValue();
-            android.changeDeviceTtl(ttl);
+
+            if (!preferences.ignoreIptables() && android.canForceTtl()) {
+                android.forceSetTtl();
+            }
+
+            if (!android.isTtlForced()){
+                android.changeDeviceTtl(ttl);
+            }
 
             if (airplaneReconnectType.equals(reconnectType)) {
                 android.disableAirplaneMode();

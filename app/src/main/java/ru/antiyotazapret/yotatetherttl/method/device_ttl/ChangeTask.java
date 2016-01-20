@@ -13,27 +13,8 @@ import ru.antiyotazapret.yotatetherttl.R;
  * @author Pavel Savinov (swapii@gmail.com)
  */
 public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void, Void> {
+
     ChangeTaskParameters.OnResult callback;
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        if (callback != null) {
-            callback.OnResult();
-        }
-    }
-
-    @Override
-    protected Void doInBackground(ChangeTaskParameters... params) {
-
-        if (params.length != 1) {
-            return null;
-        }
-
-        callback = params[0].callback;
-        doInForeground(params[0]);
-
-        return null;
-    }
 
     public static void doInForeground(ChangeTaskParameters param) {
         Context context = param.context;
@@ -88,6 +69,27 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
         */
 
     }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        if (callback != null) {
+            callback.OnResult();
+        }
+    }
+
+    @Override
+    protected Void doInBackground(ChangeTaskParameters... params) {
+
+        if (params.length != 1) {
+            return null;
+        }
+
+        callback = params[0].callback;
+        doInForeground(params[0]);
+
+        return null;
+    }
+
 
     public static class ChangeTaskParameters {
         final Preferences preferences;

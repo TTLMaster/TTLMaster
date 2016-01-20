@@ -89,7 +89,7 @@ public interface Preferences {
     /**
      * Игорирование  iptables.
      *
-     * @return {@code true} если нужно buyjhbhjdfnm
+     * @return {@code true} если нужно игнорировать
      */
     @KeyByResource(R.string.prefs_general_ignoreIptables_key)
     @DefaultValue(R.bool.prefs_general_ignoreIptables_default)

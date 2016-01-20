@@ -93,19 +93,17 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
         try {
             updateTtl();
         if (!android.hasRoot()) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-            builder1.setTitle(R.string.root_no_root_rights);
-            builder1.setMessage(R.string.root_no_root_rights_message);
-            builder1.setCancelable(false);
-            builder1.setPositiveButton(R.string.root_exit,
+            new AlertDialog.Builder(this)
+            .setTitle(R.string.root_no_root_rights)
+            .setMessage(R.string.root_no_root_rights_message)
+            .setCancelable(false)
+            .setPositiveButton(R.string.root_exit,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             MainActivity.this.finish();
                         }
-                    });
-
-            AlertDialog alert11 = builder1.create();
-            alert11.show();
+                    })
+            .create().show();
         }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

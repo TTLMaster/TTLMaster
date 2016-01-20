@@ -54,7 +54,7 @@ public class Android {
      * Проверка возможности использования ttl-set
      */
     public static boolean canForceTtl() throws IOException, InterruptedException {
-        return executor.executeAsRoot("cat /proc/net/ip_tables_matches | grep -q ttl && echo 'ok'")
+        return executor.executeAsRoot("cat /proc/net/ip_tables_matches | grep -q ttl && echo ok")
                 .getOutput().startsWith("ok");
     }
 
@@ -63,9 +63,7 @@ public class Android {
     }
 
     public static boolean isTtlForced() throws IOException, InterruptedException {
-        ShellExecutor.Result r = executor.executeAsRoot("iptables -t mangle -L | grep -q 'TTL set to 64' && echo 'ok'");
-
-        return r
+        return executor.executeAsRoot("iptables -t mangle -L | grep -q 'TTL set to 64' && echo ok")
                 .getOutput().startsWith("ok");
     }
 

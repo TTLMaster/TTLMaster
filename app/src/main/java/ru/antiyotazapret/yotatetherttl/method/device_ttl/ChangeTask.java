@@ -47,7 +47,13 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
 
             Android.disableTetheringNotification();
 
-            Android.changeDeviceTtl(ttl);
+            if (!preferences.ignoreIptables() && Android.canForceTtl()) {
+                Android.forceSetTtl();
+            }
+
+            if (!Android.isTtlForced()){
+                Android.changeDeviceTtl(ttl);
+            }
 
             if (airplaneReconnectType.equals(reconnectType)) {
                 Android.disableAirplaneMode();

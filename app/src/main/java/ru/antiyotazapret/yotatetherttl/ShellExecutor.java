@@ -19,7 +19,7 @@ public class ShellExecutor {
      * @return результат выполнения.
      */
     public Result executeAsRoot(String command) throws IOException, InterruptedException {
-        return execute("su -c " + command);
+        return execute(new String[]{"su", "-c", command});
     }
 
     /**
@@ -28,9 +28,14 @@ public class ShellExecutor {
      * @param command команда.
      * @return результат выполнения.
      */
-    public Result execute(String command) throws IOException, InterruptedException {
+    public Result execute(String command) throws  IOException, InterruptedException {
+        return execute(new String[]{"sh", "-c", command});
+    }
 
-        Process process = Runtime.getRuntime().exec(command);
+    private Result execute(String[] command) throws IOException, InterruptedException {
+
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        Process process  = processBuilder.start();
         process.waitFor();
 
         Result result = new Result();

@@ -4,6 +4,9 @@
     <string name="prefs_general_wifiHotspotOn_key" translatable="false">hotspot_after_ttl</string>
     <bool name="prefs_general_wifiHotspotOn_default">false</bool>
 
+    <string name="prefs_general_ignoreIptables_key" translatable="false">ignore_iptables</string>
+    <bool name="prefs_general_ignoreIptables_default" translatable="false">false</bool>
+
     <string name="prefs_general_reconnectType_key" translatable="false">reconnect_type</string>
     <string name="prefs_general_reconnectType_airplane" translatable="false">airplane</string>
     <string name="prefs_general_reconnectType_mobile" translatable="false">mobile</string>

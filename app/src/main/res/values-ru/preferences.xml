@@ -3,6 +3,11 @@
 
     <string name="prefs_general_title">Основные</string>
 
+
+    <string name="prefs_general_ignoreIptables_title">Не использовать iptables</string>
+    <string name="prefs_general_ignoreIptables_summary">Использовать старый метод установки TTL даже если iptables --set-ttl доступен</string>
+
+
     <string name="prefs_general_wifiHotspotOn_title">Включать точку доступа</string>
     <string name="prefs_general_wifiHotspotOn_summary">Включать точку доступа после смены TTL (работает только на некоторых версиях Android)</string>
 

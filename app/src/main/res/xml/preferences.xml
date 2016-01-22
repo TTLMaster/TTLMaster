@@ -28,6 +28,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/prefs_general_title">
+        <CheckBoxPreference
+            android:defaultValue="@bool/prefs_general_ignoreIptables_default"
+            android:key="@string/prefs_general_ignoreIptables_key"
+            android:summary="@string/prefs_general_ignoreIptables_summary"
+            android:title="@string/prefs_general_ignoreIptables_title" />
 
         <CheckBoxPreference
             android:defaultValue="@bool/prefs_general_wifiHotspotOn_default"

@@ -22,8 +22,7 @@ public class ChangeDeviceTtlService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         Preferences preferences = StoreBox.create(this, Preferences.class);
-        Integer ttl = intent.getIntExtra(TTL, preferences.onBootTtlValue());
-        ChangeTask.doInForeground(new ChangeTask.ChangeTaskParameters(preferences, this, ttl));
+        ChangeTask.doInForeground(new ChangeTask.ChangeTaskParameters(preferences, this));
     }
 
 }

@@ -11,4 +11,6 @@
     <color name="middle_blue">#6495ED</color>
     <color name="deep_blue">#0000FF</color>
 
+    <color name="light_gray">#EDEDED</color>
+
 </resources>

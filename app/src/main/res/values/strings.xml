@@ -7,18 +7,14 @@
     <string name="main_current_ttl">Current TTL</string>
     <string name="main_ttl_this_device">For this device</string>
     <string name="main_ttl_iptables">For all packets (iptables)</string>
-    <string name="main_ttl_windows" translatable="false">Windows (127)</string>
-    <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS, PS, Xbox (63)</string>
     <string name="main_ttl_hint">Enter TTL</string>
-    <string name="main_ttl_apply">Apply</string>
+    <string name="main_ttl_apply">Bypass restrictions</string>
     <string name="main_ttl_message_init">Choose or enter value of TTL</string>
     <string name="main_ttl_message_done">Done! Now you can turn on tethering or portable hotspot.</string>
     <string name="main_ttl_message_done_auto">Done! Portable hotspot has been turned on.</string>
     <string name="main_ttl_error_cantReadValue">Unable to read value of TTL</string>
     <string name="main_ttl_error_empty">Enter value of TTL</string>
     <string name="main_ttl_error_between">The value must be from 1 to 255</string>
-    <string name="main_iptables_button">Try IPTables rule</string>
-    <string name="main_iptables_message_done">Done!</string>
     <string name="main_settings_button">Open \"Tethering &amp; portable hotspot\" in Settings</string>
     <string name="action_4pda" translatable="false">4PDA</string>
     <string name="applying">Applying TTL…</string>

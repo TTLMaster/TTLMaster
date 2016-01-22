@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
     @Bind(R.id.current_ttl_view)
     TextView currentTtlView;
 
-    @Bind(R.id.ttl_field)
-    EditText ttlField;
-
     @Bind(R.id.message_text_view)
     TextView messageTextView;
 
@@ -84,12 +81,6 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
                 R.color.light_blue,
                 R.color.middle_blue,
                 R.color.deep_blue);
-
-        if (savedInstanceState == null) {
-            //TTL в поле ввода при открытии приложения
-            int ttl = preferences.getTtlValueForMainScreen();
-            ttlField.setText(String.valueOf(ttl));
-        }
 
         try {
             updateTtl();
@@ -146,54 +137,12 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
     }
 
     /**
-     * Событие нажатия кнопки Windows
-     */
-    @OnClick(R.id.windows_ttl_button)
-    void windowsClicked() {
-        ttlField.setText("127");
-    }
-
-    /**
-     * Событие нажатия кнопки UNIX
-     */
-    @OnClick(R.id.unix_ttl_button)
-    void unixClicked() {
-        ttlField.setText("63");
-    }
-
-    /**
      * Событие нажатия кнопки задания TTL
      */
     @OnClick(R.id.apply_ttl_method_button)
     void ttlClicked() {
 
-        if (TextUtils.isEmpty(ttlField.getText().toString())) {
-            //Если поле TTL пустое
-            Toast.makeText(this, R.string.main_ttl_error_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        int ttl;
-
-        try {
-            //Парсинг поля TTL
-            ttl = Integer.parseInt(ttlField.getText().toString());
-        } catch (Exception e) {
-            //Исключение: невозможность прочтения поля TTL
-            e.printStackTrace();
-            Toast.makeText(this, R.string.main_ttl_error_cantReadValue, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (ttl <= 1 || ttl >= 255) {
-            //Если TTL находится вне диапазона допустимых значений...
-            //...сообщаем об этом...
-            Toast.makeText(this, R.string.main_ttl_error_between, Toast.LENGTH_SHORT).show();
-            //...и закругляемся.
-            return;
-        }
-
-        new ChangeTask().execute(new ChangeTask.ChangeTaskParameters(preferences, this, ttl));
+        new ChangeTask().execute(new ChangeTask.ChangeTaskParameters(preferences, this));
 
     }
 

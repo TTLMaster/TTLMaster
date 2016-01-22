@@ -25,14 +25,11 @@
     <string name="prefs_boot_showToasts_key" translatable="false">boot_toasts</string>
     <bool name="prefs_boot_showToasts_default">false</bool>
 
-    <string name="prefs_boot_ttlValue_key" translatable="false">boot_ttl</string>
-    <integer name="prefs_boot_ttlValue_default">63</integer>
+    <string name="prefs_general_ttlValue_key" translatable="false">ttl_fallback</string>
+    <integer name="prefs_general_ttlValue_default">63</integer>
 
     <string name="prefs_misc_debugMode_key" translatable="false">debug_mode</string>
     <bool name="prefs_misc_debugMode_default">false</bool>
-
-    <string name="prefs_misc_ttlValue_key" translatable="false">main_screen_ttl</string>
-    <integer name="prefs_misc_ttlValue_default">@integer/prefs_boot_ttlValue_default</integer>
 
     <string name="prefs_misc_restart_key" translatable="false">restart</string>
 

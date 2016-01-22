@@ -48,8 +48,8 @@ public class TtlApplication extends Application {
         upgradeBoolean(p, "bootup", R.string.prefs_boot_autoStart_key);
         upgradeBoolean(p, "bootup_toast", R.string.prefs_boot_showToasts_key);
         upgradeBoolean(p, "debugm", R.string.prefs_misc_debugMode_key);
-        upgradeStringToInteger(p, "bootup_ttl", R.string.prefs_boot_ttlValue_key, R.integer.prefs_boot_ttlValue_default);
-        upgradeStringToInteger(p, "onlaunch_ttl", R.string.prefs_misc_ttlValue_key, R.integer.prefs_misc_ttlValue_default);
+        upgradeStringToInteger(p, "bootup_ttl", R.string.prefs_general_ttlValue_key, R.integer.prefs_general_ttlValue_default);
+        deleteString(p, "onlaunch_ttl");
     }
 
     private void upgradeStringToInteger(SharedPreferences preferences, String oldKey, int newKeyId, int defaultValueId) {
@@ -88,6 +88,12 @@ public class TtlApplication extends Application {
                     .putString(newKey, value)
                     .remove(oldKey)
                     .commit();
+        }
+    }
+
+    private void deleteString(SharedPreferences preferences, String key) {
+        if (preferences.contains(key)) {
+            preferences.edit().remove(key).commit();
         }
     }
 

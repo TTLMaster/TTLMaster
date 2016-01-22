@@ -19,8 +19,6 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
     public static void doInForeground(ChangeTaskParameters param) {
         Context context = param.context;
         Preferences preferences = param.preferences;
-        Integer ttl = param.ttl;
-
 
         /*
         TODO Заменить на нотификации
@@ -52,7 +50,7 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
             }
 
             if (!Android.isTtlForced()){
-                Android.changeDeviceTtl(ttl);
+                Android.changeDeviceTtl(preferences.ttlFallbackVaule());
             }
 
             if (airplaneReconnectType.equals(reconnectType)) {
@@ -100,14 +98,12 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
     public static class ChangeTaskParameters {
         final Preferences preferences;
         final Context context;
-        final Integer ttl;
         OnResult callback;
 
 
-        public ChangeTaskParameters(Preferences preferences, Context context, Integer ttl) {
+        public ChangeTaskParameters(Preferences preferences, Context context) {
             this.preferences = preferences;
             this.context = context;
-            this.ttl = ttl;
 
             if (context instanceof OnResult) {
                 callback = (OnResult) context;

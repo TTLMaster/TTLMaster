@@ -20,13 +20,13 @@ public interface Preferences {
     boolean autoStartOnBoot();
 
     /**
-     * Значение TTL которое надо применить при загрузке системы.
+     * Значение TTL, используемое,если другие методы обхода недоступны
      *
      * @return значение TLL
      */
-    @KeyByResource(R.string.prefs_boot_ttlValue_key)
-    @DefaultValue(R.integer.prefs_boot_ttlValue_default)
-    int onBootTtlValue();
+    @KeyByResource(R.string.prefs_general_ttlValue_key)
+    @DefaultValue(R.integer.prefs_general_ttlValue_default)
+    int ttlFallbackVaule();
 
     /**
      * Отображение процесса применения TTL.
@@ -58,14 +58,6 @@ public interface Preferences {
     @DefaultValue(R.string.prefs_misc_language_default)
     String getSelectedLanguage();
 
-    /**
-     * Значение поля TTL на главном экране при старте приложения.
-     *
-     * @return значение поля TTL
-     */
-    @KeyByResource(R.string.prefs_misc_ttlValue_key)
-    @DefaultValue(R.integer.prefs_misc_ttlValue_default)
-    int getTtlValueForMainScreen();
 
     /**
      * Включен ли режим Debug.

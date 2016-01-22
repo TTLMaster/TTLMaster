@@ -15,6 +15,9 @@
     <string name="prefs_general_reconnectType_summary">Можно попробовать сменить/отключить, если текущий не работает</string>
     <string name="prefs_general_reconnectType_dialog_title">Выберите методд переподключения:</string>
 
+    <string name="prefs_general_ttlValue_title">Значение TTL</string>
+    <string name="prefs_general_ttlValue_summary">Используется, если другие методы обхода ограничений недоступны.\nРекомендуемые значения: 127 — Windows, 63 — все остальное</string>
+
     <string-array name="prefs_general_reconnect_type_titles">
         <item>Авиарежим</item>
         <item>Мобильные данные</item>
@@ -31,8 +34,6 @@
     <string name="prefs_boot_showToasts_title">Оповещения</string>
     <string name="prefs_boot_showToasts_summary">Включение оповещений о смене TTL</string>
 
-    <string name="prefs_boot_ttlValue_title">Значение TTL</string>
-    <string name="prefs_boot_ttlValue_summary">Значение TTL которое применяется при запуске</string>
 
 
 
@@ -40,9 +41,6 @@
 
     <string name="prefs_misc_debugMode_title">Режим отладки</string>
     <string name="prefs_misc_debugMode_summary">Включение режима отладки</string>
-
-    <string name="prefs_misc_ttlValue_title">TTL в поле</string>
-    <string name="prefs_misc_ttlValue_summary">Значение TTL в поле при запуске приложения</string>
 
     <string name="prefs_misc_restart_title">Перезапустить приложение</string>
 

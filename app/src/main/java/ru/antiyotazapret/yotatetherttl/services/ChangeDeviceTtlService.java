@@ -1,4 +1,4 @@
-package ru.antiyotazapret.yotatetherttl.method.device_ttl;
+package ru.antiyotazapret.yotatetherttl.services;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -22,7 +22,7 @@ public class ChangeDeviceTtlService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         Preferences preferences = StoreBox.create(this, Preferences.class);
-        ChangeTask.doInForeground(new ChangeTask.ChangeTaskParameters(preferences, this));
+        (new ChangeTask()).doInForeground(new ChangeTask.ChangeTaskParameters(preferences, this));
     }
 
 }

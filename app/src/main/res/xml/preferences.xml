@@ -52,6 +52,22 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/prefs_restrictions_title">
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/prefs_restrictions_enabled_default"
+            android:key="@string/prefs_restrictions_enabled_key"
+            android:summary="@string/prefs_restrictions_enabled_summary"
+            android:title="@string/prefs_restrictions_enabled_title" />
+
+        <EditTextPreference
+            android:defaultValue="@string/prefs_restrictions_banurl_default"
+            android:dialogTitle="@string/prefs_restrictions_banurl_title"
+            android:key="@string/prefs_restrictions_banurl_key"
+            android:title="@string/prefs_restrictions_banurl_title" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/prefs_misc_title">
 
         <CheckBoxPreference

@@ -8,24 +8,24 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.orange_box.storebox.StoreBox;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,9 +33,13 @@ import butterknife.OnClick;
 import ru.antiyotazapret.yotatetherttl.Android;
 import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
-import ru.antiyotazapret.yotatetherttl.method.device_ttl.ChangeTask;
+import ru.antiyotazapret.yotatetherttl.TtlApplication;
+import ru.antiyotazapret.yotatetherttl.services.ChangeTask;
+import ru.antiyotazapret.yotatetherttl.services.Task;
+import ru.antiyotazapret.yotatetherttl.services.UpdateBlockListTask;
+import ru.antiyotazapret.yotatetherttl.services.UpdateTtlTask;
 
-public class MainActivity extends AppCompatActivity implements ChangeTask.ChangeTaskParameters.OnResult {
+public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -43,20 +47,16 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
     @Bind(R.id.current_ttl_view)
     TextView currentTtlView;
 
-    @Bind(R.id.message_text_view)
-    TextView messageTextView;
-
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Bind(R.id.current_ttl_scope)
     TextView ttlScopeTextView;
 
+    @Bind(R.id.refreshed_at)
+    TextView refreshedAtTextView;
+
     private Preferences preferences;
-
-    private Thread thread;
-
-    private final Android android = new Android();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,24 +83,35 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
                 R.color.deep_blue);
 
         try {
+            if (!Android.hasRoot()) {
+                createDialog(R.string.root_no_root_rights, R.string.root_no_root_rights_message, R.string.root_exit, false);
+            }
+
+            if (!Android.hasIptables()) {
+                createDialog(R.string.root_no_iptables, R.string.root_no_iptables_message, R.string.root_ok, true);
+            }
             updateTtl();
-        if (!android.hasRoot()) {
-            new AlertDialog.Builder(this)
-            .setTitle(R.string.root_no_root_rights)
-            .setMessage(R.string.root_no_root_rights_message)
-            .setCancelable(false)
-            .setPositiveButton(R.string.root_exit,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            MainActivity.this.finish();
-                        }
-                    })
-            .create().show();
-        }
+            updateTime();
+
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            TtlApplication.Loge(e.toString());
         }
 
+    }
+
+    private void createDialog(int title, int message, int button, boolean cancelable) {
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(R.string.root_exit,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                MainActivity.this.finish();
+                            }
+                        })
+                .setCancelable(cancelable)
+                .create().show();
     }
 
     private String getAppVersion() {
@@ -142,8 +153,43 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
     @OnClick(R.id.apply_ttl_method_button)
     void ttlClicked() {
 
-        new ChangeTask().execute(new ChangeTask.ChangeTaskParameters(preferences, this));
+        new ChangeTask().attach(new Task.OnResult<Void>() {
+            @Override
+            public void onResult(Void r) {
+                updateTtl();
+                makeSnackbar(R.string.toast_ttl_applied);
+            }
 
+            @Override
+            public void onError(Exception e) {
+                makeSnackbar(R.string.toast_fatal_error_applying_ttl);
+            }
+        }).execute(new ChangeTask.ChangeTaskParameters(preferences, this));
+    }
+
+    void makeSnackbar(int resid) {
+        Snackbar.make(swipeRefreshLayout, getResources().getText(resid), Snackbar.LENGTH_LONG).show();
+    }
+
+    @OnClick(R.id.refresh_list_button)
+    void refreshClicked() {
+
+        swipeRefreshLayout.setRefreshing(true);
+        new UpdateBlockListTask().attach(new Task.OnResult<Set<String>>() {
+            @Override
+            public void onResult(Set<String> r) {
+                preferences.setBans(r);
+                preferences.setBansUpdated(System.currentTimeMillis());
+                updateTime();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                makeSnackbar(R.string.toast_error_refreshing);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }).execute(preferences.getBanlistURL());
     }
 
     /**
@@ -157,7 +203,8 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
             if (method.getName().equals("setWifiApEnabled")) {
                 try {
                     method.invoke(wifiManager, null, true);
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    TtlApplication.Logi(e.toString());
                 }
                 break;
             }
@@ -189,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
                     available = (String[]) method.invoke(cm);
                     break;
                 } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
-                    e.printStackTrace();
+                    TtlApplication.Loge(e.toString());
                     return;
                 }
             }
@@ -200,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
                 try {
                     method.invoke(cm, "rndis0");
                 } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    TtlApplication.Loge(e.toString());
                     return;
                 }
                 break;
@@ -209,31 +256,11 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
 
     }
 
-    private void updateTtl() throws IOException, InterruptedException {
-        class TtlStatus {
-            int ttl;
+    private void updateTtl() {
 
-            public TtlStatus(int ttl, boolean forced) {
-                this.ttl = ttl;
-                this.forced = forced;
-            }
-
-            boolean forced;
-        }
-
-        new AsyncTask<Void, Void, TtlStatus>() {
+        new UpdateTtlTask().attach(new Task.OnResult<UpdateTtlTask.TtlStatus>() {
             @Override
-            protected TtlStatus doInBackground(Void... params) {
-                try {
-                    return new TtlStatus(android.getDeviceTtl(), android.isTtlForced());
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(TtlStatus ttlStatus) {
+            public void onResult(UpdateTtlTask.TtlStatus ttlStatus) {
                 if (ttlStatus == null) {
                     currentTtlView.setText("?");
                     return;
@@ -245,29 +272,35 @@ public class MainActivity extends AppCompatActivity implements ChangeTask.Change
                     ttlStatus.ttl = 64;
                 }
                 currentTtlView.setText(String.valueOf(ttlStatus.ttl));
+                swipeRefreshLayout.setRefreshing(false);
             }
-        }.execute();
+
+            @Override
+            public void onError(Exception e) {
+                TtlApplication.Loge(e.toString());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }).doInBackground(new Object());
 
     }
 
-    @Override
-    public void OnResult() {
-        try {
-            updateTtl();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+    public void updateTime() {
+        long time = preferences.getBansUpdated();
+
+        if (time == 0) {
+            refreshedAtTextView.setText(R.string.never);
+        } else {
+            DateFormat format = DateFormat.getDateInstance();
+            refreshedAtTextView.setText(format.format(new Date(time)));
         }
+
     }
+
 
     private class RefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            try {
-                updateTtl();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
-            swipeRefreshLayout.setRefreshing(false);
+            updateTtl();
         }
     }
 

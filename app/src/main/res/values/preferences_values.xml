@@ -41,4 +41,13 @@
         <item>ru</item>
     </string-array>
 
+    <string name="prefs_restrictions_banurl_key" translatable="false">restrict_url</string>
+    <string name="prefs_restrictions_banurl_default" translatable="false">https://raw.githubusercontent.com/TTLMaster/yota-ban-list/master/list.txt</string>
+
+    <string name="prefs_restrictions_banurl_db_key" translatable="false">banurl_db_key</string>
+    <string name="prefs_restrictions_banurl_updated_key" translatable="false">banurl_updated_key</string>
+
+    <string name="prefs_restrictions_enabled_key" translatable="false">restrictions_enabled</string>
+    <bool name="prefs_restrictions_enabled_default" translatable="false">true</bool>
+
 </resources>

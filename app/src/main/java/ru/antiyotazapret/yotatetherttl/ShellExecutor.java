@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Arrays;
 
 /**
  * Класс для запуска консольных команд.
@@ -19,7 +21,7 @@ public class ShellExecutor {
      * @return результат выполнения.
      */
     public Result executeAsRoot(String command) throws IOException, InterruptedException {
-        return execute(new String[]{"su", "-c", command});
+        return execute(new String[]{"su", "-c", command}, null);
     }
 
     /**
@@ -29,13 +31,32 @@ public class ShellExecutor {
      * @return результат выполнения.
      */
     public Result execute(String command) throws  IOException, InterruptedException {
-        return execute(new String[]{"sh", "-c", command});
+        return execute(new String[]{"sh", "-c", command}, null);
     }
 
-    private Result execute(String[] command) throws IOException, InterruptedException {
+    /**
+     * Запуск команды.
+     *
+     * @param command команда.
+     * @param input stdin
+     * @return результат выполнения.
+     */
+    public Result executeAsRootWithInput(String command, String input) throws  IOException, InterruptedException {
+        return execute(new String[]{"su", "-c", command}, input);
+    }
+
+    private Result execute(String[] command, String input) throws IOException, InterruptedException {
 
         ProcessBuilder processBuilder = new ProcessBuilder(command);
+
         Process process  = processBuilder.start();
+        if (input != null) {
+            OutputStream outputStream = process.getOutputStream();
+            outputStream.write(input.getBytes());
+            outputStream.flush();
+            outputStream.close();
+        }
+
         process.waitFor();
 
         Result result = new Result();
@@ -43,6 +64,7 @@ public class ShellExecutor {
         InputStream inputStream = process.getInputStream();
         try {
             result.output = IOUtils.toString(inputStream);
+            TtlApplication.Logi(Arrays.asList(command).toString() + " " + result.output);
         } finally {
             inputStream.close();
         }

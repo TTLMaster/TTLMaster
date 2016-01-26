@@ -31,6 +31,12 @@
     <string name="prefs_boot_showToasts_title">Toasts</string>
     <string name="prefs_boot_showToasts_summary">Enabling toasts about applying TTL</string>
 
+    <string name="prefs_restrictions_title">Restrictions</string>
+
+    <string name="prefs_restrictions_banurl_title">Stop-list URL</string>
+    <string name="prefs_restrictions_enabled_title">Enable stop-list</string>
+    <string name="prefs_restrictions_enabled_summary">Disable to stop blocking hosts</string>
+
     <string name="prefs_misc_title">Miscellaneous</string>
 
     <string name="prefs_misc_debugMode_title">Debug mode</string>

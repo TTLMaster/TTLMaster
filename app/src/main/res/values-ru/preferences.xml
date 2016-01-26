@@ -35,6 +35,9 @@
     <string name="prefs_boot_showToasts_summary">Включение оповещений о смене TTL</string>
 
 
+    <string name="prefs_restrictions_title">Ограничения</string>
+
+    <string name="prefs_restrictions_banurl_title">Список блокировок</string>
 
 
     <string name="prefs_misc_title">Различные</string>

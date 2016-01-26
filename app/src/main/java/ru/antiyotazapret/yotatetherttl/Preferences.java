@@ -3,6 +3,8 @@ package ru.antiyotazapret.yotatetherttl;
 import net.orange_box.storebox.annotations.method.DefaultValue;
 import net.orange_box.storebox.annotations.method.KeyByResource;
 
+import java.util.Set;
+
 /**
  * Настройки приложения.
  *
@@ -86,6 +88,40 @@ public interface Preferences {
     @KeyByResource(R.string.prefs_general_ignoreIptables_key)
     @DefaultValue(R.bool.prefs_general_ignoreIptables_default)
     boolean ignoreIptables();
+
+    /**
+     * URL списка блокировки
+     *
+     * @return URL
+     */
+    @KeyByResource(R.string.prefs_restrictions_banurl_key)
+    @DefaultValue(R.string.prefs_restrictions_banurl_default)
+    String getBanlistURL();
+
+    /**
+     * Включён ли стоп-лист
+     * @return {@code true} включен
+     */
+    @KeyByResource(R.string.prefs_restrictions_enabled_key)
+    @DefaultValue(R.bool.prefs_restrictions_enabled_default)
+    boolean restrictionsEnabled();
+
+
+    /**
+     * База данных блокировок
+     *
+     */
+    @KeyByResource(R.string.prefs_restrictions_banurl_db_key)
+    Set<String> getBans();
+
+    @KeyByResource(R.string.prefs_restrictions_banurl_db_key)
+    void setBans(Set<String> a);
+
+    @KeyByResource(R.string.prefs_restrictions_banurl_updated_key)
+    Long getBansUpdated();
+
+    @KeyByResource(R.string.prefs_restrictions_banurl_updated_key)
+    void setBansUpdated(Long a);
 
 
 

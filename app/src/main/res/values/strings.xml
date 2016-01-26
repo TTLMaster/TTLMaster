@@ -27,10 +27,16 @@
         Unfortunately, this application is piece of junk without a root access.
         Please, root your device and allow root rights to continue
     </string>
-
-
-
-
+    <string name="main_ttl_list_age">Last block list update</string>
+    <string name="refresh_list_button">Update it</string>
+    <string name="never">Never</string>
+    <string name="root_no_iptables">iptables not found</string>
+    <string name="root_no_iptables_message">Almost all the functionality will not be available</string>
+    <string name="root_ok">Continue anyway</string>
+    <string name="toast_error_refreshing">Error while updating the list</string>
+    <string name="toast_fatal_error_applying_ttl">Fatal error while applying rules</string>
+    <string name="toast_ttl_applied">Successfully applied</string>
+    <string name="toast_refreshed">Sucessfully updated</string>
 
 
 </resources>

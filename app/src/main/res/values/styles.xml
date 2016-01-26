@@ -16,7 +16,7 @@
 
     <style name="Main_Button">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@android:color/white</item>
+        <item name="android:background">@drawable/onpress</item>
         <item name="android:textColor">@color/accent</item>
     </style>
 

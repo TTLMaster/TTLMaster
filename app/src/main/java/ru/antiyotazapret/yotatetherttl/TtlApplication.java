@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import net.orange_box.storebox.StoreBox;
 
@@ -15,6 +16,15 @@ import java.util.Locale;
 public class TtlApplication extends Application {
 
     private Preferences preferences;
+    public final static String TAG = "TTL";
+
+    public static void Logi(String msg) {
+        Log.i(TAG, msg);
+    }
+
+    public static void Loge(String msg) {
+        Log.e(TAG, msg);
+    }
 
     @Override
     public void onCreate() {
@@ -60,7 +70,7 @@ public class TtlApplication extends Application {
             try {
                 newValue = Integer.parseInt(existValueString);
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                TtlApplication.Loge(e.toString());
             }
             preferences.edit()
                     .putInt(newKey, newValue)

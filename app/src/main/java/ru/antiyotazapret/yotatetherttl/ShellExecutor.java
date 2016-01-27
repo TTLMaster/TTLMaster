@@ -52,9 +52,14 @@ public class ShellExecutor {
         Process process  = processBuilder.start();
         if (input != null) {
             OutputStream outputStream = process.getOutputStream();
-            outputStream.write(input.getBytes());
-            outputStream.flush();
-            outputStream.close();
+            try {
+                outputStream.write(input.getBytes());
+                outputStream.flush();
+            } catch (IOException e) {
+                TtlApplication.Loge(e.toString());
+            } finally {
+                outputStream.close();
+            }
         }
 
         process.waitFor();

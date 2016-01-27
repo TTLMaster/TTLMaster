@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setCancelable(false)
                 .setPositiveButton(R.string.root_exit,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
@@ -111,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         })
                 .setCancelable(cancelable)
-                .create().show();
+                .create()
+                .show();
     }
 
     private String getAppVersion() {
@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
                     ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_this_device));
                 } else {
                     ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables));
-                    ttlStatus.ttl = 64;
                 }
                 currentTtlView.setText(String.valueOf(ttlStatus.ttl));
                 swipeRefreshLayout.setRefreshing(false);

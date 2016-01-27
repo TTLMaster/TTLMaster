@@ -18,13 +18,11 @@
     <string name="prefs_general_ttlValue_title">Значение TTL</string>
     <string name="prefs_general_ttlValue_summary">Используется, если другие методы обхода ограничений недоступны.\nРекомендуемые значения: 127 — Windows, 63 — все остальное</string>
 
-    <string-array name="prefs_general_reconnect_type_titles">
+    <string-array name="prefs_general_reconnectType_titles">
         <item>Авиарежим</item>
         <item>Мобильные данные</item>
         <item>Не переподключаться</item>
     </string-array>
-
-
 
     <string name="prefs_boot_title">Автозапуск</string>
 

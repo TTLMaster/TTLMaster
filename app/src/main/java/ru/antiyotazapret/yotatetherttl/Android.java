@@ -87,7 +87,7 @@ public class Android {
 
         StringBuilder sb = new StringBuilder();
         for (String addr : rules) {
-            sb.append(addr); sb.append("\n");
+            sb.append(addr).append('\n');
         }
         executor.executeAsRootWithInput("while read s; do iptables -A BLACKLIST -s $s -j DROP; done", sb.toString());
     }

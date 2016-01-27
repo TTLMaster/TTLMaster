@@ -8,7 +8,10 @@ public class UpdateTtlTask extends Task<Object, UpdateTtlTask.TtlStatus> {
     @Override
     public TtlStatus action(Object o) {
         try {
-            return new TtlStatus(Android.getDeviceTtl(), Android.isTtlForced());
+            final boolean forced = Android.isTtlForced();
+            final int ttl = forced ? 64 : Android.getDeviceTtl();
+
+            return new TtlStatus(ttl, forced);
         } catch (IOException | InterruptedException e) {
             setException(e);
             return null;
@@ -16,8 +19,8 @@ public class UpdateTtlTask extends Task<Object, UpdateTtlTask.TtlStatus> {
     }
 
     public class TtlStatus {
-        public int ttl;
-        public boolean forced;
+        public final int ttl;
+        public final boolean forced;
 
         public TtlStatus(int ttl, boolean forced) {
             this.ttl = ttl;

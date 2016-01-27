@@ -36,18 +36,24 @@ public class UpdateBlockListTask extends Task<String,Set<String>> {
 
             String inputLine;
 
-            while ((inputLine = in.readLine()) != null) {
-                try {
-                    InetAddress[] addresses = InetAddress.getAllByName(inputLine);
-                    for (InetAddress addr : addresses) {
-                        out.add(addr.getHostAddress());
-                        TtlApplication.Logi(String.format("%s -> %s", inputLine, addr.getHostAddress()));
+            try {
+                while ((inputLine = in.readLine()) != null) {
+                    try {
+                        InetAddress[] addresses = InetAddress.getAllByName(inputLine);
+                        for (InetAddress addr : addresses) {
+                            out.add(addr.getHostAddress());
+                            TtlApplication.Logi(String.format("%s -> %s", inputLine, addr.getHostAddress()));
+                        }
+                    } catch (UnknownHostException e) {
+                        TtlApplication.Logi(e.toString());
                     }
-                } catch (UnknownHostException e) {
-                    TtlApplication.Logi(e.toString());
                 }
+            } catch (IOException e) {
+                TtlApplication.Loge(e.toString());
+                setException(e);
+            } finally {
+                in.close();
             }
-            in.close();
 
         } catch (IOException e) {
             TtlApplication.Logi(e.toString());

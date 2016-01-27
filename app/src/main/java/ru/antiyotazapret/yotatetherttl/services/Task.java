@@ -26,10 +26,6 @@ public abstract class Task<Parameters,Result> extends AsyncTask<Parameters,Void,
         }
     }
 
-    public interface OnResult<Result> {
-        void onResult(Result r);
-        void onError(Exception e);
-    }
 
     abstract Result action(Parameters p);
 
@@ -53,4 +49,8 @@ public abstract class Task<Parameters,Result> extends AsyncTask<Parameters,Void,
     }
 
 
+    public interface OnResult<Result> {
+        void onResult(Result r);
+        void onError(Exception e);
+    }
 }

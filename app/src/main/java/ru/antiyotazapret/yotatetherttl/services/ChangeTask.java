@@ -1,26 +1,23 @@
-package ru.antiyotazapret.yotatetherttl.method.device_ttl;
+package ru.antiyotazapret.yotatetherttl.services;
 
 import android.content.Context;
-import android.os.AsyncTask;
 
 import java.io.IOException;
 
 import ru.antiyotazapret.yotatetherttl.Android;
 import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
+import ru.antiyotazapret.yotatetherttl.TtlApplication;
 
 /**
  * @author Pavel Savinov (swapii@gmail.com)
  */
-public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void, Void> {
+public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
 
-    ChangeTaskParameters.OnResult callback;
-
-    public static void doInForeground(ChangeTaskParameters param) {
+    @Override
+    Void action(ChangeTaskParameters param) {
         Context context = param.context;
         Preferences preferences = param.preferences;
-        Integer ttl = param.ttl;
-
 
         /*
         TODO Заменить на нотификации
@@ -47,12 +44,17 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
 
             Android.disableTetheringNotification();
 
-            if (!preferences.ignoreIptables() && Android.canForceTtl()) {
+            if (!preferences.ignoreIptables() && Android.hasIptables() && Android.canForceTtl()) {
                 Android.forceSetTtl();
             }
 
             if (!Android.isTtlForced()){
-                Android.changeDeviceTtl(ttl);
+                Android.changeDeviceTtl(preferences.ttlFallbackVaule());
+            }
+
+            Android.disableBlockList();
+            if (preferences.restrictionsEnabled()) {
+                Android.applyBlockList(preferences.getBans());
             }
 
             if (airplaneReconnectType.equals(reconnectType)) {
@@ -64,8 +66,12 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
             }
 
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            TtlApplication.Loge(e.toString());
+            setException(e);
+            return null;
         }
+
+
 
         /*
         TODO Заменить на нотификации
@@ -74,51 +80,19 @@ public class ChangeTask extends AsyncTask<ChangeTask.ChangeTaskParameters, Void,
         }
         */
 
+       return null;
+
     }
-
-    @Override
-    protected void onPostExecute(Void aVoid) {
-        if (callback != null) {
-            callback.OnResult();
-        }
-    }
-
-    @Override
-    protected Void doInBackground(ChangeTaskParameters... params) {
-
-        if (params.length != 1) {
-            return null;
-        }
-
-        callback = params[0].callback;
-        doInForeground(params[0]);
-
-        return null;
-    }
-
 
     public static class ChangeTaskParameters {
         final Preferences preferences;
         final Context context;
-        final Integer ttl;
-        OnResult callback;
 
-
-        public ChangeTaskParameters(Preferences preferences, Context context, Integer ttl) {
+        public ChangeTaskParameters(Preferences preferences, Context context) {
             this.preferences = preferences;
             this.context = context;
-            this.ttl = ttl;
 
-            if (context instanceof OnResult) {
-                callback = (OnResult) context;
-            }
         }
-
-
-        public interface OnResult {
-            public void OnResult();
-        }
-
 
     }
 

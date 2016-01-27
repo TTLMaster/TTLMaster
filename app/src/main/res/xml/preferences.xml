@@ -17,13 +17,6 @@
             android:summary="@string/prefs_boot_showToasts_summary"
             android:title="@string/prefs_boot_showToasts_title" />
 
-        <ru.antiyotazapret.yotatetherttl.ui.IntEditTextPreference
-            android:defaultValue="@integer/prefs_boot_ttlValue_default"
-            android:inputType="number"
-            android:key="@string/prefs_boot_ttlValue_key"
-            android:numeric="integer"
-            android:summary="@string/prefs_boot_ttlValue_summary"
-            android:title="@string/prefs_boot_ttlValue_title" />
 
     </PreferenceCategory>
 
@@ -49,6 +42,30 @@
             android:summary="@string/prefs_general_reconnectType_summary"
             android:title="@string/prefs_general_reconnectType_title" />
 
+        <ru.antiyotazapret.yotatetherttl.ui.IntEditTextPreference
+            android:defaultValue="@integer/prefs_general_ttlValue_default"
+            android:inputType="number"
+            android:key="@string/prefs_general_ttlValue_key"
+            android:numeric="integer"
+            android:summary="@string/prefs_general_ttlValue_summary"
+            android:title="@string/prefs_general_ttlValue_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prefs_restrictions_title">
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/prefs_restrictions_enabled_default"
+            android:key="@string/prefs_restrictions_enabled_key"
+            android:summary="@string/prefs_restrictions_enabled_summary"
+            android:title="@string/prefs_restrictions_enabled_title" />
+
+        <EditTextPreference
+            android:defaultValue="@string/prefs_restrictions_banurl_default"
+            android:dialogTitle="@string/prefs_restrictions_banurl_title"
+            android:key="@string/prefs_restrictions_banurl_key"
+            android:title="@string/prefs_restrictions_banurl_title" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/prefs_misc_title">
@@ -58,14 +75,6 @@
             android:key="@string/prefs_misc_debugMode_key"
             android:summary="@string/prefs_misc_debugMode_summary"
             android:title="@string/prefs_misc_debugMode_title" />
-
-        <ru.antiyotazapret.yotatetherttl.ui.IntEditTextPreference
-            android:defaultValue="@integer/prefs_misc_ttlValue_default"
-            android:inputType="number"
-            android:key="@string/prefs_misc_ttlValue_key"
-            android:numeric="integer"
-            android:summary="@string/prefs_misc_ttlValue_summary"
-            android:title="@string/prefs_misc_ttlValue_title" />
 
         <ListPreference
             android:defaultValue="@string/prefs_misc_language_default"

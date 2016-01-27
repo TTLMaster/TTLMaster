@@ -6,15 +6,13 @@
     <string name="main_ttl_this_device">Для этого устройства</string>
     <string name="main_ttl_iptables">Для всех пакетов (iptables)</string>
     <string name="main_ttl_hint">Введите TTL</string>
-    <string name="main_ttl_apply">Применить</string>
+    <string name="main_ttl_apply">Обойти ограничения</string>
     <string name="main_ttl_message_init">Выберите или введите значение TTL</string>
     <string name="main_ttl_message_done">Готово! Теперь Вы можете включить режим модема.</string>
     <string name="main_ttl_message_done_auto">Готово! Режим модема включен.</string>
     <string name="main_ttl_error_cantReadValue">Не удалось прочитать значение TTL</string>
     <string name="main_ttl_error_empty">Введите значение TTL</string>
     <string name="main_ttl_error_between">Значение должно быть от 1 до 255</string>
-    <string name="main_iptables_button">Попробовать правило IPTables</string>
-    <string name="main_iptables_message_done">ОК.</string>
     <string name="main_settings_button">Открыть \"Режим модема\" в Настройках</string>
     <string name="applying">Смена TTL…</string>
     <string name="done">Готово!</string>
@@ -27,6 +25,18 @@
         К сожалению, для функционирования данного приложения необходимы права суперпользователя.
         Пожалуйста, получите их и разрешите доступ приложению, прежде чем продолжить.
     </string>
+    <string name="main_ttl_list_age">Последнее обновление стоп-листа</string>
+    <string name="refresh_list_button">Обновить</string>
+    <string name="never">Никогда</string>
+    <string name="prefs_restrictions_enabled_summary">Отключите для отмены блокирования опасных адресов</string>
+    <string name="prefs_restrictions_enabled_title">Включить стоп-список</string>
+    <string name="root_no_iptables">Утилита iptables не найдена</string>
+    <string name="root_no_iptables_message">Практически вся функциональность будет недоступна</string>
+    <string name="root_ok">Всё равно продолжить</string>
+    <string name="toast_error_refreshing">Ошибка во время обновления списка</string>
+    <string name="toast_fatal_error_applying_ttl">Ошибка во время применения правил</string>
+    <string name="toast_refreshed">Успешно обновлено</string>
+    <string name="toast_ttl_applied">Успешно применено</string>
 
 
 </resources>

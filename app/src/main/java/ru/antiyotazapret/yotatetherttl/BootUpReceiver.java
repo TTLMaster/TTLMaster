@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import net.orange_box.storebox.StoreBox;
 
-import ru.antiyotazapret.yotatetherttl.method.device_ttl.ChangeDeviceTtlService;
+import ru.antiyotazapret.yotatetherttl.services.ChangeDeviceTtlService;
 
 public class BootUpReceiver extends BroadcastReceiver {
 

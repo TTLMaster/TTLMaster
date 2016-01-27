@@ -20,6 +20,8 @@
     </string-array>
 
 
+    <string name="prefs_general_ttlValue_title">Value of TTL</string>
+    <string name="prefs_general_ttlValue_summary">Used if no other method is available (Recommended: 127 -- Windows, 63 -- everything else)</string>
 
     <string name="prefs_boot_title">Autostart</string>
 
@@ -29,18 +31,16 @@
     <string name="prefs_boot_showToasts_title">Toasts</string>
     <string name="prefs_boot_showToasts_summary">Enabling toasts about applying TTL</string>
 
-    <string name="prefs_boot_ttlValue_title">Value of TTL</string>
-    <string name="prefs_boot_ttlValue_summary">Value of TTL that applied at startup </string>
+    <string name="prefs_restrictions_title">Restrictions</string>
 
-
+    <string name="prefs_restrictions_banurl_title">Stop-list URL</string>
+    <string name="prefs_restrictions_enabled_title">Enable stop-list</string>
+    <string name="prefs_restrictions_enabled_summary">Disable to stop blocking hosts</string>
 
     <string name="prefs_misc_title">Miscellaneous</string>
 
     <string name="prefs_misc_debugMode_title">Debug mode</string>
     <string name="prefs_misc_debugMode_summary">Enabling debug mode</string>
-
-    <string name="prefs_misc_ttlValue_title">TTL in field</string>
-    <string name="prefs_misc_ttlValue_summary">Value of TTL field, when the application starts</string>
 
     <string name="prefs_misc_restart_title">Restart application</string>
 

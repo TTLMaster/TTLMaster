@@ -1,6 +1,7 @@
 package ru.antiyotazapret.yotatetherttl;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Сборник стандартных команд Android.
@@ -70,6 +71,25 @@ public class Android {
     public static boolean hasRoot() throws IOException, InterruptedException {
         return executor.executeAsRoot("echo ok")
                 .getOutput().startsWith("ok");
+    }
+
+    public static boolean hasIptables() throws IOException, InterruptedException {
+        return executor.executeAsRoot("iptables -L &>/dev/null && echo ok")
+                .getOutput().startsWith("ok");
+    }
+
+    public static void disableBlockList() throws IOException, InterruptedException {
+        executor.executeAsRoot("iptables -F BLACKLIST; iptables -D INPUT -j BLACKLIST");
+    }
+
+    public static void applyBlockList(Set<String> rules) throws IOException, InterruptedException {
+        executor.executeAsRoot("iptables -N BLACKLIST; iptables -A INPUT -j BLACKLIST");
+
+        StringBuilder sb = new StringBuilder();
+        for (String addr : rules) {
+            sb.append(addr).append('\n');
+        }
+        executor.executeAsRootWithInput("while read s; do iptables -A BLACKLIST -s $s -j DROP; done", sb.toString());
     }
 
 }

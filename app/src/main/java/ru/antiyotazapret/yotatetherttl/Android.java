@@ -74,7 +74,7 @@ public class Android {
     }
 
     public static boolean hasIptables() throws IOException, InterruptedException {
-        return executor.executeAsRoot("iptables -L &>/dev/null && echo ok")
+        return executor.executeAsRoot("iptables -S &>/dev/null && echo ok")
                 .getOutput().startsWith("ok");
     }
 

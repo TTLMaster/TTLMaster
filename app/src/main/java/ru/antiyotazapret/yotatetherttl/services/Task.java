@@ -29,13 +29,13 @@ public abstract class Task<Parameters,Result> extends AsyncTask<Parameters,Void,
 
     abstract Result action(Parameters p);
 
-    public Result doInForeground(Parameters parameters) {
+    public Result runInForeground(Parameters parameters) {
         return action(parameters);
     }
 
     // welcome to java shit-generics world
     @SuppressWarnings("unchecked")
-    public void doInBackground(Parameters parameters) {
+    public void runInBackground(Parameters parameters) {
         execute(parameters);
     }
 

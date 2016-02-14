@@ -1,6 +1,12 @@
 package ru.antiyotazapret.yotatetherttl;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -11,6 +17,7 @@ import java.util.Set;
 public class Android {
 
     private static ShellExecutor executor = new ShellExecutor();
+    private static String[] INTERFACE_MASKS = new String[] {"rmnet+", "rev_rmnet+"};
 
     public static void enabledAirplaneMode() throws IOException, InterruptedException {
         executor.executeAsRoot("settings put global airplane_mode_on 1");
@@ -48,7 +55,11 @@ public class Android {
 
     public static int getDeviceTtl() throws IOException, InterruptedException {
         ShellExecutor.Result result = executor.execute("cat /proc/sys/net/ipv4/ip_default_ttl");
-        return Integer.parseInt(result.getOutput().trim());
+        final int default_ttl = Integer.parseInt(result.getOutput().trim());
+        final boolean forced = isTtlForced();
+        final boolean workaround = isWorkaroundApplied();
+
+        return workaround ? 63 : (forced ? 64 : default_ttl);
     }
 
     /**
@@ -64,7 +75,12 @@ public class Android {
     }
 
     public static boolean isTtlForced() throws IOException, InterruptedException {
-        return executor.executeAsRoot("iptables -t mangle -L | grep -q 'TTL set to 64' && echo ok")
+        return executor.executeAsRoot("(iptables -t mangle -L | grep -q 'TTL set to 64' && echo ok)")
+                .getOutput().startsWith("ok");
+    }
+
+    public static boolean isWorkaroundApplied() throws IOException, InterruptedException {
+        return executor.executeAsRoot("(iptables -t filter -S sort_out_interface >/dev/null && echo ok)")
                 .getOutput().startsWith("ok");
     }
 
@@ -90,6 +106,37 @@ public class Android {
             sb.append(addr).append('\n');
         }
         executor.executeAsRootWithInput("while read s; do iptables -A BLACKLIST -s $s -j DROP; done", sb.toString());
+    }
+
+    public static void applyWorkaround() throws IOException, InterruptedException {
+
+        // packets from the device should be 63 too
+        Android.changeDeviceTtl(63);
+
+        executor.executeAsRoot("iptables -t filter -F sort_out_interface");
+        executor.executeAsRoot("iptables -t filter -N sort_out_interface");
+
+        executor.executeAsRoot(
+                "iptables -t filter -N sort_out_interface;" +
+                "iptables -t filter -A sort_out_interface -m ttl --ttl-lt 63 -j REJECT;" +
+                "iptables -t filter -A sort_out_interface -m ttl --ttl-eq 63 -j RETURN" + // Skip all packets with TTL == 63
+                "iptables -t filter -A sort_out_interface -j CONNMARK --set-mark 64"); // All other are marked as 64 (TTL > 63)
+
+        for (String iface : INTERFACE_MASKS) {
+            for (String cmd : new String[]{
+                    "iptables -t filter -D OUTPUT -o %s -j sort_out_interface",
+                    "iptables -t filter -D FORWARD -o %s -j sort_out_interface ",
+                    "iptables -t filter -I OUTPUT -o %s -j sort_out_interface",
+                    "iptables -t filter -I FORWARD -o %s -j sort_out_interface ",
+            }) {
+                ShellExecutor.Result r = executor.executeAsRoot(String.format(cmd, iface));
+                TtlApplication.Logi(r.getOutput());
+            }
+        }
+
+        executor.executeAsRoot("ip rule add fwmark 64 table 164");
+        executor.executeAsRoot("ip route add default dev lo table 164");
+        executor.executeAsRoot("ip route flush cache");
     }
 
 }

@@ -35,6 +35,7 @@ import ru.antiyotazapret.yotatetherttl.Preferences;
 import ru.antiyotazapret.yotatetherttl.R;
 import ru.antiyotazapret.yotatetherttl.TtlApplication;
 import ru.antiyotazapret.yotatetherttl.services.ChangeTask;
+import ru.antiyotazapret.yotatetherttl.services.CheckDeviceTask;
 import ru.antiyotazapret.yotatetherttl.services.Task;
 import ru.antiyotazapret.yotatetherttl.services.UpdateBlockListTask;
 import ru.antiyotazapret.yotatetherttl.services.UpdateTtlTask;
@@ -82,20 +83,26 @@ public class MainActivity extends AppCompatActivity {
                 R.color.middle_blue,
                 R.color.deep_blue);
 
-        try {
-            if (!Android.hasRoot()) {
-                createDialog(R.string.root_no_root_rights, R.string.root_no_root_rights_message, R.string.root_exit, false);
+        new CheckDeviceTask().attach(new Task.OnResult<CheckDeviceTask.DeviceCheckResult>() {
+            @Override
+            public void onResult(CheckDeviceTask.DeviceCheckResult r) {
+                if (!r.hasRoot) {
+                    createDialog(R.string.root_no_root_rights, R.string.root_no_root_rights_message, R.string.root_exit, false);
+                }
+
+                if (!r.hasIptables) {
+                    createDialog(R.string.root_no_iptables, R.string.root_no_iptables_message, R.string.root_ok, true);
+                }
+
+                updateTtl();
+                updateTime();
             }
 
-            if (!Android.hasIptables()) {
-                createDialog(R.string.root_no_iptables, R.string.root_no_iptables_message, R.string.root_ok, true);
+            @Override
+            public void onError(Exception e) {
+                createDialog(R.string.root_could_not_check, R.string.root_could_not_check_message, R.string.root_exit, false);
             }
-            updateTtl();
-            updateTime();
-
-        } catch (IOException | InterruptedException e) {
-            TtlApplication.Loge(e.toString());
-        }
+        }).runInBackground(null);
 
     }
 
@@ -265,10 +272,12 @@ public class MainActivity extends AppCompatActivity {
                     currentTtlView.setText("?");
                     return;
                 }
-                if (!ttlStatus.forced) {
-                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_this_device));
-                } else {
+                if (ttlStatus.forced) {
                     ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables));
+                } else if (ttlStatus.workaround) {
+                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables_workaround));
+                } else {
+                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_this_device));
                 }
                 currentTtlView.setText(String.valueOf(ttlStatus.ttl));
                 swipeRefreshLayout.setRefreshing(false);
@@ -279,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
                 TtlApplication.Loge(e.toString());
                 swipeRefreshLayout.setRefreshing(false);
             }
-        }).doInBackground(new Object());
+        }).runInBackground(new Object());
 
     }
 

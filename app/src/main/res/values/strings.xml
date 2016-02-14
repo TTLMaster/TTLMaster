@@ -37,6 +37,9 @@
     <string name="toast_fatal_error_applying_ttl">Fatal error while applying rules</string>
     <string name="toast_ttl_applied">Successfully applied</string>
     <string name="toast_refreshed">Sucessfully updated</string>
+    <string name="root_could_not_check">Could not check root rights</string>
+    <string name="root_could_not_check_message">Something went wrong, can not continue</string>
+    <string name="main_ttl_iptables_workaround">For all packets (iptables-workaround)</string>
 
 
 </resources>

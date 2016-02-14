@@ -44,8 +44,14 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
 
             Android.disableTetheringNotification();
 
-            if (!preferences.ignoreIptables() && Android.hasIptables() && Android.canForceTtl()) {
-                Android.forceSetTtl();
+            TtlApplication.Logi(String.format("COCO %b", Android.hasIptables()));
+            if (!preferences.ignoreIptables() && Android.hasIptables()) {
+                if (Android.canForceTtl()) {
+                    Android.forceSetTtl();
+                } else {
+                    Android.applyWorkaround();
+                }
+
             }
 
             if (!Android.isTtlForced()){

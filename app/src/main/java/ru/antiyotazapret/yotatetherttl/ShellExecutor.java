@@ -69,7 +69,7 @@ public class ShellExecutor {
         InputStream inputStream = process.getInputStream();
         try {
             result.output = IOUtils.toString(inputStream);
-            TtlApplication.Logi(Arrays.asList(command).toString() + " " + result.output);
+            TtlApplication.Logi(Arrays.asList(command).toString() + " returned: [" + result.output.replaceAll("\n", "") + "]");
         } finally {
             inputStream.close();
         }

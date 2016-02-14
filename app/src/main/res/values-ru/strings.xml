@@ -37,6 +37,9 @@
     <string name="toast_fatal_error_applying_ttl">Ошибка во время применения правил</string>
     <string name="toast_refreshed">Успешно обновлено</string>
     <string name="toast_ttl_applied">Успешно применено</string>
+    <string name="main_ttl_iptables_workaround">Для всех пакетов (iptables-workaround)</string>
+    <string name="root_could_not_check">Не удалось проверить наличие прав root</string>
+    <string name="root_could_not_check_message">Что-то пошло не так, попробуйте еще раз</string>
 
 
 </resources>

@@ -99,6 +99,10 @@ public class Android {
     }
 
     public static void applyBlockList(Set<String> rules) throws IOException, InterruptedException {
+        if (rules == null) { //rules not recieved
+            return;
+        }
+
         executor.executeAsRoot("iptables -N BLACKLIST; iptables -A INPUT -j BLACKLIST");
 
         StringBuilder sb = new StringBuilder();

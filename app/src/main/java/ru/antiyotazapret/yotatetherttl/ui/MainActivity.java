@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 preferences.setBans(r);
                 preferences.setBansUpdated(System.currentTimeMillis());
                 updateTime();
+                makeSnackbar(R.string.toast_refreshed);
                 swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -200,25 +201,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Функция включения тетеринга WiFi
-     */
-    private void setWifiTetheringEnabled() {
-        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        wifiManager.setWifiEnabled(false);
-        Method[] methods = wifiManager.getClass().getDeclaredMethods();
-        for (Method method : methods) {
-            if (method.getName().equals("setWifiApEnabled")) {
-                try {
-                    method.invoke(wifiManager, null, true);
-                } catch (Exception e) {
-                    TtlApplication.Logi(e.toString());
-                }
-                break;
-            }
-        }
-    }
-
-    /**
      * Открытие настроек тетеринга
      */
     @OnClick(R.id.open_tethering_settings_button)
@@ -226,41 +208,6 @@ public class MainActivity extends AppCompatActivity {
         Intent tetherSettings = new Intent();
         tetherSettings.setClassName("com.android.settings", "com.android.settings.TetherSettings");
         startActivity(tetherSettings);
-    }
-
-    /**
-     * Функция включения тетеринга USB
-     */
-    private void setUsbTetheringEnabled() {
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        String[] available = null;
-        Method[] methods = cm.getClass().getDeclaredMethods();
-
-        for (Method method : methods) {
-            if (method.getName().equals("getTetherableIfaces")) {
-                try {
-                    available = (String[]) method.invoke(cm);
-                    break;
-                } catch (IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
-                    TtlApplication.Loge(e.toString());
-                    return;
-                }
-            }
-        }
-
-        for (Method method : methods) {
-            if (method.getName().equals("tether")) {
-                try {
-                    method.invoke(cm, "rndis0");
-                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
-                    TtlApplication.Loge(e.toString());
-                    return;
-                }
-                break;
-            }
-        }
-
     }
 
     private void updateTtl() {

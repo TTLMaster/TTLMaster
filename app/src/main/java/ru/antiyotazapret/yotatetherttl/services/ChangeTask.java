@@ -1,6 +1,7 @@
 package ru.antiyotazapret.yotatetherttl.services;
 
 import android.content.Context;
+import android.support.v4.app.NotificationCompat;
 
 import java.io.IOException;
 
@@ -71,20 +72,16 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
                 Android.enabledMobileData();
             }
 
+            if (preferences.startWifiHotspotOnApplyTtl()) {
+                Android.setWifiTetheringEnabled(context);
+            }
+
         } catch (IOException | InterruptedException e) {
             TtlApplication.Loge(e.toString());
             setException(e);
             return null;
         }
 
-
-
-        /*
-        TODO Заменить на нотификации
-        if (preferences.showToastsOnBoot()) {
-            Toast.makeText(context, R.string.done, Toast.LENGTH_LONG).show();
-        }
-        */
 
        return null;
 

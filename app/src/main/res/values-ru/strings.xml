@@ -40,6 +40,8 @@
     <string name="main_ttl_iptables_workaround">Для всех пакетов (iptables-workaround)</string>
     <string name="root_could_not_check">Не удалось проверить наличие прав root</string>
     <string name="root_could_not_check_message">Что-то пошло не так, попробуйте еще раз</string>
+    <string name="notification_boot_error_message">Произошла ошибка во время применения правил :(</string>
+    <string name="notification_boot_message">Правила обхода ограничений успешно применены</string>
 
 
 </resources>

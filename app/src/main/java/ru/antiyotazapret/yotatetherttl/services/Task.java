@@ -30,7 +30,9 @@ public abstract class Task<Parameters,Result> extends AsyncTask<Parameters,Void,
     abstract Result action(Parameters p);
 
     public Result runInForeground(Parameters parameters) {
-        return action(parameters);
+        Result r = action(parameters);
+        onPostExecute(r);
+        return r;
     }
 
     // welcome to java shit-generics world

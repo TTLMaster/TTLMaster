@@ -2,6 +2,7 @@ package ru.antiyotazapret.yotatetherttl;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -99,6 +100,10 @@ public class Android {
     }
 
     public static void applyBlockList(Set<String> rules) throws IOException, InterruptedException {
+        if (rules == null) { //rules not recieved
+            return;
+        }
+
         executor.executeAsRoot("iptables -N BLACKLIST; iptables -A INPUT -j BLACKLIST");
 
         StringBuilder sb = new StringBuilder();
@@ -137,6 +142,26 @@ public class Android {
         executor.executeAsRoot("ip rule add fwmark 64 table 164");
         executor.executeAsRoot("ip route add default dev lo table 164");
         executor.executeAsRoot("ip route flush cache");
+    }
+
+
+    /**
+     * Функция включения тетеринга WiFi
+     */
+    public static void setWifiTetheringEnabled(Context ctx) {
+        WifiManager wifiManager = (WifiManager) ctx.getSystemService(ctx.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(false);
+        Method[] methods = wifiManager.getClass().getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getName().equals("setWifiApEnabled")) {
+                try {
+                    method.invoke(wifiManager, null, true);
+                } catch (Exception e) {
+                    TtlApplication.Logi(e.toString());
+                }
+                break;
+            }
+        }
     }
 
 }

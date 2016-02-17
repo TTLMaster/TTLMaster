@@ -11,7 +11,7 @@
     <string name="prefs_general_reconnectType_airplane" translatable="false">airplane</string>
     <string name="prefs_general_reconnectType_mobile" translatable="false">mobile</string>
     <string name="prefs_general_reconnectType_off" translatable="false">off</string>
-    <string name="prefs_general_reconnectType_default" translatable="false">@string/prefs_general_reconnectType_airplane</string>
+    <string name="prefs_general_reconnectType_default" translatable="false">@string/prefs_general_reconnectType_off</string>
     <string-array name="prefs_general_reconnectType_values" translatable="false">
         <item>@string/prefs_general_reconnectType_airplane</item>
         <item>@string/prefs_general_reconnectType_mobile</item>
@@ -23,7 +23,7 @@
     <bool name="prefs_boot_autoStart_default">false</bool>
 
     <string name="prefs_boot_showToasts_key" translatable="false">boot_toasts</string>
-    <bool name="prefs_boot_showToasts_default">false</bool>
+    <bool name="prefs_boot_showToasts_default">true</bool>
 
     <string name="prefs_general_ttlValue_key" translatable="false">ttl_fallback</string>
     <integer name="prefs_general_ttlValue_default">63</integer>

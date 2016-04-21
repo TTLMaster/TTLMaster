@@ -106,14 +106,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void createDialog(int title, int message, int button, boolean cancelable) {
+    private void createDialog(int title, int message, int button, final boolean cancelable) {
         new AlertDialog.Builder(this)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(R.string.root_exit,
+                .setPositiveButton(button,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                MainActivity.this.finish();
+                                if (!cancelable) {
+                                    MainActivity.this.finish();
+                                }
                             }
                         })
                 .setCancelable(cancelable)

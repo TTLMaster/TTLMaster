@@ -1,9 +1,7 @@
-package ru.antiyotazapret.yotatetherttl;
+package ru.antiyotazapret.yotatetherttl.ui;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -12,40 +10,40 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 
+import ru.antiyotazapret.yotatetherttl.R;
+
 @SuppressWarnings("ALL")
 public class SettingsActivity extends PreferenceActivity {
+
     private PendingIntent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.settings);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
-
-        addPreferencesFromResource(R.xml.preference);
-        Preference restart = findPreference("restart");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.action_settings);
+        toolbar.setClickable(true);
+        toolbar.setNavigationIcon(getResIdFromAttribute(this));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         intent = PendingIntent.getActivity(getApplicationContext(), 0,
                 new Intent(getIntent()), 0);
 
+        addPreferencesFromResource(R.xml.preferences);
 
-        restart.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        findPreference(getString(R.string.prefs_misc_restart_key)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 System.exit(1);
                 return true;
-            }
-        });
-
-        toolbar.setClickable(true);
-        toolbar.setNavigationIcon(getResIdFromAttribute(this));
-        toolbar.setTitle(R.string.action_settings);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
 
@@ -59,4 +57,5 @@ public class SettingsActivity extends PreferenceActivity {
         activity.getTheme().resolveAttribute(R.attr.homeAsUpIndicator, typedvalueattr, true);
         return typedvalueattr.resourceId;
     }
+
 }

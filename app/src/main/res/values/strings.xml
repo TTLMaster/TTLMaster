@@ -1,53 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name" translatable="false">YOTA Tether TTL</string>
+    <string name="app_name" translatable="false">TTL Master</string>
     <string name="app_web_address" translatable="false">http://4pda.ru/forum/index.php?showtopic=647126</string>
     <string name="main_version" formatted="false">Version %s</string>
-    <string name="main_current_ttl">current TTL</string>
-    <string name="main_ttl_windows" translatable="false">Windows (127)</string>
-    <string name="main_ttl_unix" translatable="false">UNIX Android, Mac, IOS, PS, Xbox (63)</string>
+    <string name="main_current_ttl">Current TTL</string>
+    <string name="main_ttl_this_device">For this device</string>
+    <string name="main_ttl_iptables">For all packets (iptables)</string>
     <string name="main_ttl_hint">Enter TTL</string>
-    <string name="main_ttl_apply">Apply</string>
+    <string name="main_ttl_apply">Bypass restrictions</string>
     <string name="main_ttl_message_init">Choose or enter value of TTL</string>
     <string name="main_ttl_message_done">Done! Now you can turn on tethering or portable hotspot.</string>
     <string name="main_ttl_message_done_auto">Done! Portable hotspot has been turned on.</string>
     <string name="main_ttl_error_cantReadValue">Unable to read value of TTL</string>
     <string name="main_ttl_error_empty">Enter value of TTL</string>
     <string name="main_ttl_error_between">The value must be from 1 to 255</string>
-    <string name="main_iptables_button">Try IPTables rule</string>
-    <string name="main_iptables_message_done">Done!</string>
     <string name="main_settings_button">Open \"Tethering &amp; portable hotspot\" in Settings</string>
     <string name="action_4pda" translatable="false">4PDA</string>
     <string name="applying">Applying TTL…</string>
     <string name="done">Done!</string>
     <string name="log">Log:</string>
     <string name="action_settings">Settings</string>
-    <string name="bootup">Autostart</string>
-    <string name="general">General</string>
-    <string name="misc">Miscellaneous</string>
-    <string name="debugcheckbox_title">Debug mode</string>
-    <string name="debugcheckbox_summary">Enabling debug mode</string>
-    <string name="bootup_title">Autostart</string>
-    <string name="bootup_summary">Enabling automatic applying TTL on device\'s startup</string>
-    <string name="bootup_toast_title">Toasts</string>
-    <string name="bootup_toast_summary">Enabling toasts about applying TTL</string>
-    <string name="bootup_ttl_title">Value of TTL</string>
-    <string name="bootup_ttl_summary">Value of TTL that applied at startup </string>
-    <string name="wificheckbox_title">Turn on portable hotspot</string>
-    <string name="wificheckbox_summary">Turn on portable hotspot after changing the TTL (only works on some versions of Android)</string>
-    <string name="langlist_title">Language</string>
-    <string name="langlist_summary">Application language.\nNeed restart application to apply changes.</string>
-    <string name="selectmethod_title">Reconnect type</string>
-    <string name="selectmethod_summary">"If it's failed, try another reconnect type"</string>
-    <string name="langdialog_title">Select language:</string>
-    <string name="selectmethoddialog_title">Select reconnect method:</string>
-    <string name="restart">Restart application</string>
-    <string name="ttlvalue_title">TTL in field</string>
-    <string name="ttlvalue_summary">Value of TTL field, when the application starts</string>
-    <string-array name="method_array">
-        <item>Airplane mode</item>
-        <item>Mobile data</item>
-        <item>"Don't reconnect"</item>
-    </string-array>
+    <string name="root_exit">Exit</string>
+    <string name="root_no_root_rights">No root rights found</string>
+    <string name="root_no_root_rights_message">
+        Unfortunately, this application is piece of junk without a root access.
+        Please, root your device and allow root rights to continue
+    </string>
+    <string name="main_ttl_list_age">Last block list update</string>
+    <string name="refresh_list_button">Update it</string>
+    <string name="never">Never</string>
+    <string name="root_no_iptables">iptables not found</string>
+    <string name="root_no_iptables_message">Almost all the functionality will not be available</string>
+    <string name="root_ok">Continue anyway</string>
+    <string name="toast_error_refreshing">Error while updating the list</string>
+    <string name="toast_fatal_error_applying_ttl">Fatal error while applying rules</string>
+    <string name="toast_ttl_applied">Successfully applied</string>
+    <string name="toast_refreshed">Sucessfully updated</string>
+    <string name="root_could_not_check">Could not check root rights</string>
+    <string name="root_could_not_check_message">Something went wrong, can not continue</string>
+    <string name="main_ttl_iptables_workaround">For all packets (iptables-workaround)</string>
+    <string name="notification_boot_message">Successfully applied</string>
+    <string name="notification_boot_error_message">Error occured :(</string>
+
+
 </resources>

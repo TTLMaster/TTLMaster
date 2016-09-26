@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="main_version" formatted="false">Версия %s</string>
-    <string name="main_current_ttl">текущий TTL</string>
+    <string name="main_current_ttl">Текущий TTL</string>
+    <string name="main_ttl_this_device">Для этого устройства</string>
+    <string name="main_ttl_iptables">Для всех пакетов (iptables)</string>
     <string name="main_ttl_hint">Введите TTL</string>
-    <string name="main_ttl_apply">Применить</string>
+    <string name="main_ttl_apply">Обойти ограничения</string>
     <string name="main_ttl_message_init">Выберите или введите значение TTL</string>
     <string name="main_ttl_message_done">Готово! Теперь Вы можете включить режим модема.</string>
     <string name="main_ttl_message_done_auto">Готово! Режим модема включен.</string>
     <string name="main_ttl_error_cantReadValue">Не удалось прочитать значение TTL</string>
     <string name="main_ttl_error_empty">Введите значение TTL</string>
     <string name="main_ttl_error_between">Значение должно быть от 1 до 255</string>
-    <string name="main_iptables_button">Попробовать правило IPTables</string>
-    <string name="main_iptables_message_done">ОК.</string>
     <string name="main_settings_button">Открыть \"Режим модема\" в Настройках</string>
     <string name="applying">Смена TTL…</string>
     <string name="done">Готово!</string>
     <string name="log">Журнал:</string>
     <string name="action_settings">Настройки</string>
-    <string name="bootup">Автозапуск</string>
-    <string name="general">Основные</string>
-    <string name="misc">Различные</string>
-    <string name="debugcheckbox_title">Режим отладки</string>
-    <string name="debugcheckbox_summary">Включение режима отладки</string>
-    <string name="bootup_title">Автозапуск</string>
-    <string name="bootup_summary">Включение автоматической смены TTL при запуске устройства</string>
-    <string name="bootup_toast_title">Оповещения</string>
-    <string name="bootup_toast_summary">Включение оповещений о смене TTL</string>
-    <string name="bootup_ttl_title">Значение TTL</string>
-    <string name="bootup_ttl_summary">Значение TTL которое применяется при запуске</string>
-    <string name="wificheckbox_title">Включать точку доступа</string>
-    <string name="wificheckbox_summary">Включать точку доступа после смены TTL (работает только на некоторых версиях Android)</string>
-    <string name="langlist_title">Язык</string>
-    <string name="langlist_summary">Язык приложения.\nНеобходимо перезапустить приложение для принятия изменений.</string>
-    <string name="selectmethod_title">Метод переподключения к сети</string>
-    <string name="selectmethod_summary">Можно попробовать сменить/отключить, если текущий не работает</string>
-    <string name="langdialog_title">Выберите язык:</string>
-    <string name="selectmethoddialog_title">Выберите методд переподключения:</string>
-    <string name="restart">Перезапустить приложение</string>
-    <string name="ttlvalue_title">TTL в поле</string>
-    <string name="ttlvalue_summary">Значение TTL в поле при запуске приложения</string>
-    <string-array name="method_array">
-        <item>Авиарежим</item>
-        <item>Мобильные данные</item>
-        <item>Не переподключаться</item>
-    </string-array>
+
+    <string name="root_exit">Выход</string>
+    <string name="root_no_root_rights">Нет прав суперпользователя</string>
+    <string name="root_no_root_rights_message">
+        К сожалению, для функционирования данного приложения необходимы права суперпользователя.
+        Пожалуйста, получите их и разрешите доступ приложению, прежде чем продолжить.
+    </string>
+    <string name="main_ttl_list_age">Последнее обновление стоп-листа</string>
+    <string name="refresh_list_button">Обновить</string>
+    <string name="never">Никогда</string>
+    <string name="prefs_restrictions_enabled_summary">Отключите для отмены блокирования опасных адресов</string>
+    <string name="prefs_restrictions_enabled_title">Включить стоп-список</string>
+    <string name="root_no_iptables">Утилита iptables не найдена</string>
+    <string name="root_no_iptables_message">Практически вся функциональность будет недоступна</string>
+    <string name="root_ok">Всё равно продолжить</string>
+    <string name="toast_error_refreshing">Ошибка во время обновления списка</string>
+    <string name="toast_fatal_error_applying_ttl">Ошибка во время применения правил</string>
+    <string name="toast_refreshed">Успешно обновлено</string>
+    <string name="toast_ttl_applied">Успешно применено</string>
+    <string name="main_ttl_iptables_workaround">Для всех пакетов (iptables-workaround)</string>
+    <string name="root_could_not_check">Не удалось проверить наличие прав root</string>
+    <string name="root_could_not_check_message">Что-то пошло не так, попробуйте еще раз</string>
+    <string name="notification_boot_error_message">Ошибка при применении :(</string>
+    <string name="notification_boot_message">Успешно применено</string>
+
+
 </resources>

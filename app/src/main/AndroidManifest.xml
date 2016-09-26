@@ -3,46 +3,60 @@
     package="ru.antiyotazapret.yotatetherttl">
 
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="WRITE_SECURE_SETTINGS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="WRITE_SECURE_SETTINGS" />
 
     <application
+        android:name=".TtlApplication"
         android:allowBackup="true"
+        android:configChanges="locale"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:configChanges="locale">
+        android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
+            android:configChanges="locale"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"
-            android:configChanges="locale">
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.AIRPLANE_MODE" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/action_settings"
-            android:configChanges="locale">
-        </activity>
-        <receiver android:enabled="true" android:name=".BootUpReceiver"
+            android:name=".ui.SettingsActivity"
+            android:configChanges="locale"
+            android:label="@string/action_settings" />
+
+        <receiver
+            android:name=".BootUpReceiver"
+            android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
-        <service android:enabled="true" android:name=".BootUpService"/>
+
+        <service
+            android:name=".services.ChangeDeviceTtlService"
+            android:enabled="true" />
+
     </application>
 
 </manifest>

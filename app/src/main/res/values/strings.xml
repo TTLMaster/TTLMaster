@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name" translatable="false">YOTA Tether TTL</string>
+    <string name="app_name" translatable="false">TTL Master</string>
     <string name="app_web_address" translatable="false">http://4pda.ru/forum/index.php?showtopic=647126</string>
     <string name="main_version" formatted="false">Version %s</string>
     <string name="main_current_ttl">Current TTL</string>

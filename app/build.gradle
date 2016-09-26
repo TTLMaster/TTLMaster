@@ -6,11 +6,11 @@ android {
     buildToolsVersion '23.0.2'
 
     defaultConfig {
-        applicationId 'ru.antiyotazapret.yotatetherttl'
+        applicationId 'ru.glebchajah.ttlmaster'
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 401
-        versionName '4.0.1-DEV'
+        versionCode 201
+        versionName '2.0.1'
     }
 
     buildTypes {

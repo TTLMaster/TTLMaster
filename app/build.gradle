@@ -6,7 +6,7 @@ android {
     buildToolsVersion '23.0.2'
 
     defaultConfig {
-        applicationId 'ru.glebchajah.ttlmaster'
+        applicationId 'io.github.ttlmaster'
         minSdkVersion 8
         targetSdkVersion 22
         versionCode 201

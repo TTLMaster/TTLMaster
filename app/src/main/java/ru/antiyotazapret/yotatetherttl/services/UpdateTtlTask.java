@@ -1,6 +1,9 @@
 package ru.antiyotazapret.yotatetherttl.services;
 
+import com.stericson.rootshell.exceptions.RootDeniedException;
+
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import ru.antiyotazapret.yotatetherttl.Android;
 
@@ -17,7 +20,14 @@ public class UpdateTtlTask extends Task<Object, UpdateTtlTask.TtlStatus> {
         } catch (IOException | InterruptedException e) {
             setException(e);
             return null;
+        } catch (RootDeniedException e) {
+            setException(e);
+        } catch (TimeoutException e) {
+            setException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     public class TtlStatus {

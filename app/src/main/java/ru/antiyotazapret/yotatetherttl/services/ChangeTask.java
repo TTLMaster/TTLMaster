@@ -3,7 +3,10 @@ package ru.antiyotazapret.yotatetherttl.services;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 
+import com.stericson.rootshell.exceptions.RootDeniedException;
+
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import ru.antiyotazapret.yotatetherttl.Android;
 import ru.antiyotazapret.yotatetherttl.Preferences;
@@ -80,10 +83,16 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
             TtlApplication.Loge(e.toString());
             setException(e);
             return null;
+        } catch (RootDeniedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
-       return null;
+        return null;
 
     }
 

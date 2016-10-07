@@ -3,12 +3,28 @@ package ru.antiyotazapret.yotatetherttl;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
+
+import com.stericson.rootshell.RootShell;
+import com.stericson.rootshell.exceptions.RootDeniedException;
+import com.stericson.rootshell.execution.Command;
+import com.stericson.roottools.RootTools;
+
+import android.content.Context;
+import android.util.Log;
+
+import ru.antiyotazapret.yotatetherttl.ui.MainActivity;
+
+import static com.stericson.rootshell.RootShell.commandWait;
+import static com.stericson.roottools.RootTools.installBinary;
+import static com.stericson.roottools.RootTools.checkUtil;
 
 /**
  * Сборник стандартных команд Android.
@@ -20,29 +36,36 @@ public class Android {
     private static ShellExecutor executor = new ShellExecutor();
     private static String[] INTERFACE_MASKS = new String[] {"rmnet+", "rev_rmnet+"};
 
-    public static void enabledAirplaneMode() throws IOException, InterruptedException {
-        executor.executeAsRoot("settings put global airplane_mode_on 1");
-        executor.executeAsRoot("am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true");
+    public static void enabledAirplaneMode() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,"settings put global airplane_mode_on 1");
+        RootShell.getShell(true).add(command);
+        command = new Command(0,"am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true");
+        RootShell.getShell(true).add(command);
     }
 
-    public static void disableAirplaneMode() throws IOException, InterruptedException {
-        executor.executeAsRoot("settings put global airplane_mode_on 0");
-        executor.executeAsRoot("am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false");
+    public static void disableAirplaneMode() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,"settings put global airplane_mode_on 0");
+        RootShell.getShell(true).add(command);
+        command = new Command(0,"am broadcast -a android.intent.action.AIRPLANE_MODE --ez state false");
+        RootShell.getShell(true).add(command);
     }
 
-    public static void enabledMobileData() throws IOException, InterruptedException {
-        executor.executeAsRoot("svc data enable");
+    public static void enabledMobileData() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,"svc data enable");
+        RootShell.getShell(true).add(command);
     }
 
-    public static void disableMobileData() throws IOException, InterruptedException {
-        executor.executeAsRoot("svc data disable");
+    public static void disableMobileData() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,"svc data disable");
+        RootShell.getShell(true).add(command);
     }
 
     /**
      * Отключение оповещения андроидом оператора о тетеринге.
      */
-    public static void disableTetheringNotification() throws IOException, InterruptedException {
-        executor.executeAsRoot("settings put global tether_dun_required 0");
+    public static void disableTetheringNotification() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,"settings put global tether_dun_required 0");
+        RootShell.getShell(true).add(command);
     }
 
     /**
@@ -50,83 +73,136 @@ public class Android {
      *
      * @param ttl новое значение TTL.
      */
-    public static void changeDeviceTtl(int ttl) throws IOException, InterruptedException {
-        executor.executeAsRoot(String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl));
+    public static void changeDeviceTtl(int ttl) throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,String.format("echo '%d' > /proc/sys/net/ipv4/ip_default_ttl", ttl));
+        RootShell.getShell(true).add(command);
     }
 
-    public static int getDeviceTtl() throws IOException, InterruptedException {
-        ShellExecutor.Result result = executor.execute("cat /proc/sys/net/ipv4/ip_default_ttl");
-        final int default_ttl = Integer.parseInt(result.getOutput().trim());
-        final boolean forced = isTtlForced();
-        final boolean workaround = isWorkaroundApplied();
-
-        return workaround ? 63 : (forced ? 64 : default_ttl);
+    public static int getDeviceTtl() throws Exception {
+        final Integer[] finalDefault_ttl = new Integer[1];
+        Command command = new Command(0, "cat /proc/sys/net/ipv4/ip_default_ttl")
+        {
+            @Override
+            public void commandOutput(int id, String line)
+            {
+                finalDefault_ttl[0] = Integer.parseInt(line.trim());
+                //MUST call the super method when overriding!
+                super.commandOutput(id, line);
+            }
+        };
+        RootShell.getShell(false).add(command);
+        commandWait(RootShell.getShell(false), command);
+        return finalDefault_ttl[0];
     }
 
     /**
      * Проверка возможности использования ttl-set
      */
-    public static boolean canForceTtl() throws IOException, InterruptedException {
-        return executor.executeAsRoot("cat /proc/net/ip_tables_matches | grep -q ttl && echo ok")
-                .getOutput().startsWith("ok");
+    public static boolean canForceTtl() throws Exception {
+        final boolean[] ret = new boolean[1];
+        Command command = new Command(0, "cat /proc/net/ip_tables_matches | grep -q ttl && echo ok")
+        {
+            @Override
+            public void commandOutput(int id, String line)
+            {
+                ret[0] =line.startsWith("ok");
+                //MUST call the super method when overriding!
+                super.commandOutput(id, line);
+            }
+        };
+        RootShell.getShell(true).add(command);
+        try {
+            commandWait(RootShell.getShell(true), command);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret[0];
     }
 
-    public static void forceSetTtl() throws  IOException, InterruptedException {
-        executor.executeAsRoot("iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64");
+    public static void forceSetTtl() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,"iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64");
+        RootShell.getShell(true).add(command);
     }
 
-    public static boolean isTtlForced() throws IOException, InterruptedException {
-        return executor.executeAsRoot("(iptables -t mangle -L | grep -q 'TTL set to 64' && echo ok)")
-                .getOutput().startsWith("ok");
+    public static boolean isTtlForced() throws Exception {
+        final boolean[] ret = new boolean[1];
+        Command command = new Command(0, "(iptables -t mangle -L | grep -q 'TTL set to 64' && echo ok)")
+        {
+            @Override
+            public void commandOutput(int id, String line)
+            {
+                ret[0] =line.startsWith("ok");
+                //MUST call the super method when overriding!
+                super.commandOutput(id, line);
+            }
+        };
+        RootShell.getShell(true).add(command);
+        try {
+            commandWait(RootShell.getShell(true), command);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret[0];
     }
 
-    public static boolean isWorkaroundApplied() throws IOException, InterruptedException {
-        return executor.executeAsRoot("(iptables -t filter -S sort_out_interface >/dev/null && echo ok)")
-                .getOutput().startsWith("ok");
+    public static boolean isWorkaroundApplied() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        final boolean[] ret = new boolean[1];
+        Command command = new Command(0, "(iptables -t mangle -L | grep -q 'TTL set to 64' && echo ok)")
+        {
+            @Override
+            public void commandOutput(int id, String line)
+            {
+                ret[0] =line.startsWith("ok");
+                //MUST call the super method when overriding!
+                super.commandOutput(id, line);
+            }
+        };
+        RootShell.getShell(true).add(command);
+        try {
+            commandWait(RootShell.getShell(true), command);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret[0];
     }
 
     public static boolean hasRoot() throws IOException, InterruptedException {
-        return executor.executeAsRoot("echo ok")
-                .getOutput().startsWith("ok");
+        return RootShell.isRootAvailable()&&RootShell.isAccessGiven();
     }
 
-    public static boolean hasIptables() throws IOException, InterruptedException {
-        return executor.executeAsRoot("iptables -S &>/dev/null && echo ok")
-                .getOutput().startsWith("ok");
+    public static boolean hasIptables() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        return checkUtil("iptables");
     }
 
-    public static void disableBlockList() throws IOException, InterruptedException {
-        executor.executeAsRoot("iptables -F BLACKLIST; iptables -D INPUT -j BLACKLIST");
+    public static void disableBlockList() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
+        Command command = new Command(0,"iptables -F BLACKLIST; iptables -D INPUT -j BLACKLIST");
+        RootShell.getShell(true).add(command);
     }
 
-    public static void applyBlockList(Set<String> rules) throws IOException, InterruptedException {
+    public static void applyBlockList(Set<String> rules) throws IOException, InterruptedException, TimeoutException, RootDeniedException {
         if (rules == null) { //rules not recieved
             return;
         }
 
-        executor.executeAsRoot("iptables -N BLACKLIST; iptables -A INPUT -j BLACKLIST");
-
+        Command command = new Command(0,"iptables -N BLACKLIST; iptables -A INPUT -j BLACKLIST");
+        RootShell.getShell(true).add(command);
         StringBuilder sb = new StringBuilder();
         for (String addr : rules) {
             sb.append(addr).append('\n');
         }
-        executor.executeAsRootWithInput("while read s; do iptables -A BLACKLIST -s $s -j DROP; done", sb.toString());
+        command = new Command(0,"while read s; do iptables -A BLACKLIST -s $s -j DROP; done", sb.toString());
+        RootShell.getShell(true).add(command);
     }
 
-    public static void applyWorkaround() throws IOException, InterruptedException {
+    public static void applyWorkaround() throws IOException, InterruptedException, TimeoutException, RootDeniedException {
 
         // packets from the device should be 63 too
         Android.changeDeviceTtl(63);
-
-        executor.executeAsRoot("iptables -t filter -F sort_out_interface");
-        executor.executeAsRoot("iptables -t filter -N sort_out_interface");
-
-        executor.executeAsRoot(
-                "iptables -t filter -N sort_out_interface;" +
+        Command command = new Command(0,"iptables -t filter -F sort_out_interface", "iptables -t filter -N sort_out_interface", "iptables -t filter -N sort_out_interface;" +
                 "iptables -t filter -A sort_out_interface -m ttl --ttl-lt 63 -j REJECT;" +
                 "iptables -t filter -A sort_out_interface -m ttl --ttl-eq 63 -j RETURN" + // Skip all packets with TTL == 63
                 "iptables -t filter -A sort_out_interface -j CONNMARK --set-mark 64"); // All other are marked as 64 (TTL > 63)
-
+        RootShell.getShell(true).add(command);
         for (String iface : INTERFACE_MASKS) {
             for (String cmd : new String[]{
                     "iptables -t filter -D OUTPUT -o %s -j sort_out_interface",
@@ -134,17 +210,56 @@ public class Android {
                     "iptables -t filter -I OUTPUT -o %s -j sort_out_interface",
                     "iptables -t filter -I FORWARD -o %s -j sort_out_interface ",
             }) {
-                ShellExecutor.Result r = executor.executeAsRoot(String.format(cmd, iface));
-                TtlApplication.Logi(r.getOutput());
+                command = new Command(0, String.format(cmd, iface))
+                {
+                    @Override
+                    public void commandOutput(int id, String line)
+                    {
+                        TtlApplication.Logi(line);
+                        //MUST call the super method when overriding!
+                        super.commandOutput(id, line);
+                    }
+                };
+                RootShell.getShell(true).add(command);
+                try {
+                    commandWait(RootShell.getShell(true), command);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
-
-        executor.executeAsRoot("ip rule add fwmark 64 table 164");
-        executor.executeAsRoot("ip route add default dev lo table 164");
-        executor.executeAsRoot("ip route flush cache");
+        command = new Command(0,"ip rule add fwmark 64 table 164", "ip route add default dev lo table 164", "ip route flush cache");
+        RootShell.getShell(true).add(command);
     }
+    /**
+     * Установщик iptables
+     */
 
-
+    public static void iptablesBinaryInstall(Context ctx)
+    {
+        RootTools.debugMode=true;
+        final String[] abis;
+        if ( Build.VERSION.SDK_INT > 21 ) {
+            abis = Build.SUPPORTED_ABIS;
+        } else {
+            abis = new String[]{Build.CPU_ABI, Build.CPU_ABI2};
+        }
+        boolean ret = false;
+        for (String abi: abis) {
+            if (abi.startsWith("x86")) {
+                ret = installBinary(ctx, R.raw.iptables_x86, "iptables") &&
+                        installBinary(ctx, R.raw.ip6tables_x86, "ip6tables");
+            } else if (abi.startsWith("mips")) {
+                ret = installBinary(ctx, R.raw.iptables_mips, "iptables") &&
+                        installBinary(ctx, R.raw.ip6tables_mips, "ip6tables");
+            } else {
+                // default to ARM
+                ret = installBinary(ctx, R.raw.iptables_arm, "iptables") &&
+                        installBinary(ctx, R.raw.ip6tables_arm, "ip6tables");
+            }
+            TtlApplication.Logi("binary installation for " + abi + (ret ? " succeeded" : " failed"));
+        }
+    }
     /**
      * Функция включения тетеринга WiFi
      */

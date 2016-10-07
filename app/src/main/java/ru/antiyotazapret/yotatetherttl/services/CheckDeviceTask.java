@@ -1,6 +1,9 @@
 package ru.antiyotazapret.yotatetherttl.services;
 
+import com.stericson.rootshell.exceptions.RootDeniedException;
+
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import ru.antiyotazapret.yotatetherttl.Android;
 import ru.antiyotazapret.yotatetherttl.TtlApplication;
@@ -17,7 +20,12 @@ public class CheckDeviceTask extends Task<Void,CheckDeviceTask.DeviceCheckResult
         } catch (IOException | InterruptedException e) {
             TtlApplication.Loge(e.toString());
             return new DeviceCheckResult(false, false);
+        } catch (RootDeniedException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     public class DeviceCheckResult {

@@ -198,7 +198,7 @@ public class Android {
 
         // packets from the device should be 63 too
         Android.changeDeviceTtl(63);
-        Command command = new Command(0,"iptables -t filter -F sort_out_interface", "iptables -t filter -N sort_out_interface", "iptables -t filter -N sort_out_interface;" +
+        Command command = new Command(0, "iptables -t filter -F sort_out_interface", "iptables -t filter -N sort_out_interface", "iptables -t filter -N sort_out_interface;" +
                 "iptables -t filter -A sort_out_interface -m ttl --ttl-lt 63 -j REJECT;" +
                 "iptables -t filter -A sort_out_interface -m ttl --ttl-eq 63 -j RETURN" + // Skip all packets with TTL == 63
                 "iptables -t filter -A sort_out_interface -j CONNMARK --set-mark 64"); // All other are marked as 64 (TTL > 63)
@@ -210,11 +210,9 @@ public class Android {
                     "iptables -t filter -I OUTPUT -o %s -j sort_out_interface",
                     "iptables -t filter -I FORWARD -o %s -j sort_out_interface ",
             }) {
-                command = new Command(0, String.format(cmd, iface))
-                {
+                command = new Command(0, String.format(cmd, iface)) {
                     @Override
-                    public void commandOutput(int id, String line)
-                    {
+                    public void commandOutput(int id, String line) {
                         TtlApplication.Logi(line);
                         //MUST call the super method when overriding!
                         super.commandOutput(id, line);
@@ -228,37 +226,8 @@ public class Android {
                 }
             }
         }
-        command = new Command(0,"ip rule add fwmark 64 table 164", "ip route add default dev lo table 164", "ip route flush cache");
+        command = new Command(0, "ip rule add fwmark 64 table 164", "ip route add default dev lo table 164", "ip route flush cache");
         RootShell.getShell(true).add(command);
-    }
-    /**
-     * Установщик iptables
-     */
-
-    public static void iptablesBinaryInstall(Context ctx)
-    {
-        RootTools.debugMode=true;
-        final String[] abis;
-        if ( Build.VERSION.SDK_INT > 21 ) {
-            abis = Build.SUPPORTED_ABIS;
-        } else {
-            abis = new String[]{Build.CPU_ABI, Build.CPU_ABI2};
-        }
-        boolean ret = false;
-        for (String abi: abis) {
-            if (abi.startsWith("x86")) {
-                ret = installBinary(ctx, R.raw.iptables_x86, "iptables") &&
-                        installBinary(ctx, R.raw.ip6tables_x86, "ip6tables");
-            } else if (abi.startsWith("mips")) {
-                ret = installBinary(ctx, R.raw.iptables_mips, "iptables") &&
-                        installBinary(ctx, R.raw.ip6tables_mips, "ip6tables");
-            } else {
-                // default to ARM
-                ret = installBinary(ctx, R.raw.iptables_arm, "iptables") &&
-                        installBinary(ctx, R.raw.ip6tables_arm, "ip6tables");
-            }
-            TtlApplication.Logi("binary installation for " + abi + (ret ? " succeeded" : " failed"));
-        }
     }
     /**
      * Функция включения тетеринга WiFi

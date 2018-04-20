@@ -34,24 +34,24 @@ public class ChangeDeviceTtlService extends IntentService {
             @Override
             public void onResult(Void r) {
                 if (preferences.showToastsOnBoot()) {
-                    fireNotification(NOTIFY_OK, R.string.app_name, R.string.notification_boot_message);
+                    fireNotification(NOTIFY_OK, R.string.notification_boot_message);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 if (preferences.showToastsOnBoot()) {
-                    fireNotification(NOTIFY_ERRR, R.string.app_name, R.string.notification_boot_error_message);
+                    fireNotification(NOTIFY_ERRR, R.string.notification_boot_error_message);
                 }
             }
         }).runInForeground(new ChangeTask.ChangeTaskParameters(preferences, this));
     }
 
-    private void fireNotification(int id, int titleRes, int contentRes) {
+    private void fireNotification(int id, int contentRes) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ChangeDeviceTtlService.this).
                 setSmallIcon(R.drawable.ic_notify).
                 setAutoCancel(true).
-                setContentTitle(getResources().getString(titleRes)).
+                setContentTitle(getResources().getString(R.string.app_name)).
                 setContentText(getResources().getString(contentRes));
 
         Intent resultIntent = new Intent(this, MainActivity.class);

@@ -1,29 +1,19 @@
 package io.github.ttlmaster;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import io.github.ttlmaster.rootshell.RootShell;
 import io.github.ttlmaster.rootshell.exceptions.RootDeniedException;
 import io.github.ttlmaster.rootshell.execution.Command;
-import io.github.ttlmaster.roottools.RootTools;
 
 import android.content.Context;
-import android.util.Log;
-
-import io.github.ttlmaster.ui.MainActivity;
 
 import static io.github.ttlmaster.rootshell.RootShell.commandWait;
-import static io.github.ttlmaster.roottools.RootTools.installBinary;
 import static io.github.ttlmaster.roottools.RootTools.checkUtil;
 
 /**
@@ -233,7 +223,7 @@ public class Android {
      * Функция включения тетеринга WiFi
      */
     public static void setWifiTetheringEnabled(Context ctx) {
-        WifiManager wifiManager = (WifiManager) ctx.getSystemService(ctx.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
         Method[] methods = wifiManager.getClass().getDeclaredMethods();
         for (Method method : methods) {

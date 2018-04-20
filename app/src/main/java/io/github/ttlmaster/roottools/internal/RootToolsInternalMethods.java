@@ -90,12 +90,12 @@ public final class RootToolsInternalMethods {
         } finally {
             try {
                 fr.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
 
             try {
                 lnr.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -131,13 +131,12 @@ public final class RootToolsInternalMethods {
 
             RootTools.log(permissions.getOtherPermissions());
 
-            StringBuilder finalPermissions = new StringBuilder();
-            finalPermissions.append(parseSpecialPermissions(rawPermissions));
-            finalPermissions.append(parsePermissions(permissions.getUserPermissions()));
-            finalPermissions.append(parsePermissions(permissions.getGroupPermissions()));
-            finalPermissions.append(parsePermissions(permissions.getOtherPermissions()));
+            String finalPermissions = String.valueOf(parseSpecialPermissions(rawPermissions)) +
+                    parsePermissions(permissions.getUserPermissions()) +
+                    parsePermissions(permissions.getGroupPermissions()) +
+                    parsePermissions(permissions.getOtherPermissions());
 
-            permissions.setPermissions(Integer.parseInt(finalPermissions.toString()));
+            permissions.setPermissions(Integer.parseInt(finalPermissions));
 
             return permissions;
         }
@@ -426,7 +425,7 @@ public final class RootToolsInternalMethods {
             }
 
             RootTools.remount("/system", "ro");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -683,7 +682,7 @@ public final class RootToolsInternalMethods {
                                     RootTools.log("Symlink found.");
                                     symlink_final = symlink[symlink.length - 1];
                                 }
-                            } catch (Exception e) {
+                            } catch (Exception ignored) {
                             }
 
                             try {
@@ -762,12 +761,12 @@ public final class RootToolsInternalMethods {
         } finally {
             try {
                 fr.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
 
             try {
                 lnr.close();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -837,7 +836,7 @@ public final class RootToolsInternalMethods {
             Shell.startRootShell().add(command);
             commandWait(Shell.startRootShell(), command);
 
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         if (InternalVariables.space != null) {

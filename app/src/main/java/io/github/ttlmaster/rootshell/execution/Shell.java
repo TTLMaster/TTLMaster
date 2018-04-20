@@ -25,7 +25,6 @@ import io.github.ttlmaster.rootshell.RootShell;
 import io.github.ttlmaster.rootshell.exceptions.RootDeniedException;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
@@ -193,7 +192,7 @@ public class Shell {
 
                 try {
                     this.proc.destroy();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
 
                 closeQuietly(this.inputStream);
@@ -209,7 +208,7 @@ public class Shell {
 
                 try {
                     this.proc.destroy();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
 
                 closeQuietly(this.inputStream);
@@ -445,12 +444,12 @@ public class Shell {
                 while ((line = reader.readLine()) != null) {
                     stdout.add(line);
                 }
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
             // make sure our stream is closed and resources will be freed
             try {
                 reader.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
 
             process.destroy();
@@ -470,7 +469,7 @@ public class Shell {
                                 version = line;
                                 break;
                             }
-                        } catch (NumberFormatException e) {
+                        } catch (NumberFormatException ignored) {
                         }
                     }
                 }
@@ -523,7 +522,7 @@ public class Shell {
                         } finally {
                             is.close();
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                 }
 
@@ -699,14 +698,14 @@ public class Shell {
 
                             try {
                                 id = Integer.parseInt(fields[1]);
-                            } catch (NumberFormatException e) {
+                            } catch (NumberFormatException ignored) {
                             }
 
                             int exitCode = -1;
 
                             try {
                                 exitCode = Integer.parseInt(fields[2]);
-                            } catch (NumberFormatException e) {
+                            } catch (NumberFormatException ignored) {
                             }
 
                             if (id == totalRead) {
@@ -754,7 +753,7 @@ public class Shell {
                 try {
                     proc.waitFor();
                     proc.destroy();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
 
                 while (read < commands.size()) {

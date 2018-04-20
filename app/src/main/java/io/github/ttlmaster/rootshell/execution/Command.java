@@ -179,16 +179,9 @@ public class Command {
                 //export CLASSPATH=/data/user/0/ch.masshardt.emailnotification/files/anbuild.dex ; app_process /system/bin
                 if (Build.VERSION.SDK_INT > 22) {
                     //dalvikvm command is not working in Android Marshmallow
-                    sb.append(
-                            "export CLASSPATH=" + filePath + "/anbuild.dex;"
-                                    + " app_process /system/bin "
-                                    + command[i]);
+                    sb.append("export CLASSPATH=").append(filePath).append("/anbuild.dex;").append(" app_process /system/bin ").append(command[i]);
                 } else {
-                    sb.append(
-                            "dalvikvm -cp " + filePath + "/anbuild.dex"
-                                    + " com.android.internal.util.WithFramework"
-                                    + " io.github.ttlmaster.RootTools.containers.RootClass "
-                                    + command[i]);
+                    sb.append("dalvikvm -cp ").append(filePath).append("/anbuild.dex").append(" com.android.internal.util.WithFramework").append(" io.github.ttlmaster.RootTools.containers.RootClass ").append(command[i]);
                 }
 
                 sb.append('\n');
@@ -232,18 +225,12 @@ public class Command {
         executing = true;
     }
 
-    public final void terminate()
-    {
-        RootShell.log("Terminating command at users request!");
-        terminated("Terminated at users request!");
-    }
-
     protected final void terminate(String reason) {
         try {
             Shell.closeAll();
             RootShell.log("Terminating all shells.");
             terminated(reason);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -305,7 +292,7 @@ public class Command {
                     synchronized (Command.this) {
                         try {
                             Command.this.wait(timeout);
-                        } catch (InterruptedException e) {
+                        } catch (InterruptedException ignored) {
                         }
                     }
 

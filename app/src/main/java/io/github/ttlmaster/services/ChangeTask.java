@@ -1,7 +1,6 @@
 package io.github.ttlmaster.services;
 
 import android.content.Context;
-import android.support.v4.app.NotificationCompat;
 
 import io.github.ttlmaster.rootshell.exceptions.RootDeniedException;
 

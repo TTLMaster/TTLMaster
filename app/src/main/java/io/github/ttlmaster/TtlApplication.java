@@ -65,15 +65,15 @@ public class TtlApplication extends Application {
         upgradeBoolean(p, "bootup", R.string.prefs_boot_autoStart_key);
         upgradeBoolean(p, "bootup_toast", R.string.prefs_boot_showToasts_key);
         upgradeBoolean(p, "debugm", R.string.prefs_misc_debugMode_key);
-        upgradeStringToInteger(p, "bootup_ttl", R.string.prefs_general_ttlValue_key, R.integer.prefs_general_ttlValue_default);
-        deleteString(p, "onlaunch_ttl");
+        upgradeStringToInteger(p);
+        deleteString(p);
     }
 
-    private void upgradeStringToInteger(SharedPreferences preferences, String oldKey, int newKeyId, int defaultValueId) {
-        if (preferences.contains(oldKey)) {
-            String newKey = getString(newKeyId);
-            String existValueString = preferences.getString(oldKey, "");
-            int newValue = getResources().getInteger(defaultValueId);
+    private void upgradeStringToInteger(SharedPreferences preferences) {
+        if (preferences.contains("bootup_ttl")) {
+            String newKey = getString(R.string.prefs_general_ttlValue_key);
+            String existValueString = preferences.getString("bootup_ttl", "");
+            int newValue = getResources().getInteger(R.integer.prefs_general_ttlValue_default);
             try {
                 newValue = Integer.parseInt(existValueString);
             } catch (NumberFormatException e) {
@@ -81,7 +81,7 @@ public class TtlApplication extends Application {
             }
             preferences.edit()
                     .putInt(newKey, newValue)
-                    .remove(oldKey)
+                    .remove("bootup_ttl")
                     .commit();
         }
     }
@@ -108,9 +108,9 @@ public class TtlApplication extends Application {
         }
     }
 
-    private void deleteString(SharedPreferences preferences, String key) {
-        if (preferences.contains(key)) {
-            preferences.edit().remove(key).commit();
+    private void deleteString(SharedPreferences preferences) {
+        if (preferences.contains("onlaunch_ttl")) {
+            preferences.edit().remove("onlaunch_ttl").commit();
         }
     }
 

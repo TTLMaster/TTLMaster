@@ -120,7 +120,7 @@ class Installer
                             fos.close();
                             context.deleteFile(BOGUS_FILE_NAME);
                         }
-                        catch (IOException e1)
+                        catch (IOException ignored)
                         {
                         }
                     }
@@ -179,7 +179,7 @@ class Installer
                         oss.getFD().sync();
                         oss.close();
                     }
-                    catch (Exception e)
+                    catch (Exception ignored)
                     {
                     }
                 }
@@ -204,7 +204,7 @@ class Installer
                 commandWait(command);
 
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {
             }
         }
@@ -276,7 +276,7 @@ class Installer
             {
                 is.close();
             }
-            catch (IOException e)
+            catch (IOException ignored)
             {
             }
         }

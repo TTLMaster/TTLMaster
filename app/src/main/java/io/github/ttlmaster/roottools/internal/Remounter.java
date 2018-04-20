@@ -127,7 +127,7 @@ public class Remounter
                     commandWait(command);
 
                 }
-                catch (Exception e)
+                catch (Exception ignored)
                 {
                 }
 

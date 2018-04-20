@@ -71,7 +71,7 @@ public class Runner extends Thread
                 commandWait(command);
 
             }
-            catch (Exception e)
+            catch (Exception ignored)
             {
             }
         }

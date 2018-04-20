@@ -1,13 +1,10 @@
 package io.github.ttlmaster.ui;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,9 +17,6 @@ import android.widget.TextView;
 
 import net.orange_box.storebox.StoreBox;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Set;
@@ -30,7 +24,6 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.github.ttlmaster.Android;
 import io.github.ttlmaster.Preferences;
 import io.github.ttlmaster.R;
 import io.github.ttlmaster.TtlApplication;

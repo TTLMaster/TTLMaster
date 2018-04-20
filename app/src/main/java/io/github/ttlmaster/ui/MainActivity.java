@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResult(Void r) {
                 updateTtl();
-                makeSnackbar(R.string.toast_ttl_applied);
             }
 
             @Override

@@ -223,7 +223,7 @@ public class Android {
      * Функция включения тетеринга WiFi
      */
     public static void setWifiTetheringEnabled(Context ctx) {
-        WifiManager wifiManager = (WifiManager) ctx.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) ctx.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
         Method[] methods = wifiManager.getClass().getDeclaredMethods();
         for (Method method : methods) {

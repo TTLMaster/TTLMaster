@@ -1,0 +1,622 @@
+diff --git a/app/src/main/java/io/github/ttlmaster/rootshell/execution/Shell.java b/app/src/main/java/io/github/ttlmaster/rootshell/execution/Shell.java
+index 4ccfcaa..c408d78 100755
+--- a/app/src/main/java/io/github/ttlmaster/rootshell/execution/Shell.java
++++ b/app/src/main/java/io/github/ttlmaster/rootshell/execution/Shell.java
+@@ -43,14 +43,14 @@ import java.util.concurrent.TimeoutException;
+ 
+ public class Shell {
+ 
+-    public static enum ShellType {
++    public enum ShellType {
+         NORMAL,
+         ROOT,
+         CUSTOM
+     }
+ 
+     //this is only used with root shells
+-    public static enum ShellContext {
++    public static ShellContext {
+         NORMAL("normal"), //The normal context...
+         SHELL("u:r:shell:s0"), //unprivileged shell (such as an adb shell)
+         SYSTEM_SERVER("u:r:system_server:s0"), // system_server, u:r:system:s0 on some firmwares
+@@ -65,7 +65,7 @@ public class Shell {
+             this.value = value;
+         }
+ 
+-        public String getValue() {
++        String getValue() {
+             return this.value;
+         }
+ 
+@@ -115,7 +115,7 @@ public class Shell {
+ 
+     public boolean isReading = false;
+ 
+-    public boolean isClosed = false;
++    private boolean isClosed = false;
+ 
+     private int maxCommands = 5000;
+ 
+@@ -228,11 +228,242 @@ public class Shell {
+                  *
+                  * input, and output are runnables that the threads execute.
+                  */
+-                Thread si = new Thread(this.input, "Shell Input");
++                /*
++      Runnable to write commands to the open shell.
++      <p/>
++      When writing commands we stay in a loop and wait for new
++      commands to added to "commands"
++      <p/>
++      The notification of a new command is handled by the method add in this class
++     */
++                Runnable input = new Runnable() {
++                    public void run() {
++
++                        try {
++                            while (true) {
++
++                                synchronized (commands) {
++                                    /**
++                                     * While loop is used in the case that notifyAll is called
++                                     * and there are still no commands to be written, a rare
++                                     * case but one that could happen.
++                                     */
++                                    while (!close && write >= commands.size()) {
++                                        isExecuting = false;
++                                        commands.wait();
++                                    }
++                                }
++
++                                if (write >= maxCommands) {
++
++                                    /**
++                                     * wait for the read to catch up.
++                                     */
++                                    while (read != write) {
++                                        RootShell.log("Waiting for read and write to catch up before cleanup.");
++                                    }
++                                    /**
++                                     * Clean up the commands, stay neat.
++                                     */
++                                    cleanCommands();
++                                }
++
++                                /**
++                                 * Write the new command
++                                 *
++                                 * We write the command followed by the token to indicate
++                                 * the end of the command execution
++                                 */
++                                if (write < commands.size()) {
++                                    isExecuting = true;
++                                    Command cmd = commands.get(write);
++                                    cmd.startExecution();
++                                    RootShell.log("Executing: " + cmd.getCommand() + " with context: " + shellContext);
++
++                                    outputStream.write(cmd.getCommand());
++                                    String line = "\necho " + token + " " + totalExecuted + " $?\n";
++                                    outputStream.write(line);
++                                    outputStream.flush();
++                                    write++;
++                                    ++totalExecuted;
++                                } else if (close) {
++                                    /**
++                                     * close the thread, the shell is closing.
++                                     */
++                                    isExecuting = false;
++                                    outputStream.write("\nexit 0\n");
++                                    outputStream.flush();
++                                    RootShell.log("Closing shell");
++                                    return;
++                                }
++                            }
++                        } catch (IOException e) {
++                            RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
++                        } catch (InterruptedException e) {
++                            RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
++                        } finally {
++                            write = 0;
++                            closeQuietly(outputStream);
++                        }
++                    }
++                };
++                Thread si = new Thread(input, "Shell Input");
+                 si.setPriority(Thread.NORM_PRIORITY);
+                 si.start();
+ 
+-                Thread so = new Thread(this.output, "Shell Output");
++                /*
++      Runnable to monitor the responses from the open shell.
++
++      This include the output and error stream
++     */
++                Runnable output = new Runnable() {
++                    public void run() {
++                        try {
++                            Command command = null;
++
++                            //as long as there is something to read, we will keep reading.
++                            while (!close || inputStream.ready() || read < commands.size()) {
++                                isReading = false;
++                                String outputLine = inputStream.readLine();
++                                isReading = true;
++
++                                /**
++                                 * If we receive EOF then the shell closed?
++                                 */
++                                if (outputLine == null) {
++                                    break;
++                                }
++
++                                if (command == null) {
++                                    if (read >= commands.size()) {
++                                        if (close) {
++                                            break;
++                                        }
++
++                                        continue;
++                                    }
++
++                                    command = commands.get(read);
++                                }
++
++                                /**
++                                 * trying to determine if all commands have been completed.
++                                 *
++                                 * if the token is present then the command has finished execution.
++                                 */
++                                int pos = -1;
++
++                                pos = outputLine.indexOf(token);
++
++                                if (pos == -1) {
++                                    /**
++                                     * send the output for the implementer to process
++                                     */
++                                    command.output(command.id, outputLine);
++                                } else if (pos > 0) {
++                                    /**
++                                     * token is suffix of output, send output part to implementer
++                                     */
++                                    command.output(command.id, outputLine.substring(0, pos));
++                                }
++
++                                if (pos >= 0) {
++                                    outputLine = outputLine.substring(pos);
++                                    String fields[] = outputLine.split(" ");
++
++                                    if (fields.length >= 2 && fields[1] != null) {
++                                        int id = 0;
++
++                                        try {
++                                            id = Integer.parseInt(fields[1]);
++                                        } catch (NumberFormatException ignored) {
++                                        }
++
++                                        int exitCode = -1;
++
++                                        try {
++                                            exitCode = Integer.parseInt(fields[2]);
++                                        } catch (NumberFormatException ignored) {
++                                        }
++
++                                        if (id == totalRead) {
++                                            processErrors(command);
++
++
++                                            /**
++                                             * wait for output to be processed...
++                                             *
++                                             */
++                                            int iterations = 0;
++                                            while (command.totalOutput > command.totalOutputProcessed) {
++
++                                                if (iterations == 0) {
++                                                    iterations++;
++                                                    RootShell.log("Waiting for output to be processed. " + command.totalOutputProcessed + " Of " + command.totalOutput);
++                                                }
++
++                                                try {
++
++                                                    synchronized (this) {
++                                                        this.wait(2000);
++                                                    }
++                                                } catch (Exception e) {
++                                                    RootShell.log(e.getMessage());
++                                                }
++                                            }
++
++                                            RootShell.log("Read all output");
++
++                                            command.setExitCode(exitCode);
++                                            command.commandFinished();
++                                            command = null;
++
++                                            read++;
++                                            totalRead++;
++                                            continue;
++                                        }
++                                    }
++                                }
++                            }
++
++                            try {
++                                proc.waitFor();
++                                proc.destroy();
++                            } catch (Exception ignored) {
++                            }
++
++                            while (read < commands.size()) {
++                                if (command == null) {
++                                    command = commands.get(read);
++                                }
++
++                                if (command.totalOutput < command.totalOutputProcessed) {
++                                    command.terminated("All output not processed!");
++                                    command.terminated("Did you forget the super.commandOutput call or are you waiting on the command object?");
++                                } else {
++                                    command.terminated("Unexpected Termination.");
++                                }
++
++                                command = null;
++                                read++;
++                            }
++
++                            read = 0;
++
++                        } catch (IOException e) {
++                            RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
++                        } finally {
++                            closeQuietly(outputStream);
++                            closeQuietly(errorStream);
++                            closeQuietly(inputStream);
++
++                            RootShell.log("Shell destroyed");
++                            isClosed = true;
++                            isReading = false;
++                        }
++                    }
++                };
++                Thread so = new Thread(output, "Shell Output");
+                 so.setPriority(Thread.NORM_PRIORITY);
+                 so.start();
+             }
+@@ -305,7 +536,7 @@ public class Shell {
+         }
+     }
+ 
+-    public void close() throws IOException {
++    private void close() throws IOException {
+         RootShell.log("Request to close shell!");
+ 
+         int count = 0;
+@@ -376,7 +607,7 @@ public class Shell {
+         Shell.closeCustomShell();
+     }
+ 
+-    public int getCommandQueuePosition(Command cmd) {
++    private int getCommandQueuePosition(Command cmd) {
+         return this.commands.indexOf(cmd);
+     }
+ 
+@@ -454,10 +685,8 @@ public class Shell {
+ 
+             process.destroy();
+ 
+-            List<String> ret = stdout;
+-
+-            if (ret != null) {
+-                for (String line : ret) {
++            if (stdout != null) {
++                for (String line : stdout) {
+                     if (!internal) {
+                         if (line.contains(".")) {
+                             version = line;
+@@ -504,7 +733,7 @@ public class Shell {
+      * @return true if SELinux set to enforcing, or false in the case of
+      * permissive or not present
+      */
+-    public synchronized boolean isSELinuxEnforcing() {
++    private synchronized boolean isSELinuxEnforcing() {
+         if (isSELinuxEnforcing == null) {
+             Boolean enforcing = null;
+ 
+@@ -541,87 +770,7 @@ public class Shell {
+         return isSELinuxEnforcing;
+     }
+ 
+-    /**
+-     * Runnable to write commands to the open shell.
+-     * <p/>
+-     * When writing commands we stay in a loop and wait for new
+-     * commands to added to "commands"
+-     * <p/>
+-     * The notification of a new command is handled by the method add in this class
+-     */
+-    private Runnable input = new Runnable() {
+-        public void run() {
+-
+-            try {
+-                while (true) {
+-
+-                    synchronized (commands) {
+-                        /**
+-                         * While loop is used in the case that notifyAll is called
+-                         * and there are still no commands to be written, a rare
+-                         * case but one that could happen.
+-                         */
+-                        while (!close && write >= commands.size()) {
+-                            isExecuting = false;
+-                            commands.wait();
+-                        }
+-                    }
+-
+-                    if (write >= maxCommands) {
+-
+-                        /**
+-                         * wait for the read to catch up.
+-                         */
+-                        while (read != write) {
+-                            RootShell.log("Waiting for read and write to catch up before cleanup.");
+-                        }
+-                        /**
+-                         * Clean up the commands, stay neat.
+-                         */
+-                        cleanCommands();
+-                    }
+-
+-                    /**
+-                     * Write the new command
+-                     *
+-                     * We write the command followed by the token to indicate
+-                     * the end of the command execution
+-                     */
+-                    if (write < commands.size()) {
+-                        isExecuting = true;
+-                        Command cmd = commands.get(write);
+-                        cmd.startExecution();
+-                        RootShell.log("Executing: " + cmd.getCommand() + " with context: " + shellContext);
+-
+-                        outputStream.write(cmd.getCommand());
+-                        String line = "\necho " + token + " " + totalExecuted + " $?\n";
+-                        outputStream.write(line);
+-                        outputStream.flush();
+-                        write++;
+-                        totalExecuted++;
+-                    } else if (close) {
+-                        /**
+-                         * close the thread, the shell is closing.
+-                         */
+-                        isExecuting = false;
+-                        outputStream.write("\nexit 0\n");
+-                        outputStream.flush();
+-                        RootShell.log("Closing shell");
+-                        return;
+-                    }
+-                }
+-            } catch (IOException e) {
+-                RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
+-            } catch (InterruptedException e) {
+-                RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
+-            } finally {
+-                write = 0;
+-                closeQuietly(outputStream);
+-            }
+-        }
+-    };
+-
+-    protected void notifyThreads() {
++    private void notifyThreads() {
+         Thread t = new Thread() {
+             public void run() {
+                 synchronized (commands) {
+@@ -633,165 +782,7 @@ public class Shell {
+         t.start();
+     }
+ 
+-    /**
+-     * Runnable to monitor the responses from the open shell.
+-     *
+-     * This include the output and error stream
+-     */
+-    private Runnable output = new Runnable() {
+-        public void run() {
+-            try {
+-                Command command = null;
+-
+-                //as long as there is something to read, we will keep reading.
+-                while (!close || inputStream.ready() || read < commands.size()) {
+-                    isReading = false;
+-                    String outputLine = inputStream.readLine();
+-                    isReading = true;
+-
+-                    /**
+-                     * If we receive EOF then the shell closed?
+-                     */
+-                    if (outputLine == null) {
+-                        break;
+-                    }
+-
+-                    if (command == null) {
+-                        if (read >= commands.size()) {
+-                            if (close) {
+-                                break;
+-                            }
+-
+-                            continue;
+-                        }
+-
+-                        command = commands.get(read);
+-                    }
+-
+-                    /**
+-                     * trying to determine if all commands have been completed.
+-                     *
+-                     * if the token is present then the command has finished execution.
+-                     */
+-                    int pos = -1;
+-
+-                    pos = outputLine.indexOf(token);
+-
+-                    if (pos == -1) {
+-                        /**
+-                         * send the output for the implementer to process
+-                         */
+-                        command.output(command.id, outputLine);
+-                    } else if (pos > 0) {
+-                        /**
+-                         * token is suffix of output, send output part to implementer
+-                         */
+-                        command.output(command.id, outputLine.substring(0, pos));
+-                    }
+-
+-                    if (pos >= 0) {
+-                        outputLine = outputLine.substring(pos);
+-                        String fields[] = outputLine.split(" ");
+-
+-                        if (fields.length >= 2 && fields[1] != null) {
+-                            int id = 0;
+-
+-                            try {
+-                                id = Integer.parseInt(fields[1]);
+-                            } catch (NumberFormatException ignored) {
+-                            }
+-
+-                            int exitCode = -1;
+-
+-                            try {
+-                                exitCode = Integer.parseInt(fields[2]);
+-                            } catch (NumberFormatException ignored) {
+-                            }
+-
+-                            if (id == totalRead) {
+-                                processErrors(command);
+-
+-
+-                                /**
+-                                 * wait for output to be processed...
+-                                 *
+-                                 */
+-                                int iterations = 0;
+-                                while (command.totalOutput > command.totalOutputProcessed) {
+-
+-                                    if(iterations == 0)
+-                                    {
+-                                        iterations++;
+-                                        RootShell.log("Waiting for output to be processed. " + command.totalOutputProcessed + " Of " + command.totalOutput);
+-                                    }
+-
+-                                    try {
+-
+-                                        synchronized (this)
+-                                        {
+-                                            this.wait(2000);
+-                                        }
+-                                    } catch (Exception e) {
+-                                        RootShell.log(e.getMessage());
+-                                    }
+-                                }
+-
+-                                RootShell.log("Read all output");
+-
+-                                command.setExitCode(exitCode);
+-                                command.commandFinished();
+-                                command = null;
+-
+-                                read++;
+-                                totalRead++;
+-                                continue;
+-                            }
+-                        }
+-                    }
+-                }
+-
+-                try {
+-                    proc.waitFor();
+-                    proc.destroy();
+-                } catch (Exception ignored) {
+-                }
+-
+-                while (read < commands.size()) {
+-                    if (command == null) {
+-                        command = commands.get(read);
+-                    }
+-
+-                    if(command.totalOutput < command.totalOutputProcessed)
+-                    {
+-                        command.terminated("All output not processed!");
+-                        command.terminated("Did you forget the super.commandOutput call or are you waiting on the command object?");
+-                    }
+-                    else
+-                    {
+-                        command.terminated("Unexpected Termination.");
+-                    }
+-
+-                    command = null;
+-                    read++;
+-                }
+-
+-                read = 0;
+-
+-            } catch (IOException e) {
+-                RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
+-            } finally {
+-                closeQuietly(outputStream);
+-                closeQuietly(errorStream);
+-                closeQuietly(inputStream);
+-
+-                RootShell.log("Shell destroyed");
+-                isClosed = true;
+-                isReading = false;
+-            }
+-        }
+-    };
+-
+-    public void processErrors(Command command) {
++    private void processErrors(Command command) {
+         try {
+             while (errorStream.ready() && command != null) {
+                 String line = errorStream.readLine();
+@@ -893,7 +884,7 @@ public class Shell {
+         return Shell.startCustomShell(shellPath, 0);
+     }
+ 
+-    public static Shell startCustomShell(String shellPath, int timeout) throws IOException, TimeoutException, RootDeniedException {
++    private static Shell startCustomShell(String shellPath, int timeout) throws IOException, TimeoutException, RootDeniedException {
+ 
+         if (Shell.customShell == null) {
+             RootShell.log("Starting Custom Shell!");
+@@ -905,7 +896,7 @@ public class Shell {
+         return Shell.customShell;
+     }
+ 
+-    public static Shell startShell() throws IOException, TimeoutException {
++    private static Shell startShell() throws IOException, TimeoutException {
+         return Shell.startShell(0);
+     }
+ 
+@@ -925,7 +916,7 @@ public class Shell {
+         }
+     }
+ 
+-    public Shell switchRootShellContext(ShellContext shellContext) throws IOException, TimeoutException, RootDeniedException {
++    private Shell switchRootShellContext(ShellContext shellContext) throws IOException, TimeoutException, RootDeniedException {
+         if (this.shellType == ShellType.ROOT) {
+             try {
+                 Shell.closeRootShell();
+@@ -943,11 +934,11 @@ public class Shell {
+         }
+     }
+ 
+-    protected static class Worker extends Thread {
++    static class Worker extends Thread {
+ 
+-        public int exit = -911;
++        int exit = -911;
+ 
+-        public Shell shell;
++        Shell shell;
+ 
+         private Worker(Shell shell) {
+             this.shell = shell;

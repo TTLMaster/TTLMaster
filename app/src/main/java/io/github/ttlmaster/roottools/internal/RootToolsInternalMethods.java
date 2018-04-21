@@ -572,7 +572,7 @@ public final class RootToolsInternalMethods {
         try {
             double multiplier = 1.0;
             char c;
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < spaceStr.length(); i++) {
                 c = spaceStr.charAt(i);
                 if (!Character.isDigit(c) && c != '.') {

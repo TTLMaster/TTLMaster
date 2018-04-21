@@ -82,7 +82,7 @@ public class TtlApplication extends Application {
             preferences.edit()
                     .putInt(newKey, newValue)
                     .remove("bootup_ttl")
-                    .commit();
+                    .apply();
         }
     }
 
@@ -93,7 +93,7 @@ public class TtlApplication extends Application {
             preferences.edit()
                     .putBoolean(key, value)
                     .remove(oldKey)
-                    .commit();
+                    .apply();
         }
     }
 
@@ -104,13 +104,13 @@ public class TtlApplication extends Application {
             preferences.edit()
                     .putString(newKey, value)
                     .remove(oldKey)
-                    .commit();
+                    .apply();
         }
     }
 
     private void deleteString(SharedPreferences preferences) {
         if (preferences.contains("onlaunch_ttl")) {
-            preferences.edit().remove("onlaunch_ttl").commit();
+            preferences.edit().remove("onlaunch_ttl").apply();
         }
     }
 

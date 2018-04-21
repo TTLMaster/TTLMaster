@@ -36,12 +36,12 @@
     <string name="toast_error_refreshing">Error while updating the list</string>
     <string name="toast_fatal_error_applying_ttl">Fatal error while applying rules</string>
     <string name="toast_ttl_applied">Successfully applied</string>
-    <string name="toast_refreshed">Sucessfully updated</string>
+    <string name="toast_refreshed">Successfully updated</string>
     <string name="root_could_not_check">Could not check root rights</string>
     <string name="root_could_not_check_message">Something went wrong, can not continue</string>
     <string name="main_ttl_iptables_workaround">For all packets (iptables-workaround)</string>
     <string name="notification_boot_message">Successfully applied</string>
-    <string name="notification_boot_error_message">Error occured :(</string>
+    <string name="notification_boot_error_message">Error occurred :(</string>
 
 
 </resources>

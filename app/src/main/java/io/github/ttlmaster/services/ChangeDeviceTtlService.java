@@ -8,16 +8,12 @@ import android.support.v4.app.NotificationCompat;
 
 import net.orange_box.storebox.StoreBox;
 
-import io.github.ttlmaster.Android;
 import io.github.ttlmaster.Preferences;
 import io.github.ttlmaster.R;
 import io.github.ttlmaster.ui.MainActivity;
 
 public class ChangeDeviceTtlService extends IntentService {
 
-
-    private final Android android = new Android();
-    private final String TTL = "ttl";
     private final int NOTIFY_OK = 1;
     private final int NOTIFY_ERRR = 2;
 
@@ -60,6 +56,7 @@ public class ChangeDeviceTtlService extends IntentService {
 
         NotificationManager notifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
+        assert notifyMgr != null;
         notifyMgr.notify(id, mBuilder.build());
     }
 

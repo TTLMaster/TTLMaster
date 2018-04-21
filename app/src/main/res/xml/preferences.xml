@@ -89,6 +89,7 @@
             android:key="@string/prefs_misc_restart_key"
             android:title="@string/prefs_misc_restart_title" />
 
+
     </PreferenceCategory>
 
 </PreferenceScreen>

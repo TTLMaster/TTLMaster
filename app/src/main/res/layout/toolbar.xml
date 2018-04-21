@@ -6,4 +6,4 @@
     android:background="@color/primary"
     android:elevation="5dp"
     android:minHeight="?attr/actionBarSize"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark" />
+    android:theme="@style/ThemeOverlay.AppCompat.Light" />

@@ -18,5 +18,8 @@
 -keep,allowshrinking,allowoptimization class io.github.ttlmaster.** {
   *;
 }
+-keep class io.github.ttlmaster.** {
+*;
+}
 -dontwarn net.jodah.typetools.**
 -dontwarn sun.reflect.**

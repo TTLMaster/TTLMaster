@@ -4,7 +4,7 @@
     <string name="prefs_general_title">General</string>
 
     <string name="prefs_general_ignoreIptables_title">Ignore iptables</string>
-    <string name="prefs_general_ignoreIptables_summary">Use old method to set TTL even if iptables --set-ttl is available</string>
+    <string name="prefs_general_ignoreIptables_summary">Use old method to set TTL even if iptables —set-ttl is available</string>
 
     <string name="prefs_general_wifiHotspotOn_title">Turn on portable hotspot</string>
     <string name="prefs_general_wifiHotspotOn_summary">Turn on portable hotspot after changing the TTL (only works on some versions of Android)</string>
@@ -21,7 +21,7 @@
 
 
     <string name="prefs_general_ttlValue_title">Value of TTL</string>
-    <string name="prefs_general_ttlValue_summary">Used if no other method is available (Recommended: 127 -- Windows, 63 -- everything else)</string>
+    <string name="prefs_general_ttlValue_summary">Used if no other method is available (Recommended: 127 — Windows, 63 -- everything else)</string>
 
     <string name="prefs_boot_title">Autostart</string>
 

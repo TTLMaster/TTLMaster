@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep,allowshrinking,allowoptimization class io.github.ttlmaster.** {
+  *;
+}
+-dontwarn net.jodah.typetools.**
+-dontwarn sun.reflect.**

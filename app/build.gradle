@@ -38,6 +38,5 @@ dependencies {
     api 'com.jakewharton:butterknife:8.8.1'
     api 'net.orange-box.storebox:storebox-lib:1.4.0'
     api 'commons-io:commons-io:2.6'
-    api 'ch.acra:acra:4.11'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }

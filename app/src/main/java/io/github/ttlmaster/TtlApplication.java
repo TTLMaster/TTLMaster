@@ -9,17 +9,12 @@ import android.util.Log;
 
 import net.orange_box.storebox.StoreBox;
 
-import org.acra.ACRA;
-import org.acra.annotation.ReportsCrashes;
-
 import java.util.Locale;
 
 /**
  * @author Pavel Savinov (swapii@gmail.com)
  */
-@ReportsCrashes(
-        mailTo = "ttlbugs@2-47.ru"
-)
+
 public class TtlApplication extends Application {
 
     private Preferences preferences;
@@ -118,6 +113,5 @@ public class TtlApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
 
-        ACRA.init(this);
     }
 }

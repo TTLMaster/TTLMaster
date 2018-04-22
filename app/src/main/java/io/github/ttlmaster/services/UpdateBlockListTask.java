@@ -14,7 +14,6 @@ import io.github.ttlmaster.TtlApplication;
 
 public class UpdateBlockListTask extends Task<String,Set<String>> {
 
-    @Override
     Set<String> action(String p) {
 
         Set<String> out = new HashSet<>();
@@ -23,7 +22,7 @@ public class UpdateBlockListTask extends Task<String,Set<String>> {
         try {
             url = new URL(p);
         } catch (MalformedURLException e) {
-            TtlApplication.Loge(e.toString());
+            TtlApplication.loge(e.toString());
             setException(e);
             return null;
         }
@@ -43,25 +42,25 @@ public class UpdateBlockListTask extends Task<String,Set<String>> {
                             InetAddress[] addresses = InetAddress.getAllByName(inputLine);
                             for (InetAddress addr : addresses) {
                                 out.add(addr.getHostAddress());
-                                TtlApplication.Logi(String.format("%s -> %s", inputLine, addr.getHostAddress()));
+                                TtlApplication.logi(String.format("%s -> %s", inputLine, addr.getHostAddress()));
                             }
                         } catch (UnknownHostException e) {
-                            TtlApplication.Logi(e.toString());
+                            TtlApplication.logi(e.toString());
                         }
                     }else {
-                        TtlApplication.Logi(String.format("Adding usual addr %s", inputLine));
+                        TtlApplication.logi(String.format("Adding usual addr %s", inputLine));
                         out.add(inputLine);
                     }
                 }
             } catch (IOException e) {
-                TtlApplication.Loge(e.toString());
+                TtlApplication.loge(e.toString());
                 setException(e);
             } finally {
                 in.close();
             }
 
         } catch (IOException e) {
-            TtlApplication.Logi(e.toString());
+            TtlApplication.logi(e.toString());
             setException(e);
             return null;
 

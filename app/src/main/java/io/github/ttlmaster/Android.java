@@ -202,7 +202,7 @@ public class Android {
                 command = new Command(0, String.format(cmd, iface)) {
                     @Override
                     public void commandOutput(int id, String line) {
-                        TtlApplication.Logi(line);
+                        TtlApplication.logi(line);
                         //MUST call the super method when overriding!
                         super.commandOutput(id, line);
                     }
@@ -230,7 +230,7 @@ public class Android {
                 try {
                     method.invoke(wifiManager, null, true);
                 } catch (Exception e) {
-                    TtlApplication.Logi(e.toString());
+                    TtlApplication.logi(e.toString());
                 }
                 break;
             }

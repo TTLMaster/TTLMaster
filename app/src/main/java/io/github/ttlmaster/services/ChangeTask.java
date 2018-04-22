@@ -47,7 +47,7 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
 
             Android.disableTetheringNotification();
 
-            TtlApplication.Logi(String.format("COCO %b", Android.hasIptables()));
+            TtlApplication.logi(String.format("COCO %b", Android.hasIptables()));
             if (!preferences.ignoreIptables() && Android.hasIptables()) {
                 if (Android.canForceTtl()) {
                     Android.forceSetTtl();
@@ -79,7 +79,7 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
             }
 
         } catch (IOException | InterruptedException e) {
-            TtlApplication.Loge(e.toString());
+            TtlApplication.loge(e.toString());
             setException(e);
             return null;
         } catch (RootDeniedException e) {
@@ -96,7 +96,7 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
     }
 
     public static class ChangeTaskParameters {
-        final Preferences preferences;
+        private final Preferences preferences;
         final Context context;
 
         public ChangeTaskParameters(Preferences preferences, Context context) {

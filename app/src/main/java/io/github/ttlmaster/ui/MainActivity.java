@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
-                TtlApplication.Loge(e.toString());
+                TtlApplication.loge(e.toString());
                 swipeRefreshLayout.setRefreshing(false);
             }
         }).runInBackground(new Object());

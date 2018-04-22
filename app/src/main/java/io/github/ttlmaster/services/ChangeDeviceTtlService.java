@@ -17,7 +17,6 @@ public class ChangeDeviceTtlService extends IntentService {
 
 
     private final Android android = new Android();
-    private final String TTL = "ttl";
     private final int NOTIFY_OK = 1;
     private final int NOTIFY_ERRR = 2;
 

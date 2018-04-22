@@ -20,11 +20,11 @@ public class TtlApplication extends Application {
     private Preferences preferences;
     public final static String TAG = "TTL";
 
-    public static void Logi(String msg) {
+    public static void logi(String msg) {
         Log.i(TAG, msg);
     }
 
-    public static void Loge(String msg) {
+    public static void loge(String msg) {
         Log.e(TAG, msg);
     }
 
@@ -72,7 +72,7 @@ public class TtlApplication extends Application {
             try {
                 newValue = Integer.parseInt(existValueString);
             } catch (NumberFormatException e) {
-                TtlApplication.Loge(e.toString());
+                TtlApplication.loge(e.toString());
             }
             preferences.edit()
                     .putInt(newKey, newValue)

@@ -13,12 +13,11 @@ import io.github.ttlmaster.TtlApplication;
  */
 public class CheckDeviceTask extends Task<Void,CheckDeviceTask.DeviceCheckResult>{
 
-    @Override
     DeviceCheckResult action(Void p) {
         try {
             return new DeviceCheckResult(Android.hasRoot(), Android.hasIptables());
         } catch (IOException | InterruptedException e) {
-            TtlApplication.Loge(e.toString());
+            TtlApplication.loge(e.toString());
             return new DeviceCheckResult(false, false);
         } catch (RootDeniedException e) {
             e.printStackTrace();
@@ -32,7 +31,7 @@ public class CheckDeviceTask extends Task<Void,CheckDeviceTask.DeviceCheckResult
         public boolean hasRoot;
         public boolean hasIptables;
 
-        public DeviceCheckResult(boolean hasRoot, boolean hasIptables) {
+        private DeviceCheckResult(boolean hasRoot, boolean hasIptables) {
             this.hasRoot = hasRoot;
             this.hasIptables = hasIptables;
         }

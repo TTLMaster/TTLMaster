@@ -15,7 +15,7 @@ import io.github.ttlmaster.R;
 @SuppressWarnings("ALL")
 public class SettingsActivity extends PreferenceActivity {
 
-    private PendingIntent intent;
+    public PendingIntent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

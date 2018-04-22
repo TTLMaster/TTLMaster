@@ -23,7 +23,6 @@ import static io.github.ttlmaster.roottools.RootTools.checkUtil;
  */
 public class Android {
 
-    private static ShellExecutor executor = new ShellExecutor();
     private static String[] INTERFACE_MASKS = new String[] {"rmnet+", "rev_rmnet+"};
 
     public static void enabledAirplaneMode() throws IOException, InterruptedException, TimeoutException, RootDeniedException {

@@ -47,7 +47,7 @@ public class ChangeDeviceTtlService extends IntentService {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ChangeDeviceTtlService.this).
                 setSmallIcon(R.drawable.ic_notify).
                 setAutoCancel(true).
-                setContentTitle("TTL Master FATAL!").
+                setContentTitle("TTL Master info").
                 setContentText(getResources().getString(contentRes));
 
         Intent resultIntent = new Intent(this, MainActivity.class);

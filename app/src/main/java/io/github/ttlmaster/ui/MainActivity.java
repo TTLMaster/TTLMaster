@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Настраиваем цветовую тему значка обновления:
         swipeRefreshLayout.setColorSchemeResources(
-                R.color.light_blue,
-                R.color.middle_blue,
-                R.color.deep_blue);
+                R.color.light_teal,
+                R.color.middle_teal,
+                R.color.deep_teal);
 
         new CheckDeviceTask().attach(new Task.OnResult<CheckDeviceTask.DeviceCheckResult>() {
             @Override

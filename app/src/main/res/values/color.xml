@@ -7,9 +7,9 @@
 
     <color name="colorNavBar">@color/primaryDark</color>
 
-    <color name="light_blue">#00aeed</color>
-    <color name="middle_blue">#6495ED</color>
-    <color name="deep_blue">#0000FF</color>
+    <color name="light_teal">@color/primary</color>
+    <color name="middle_teal">@color/primary</color>
+    <color name="deep_teal">@color/primaryDark</color>
 
     <color name="light_gray">#EDEDED</color>
 

@@ -8,12 +8,16 @@ import android.support.v4.app.NotificationCompat;
 
 import net.orange_box.storebox.StoreBox;
 
+import io.github.ttlmaster.Android;
 import io.github.ttlmaster.Preferences;
 import io.github.ttlmaster.R;
 import io.github.ttlmaster.ui.MainActivity;
 
 public class ChangeDeviceTtlService extends IntentService {
 
+
+    private final Android android = new Android();
+    private final String TTL = "ttl";
     private final int NOTIFY_OK = 1;
     private final int NOTIFY_ERRR = 2;
 
@@ -30,24 +34,24 @@ public class ChangeDeviceTtlService extends IntentService {
             @Override
             public void onResult(Void r) {
                 if (preferences.showToastsOnBoot()) {
-                    fireNotification(NOTIFY_OK, R.string.notification_boot_message);
+                    fireNotification(NOTIFY_OK, R.string.app_name, R.string.notification_boot_message);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 if (preferences.showToastsOnBoot()) {
-                    fireNotification(NOTIFY_ERRR, R.string.notification_boot_error_message);
+                    fireNotification(NOTIFY_ERRR, R.string.app_name, R.string.notification_boot_error_message);
                 }
             }
         }).runInForeground(new ChangeTask.ChangeTaskParameters(preferences, this));
     }
 
-    private void fireNotification(int id, int contentRes) {
+    private void fireNotification(int id, int titleRes, int contentRes) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ChangeDeviceTtlService.this).
                 setSmallIcon(R.drawable.ic_notify).
                 setAutoCancel(true).
-                setContentTitle("TTL Master info").
+                setContentTitle(getResources().getString(titleRes)).
                 setContentText(getResources().getString(contentRes));
 
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -56,7 +60,6 @@ public class ChangeDeviceTtlService extends IntentService {
 
         NotificationManager notifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        assert notifyMgr != null;
         notifyMgr.notify(id, mBuilder.build());
     }
 

@@ -11,7 +11,7 @@
     <string name="prefs_general_reconnectType_airplane" translatable="false">airplane</string>
     <string name="prefs_general_reconnectType_mobile" translatable="false">mobile</string>
     <string name="prefs_general_reconnectType_off" translatable="false">off</string>
-    <string name="prefs_general_reconnectType_default" translatable="false">@string/prefs_general_reconnectType_off</string>
+    <string name="prefs_general_reconnectType_default" translatable="false">@string/prefs_general_reconnectType_mobile</string>
     <string-array name="prefs_general_reconnectType_values" translatable="false">
         <item>@string/prefs_general_reconnectType_airplane</item>
         <item>@string/prefs_general_reconnectType_mobile</item>

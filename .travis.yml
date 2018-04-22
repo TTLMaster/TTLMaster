@@ -35,5 +35,4 @@ install:
     - chmod +x ./gradlew; ls -l gradlew; ./gradlew wrapper -v
 
 script:
-    - make -C external NDK=/tmp/android-ndk-r10e
     - ./gradlew clean assembleDebug

@@ -1,0 +1,39 @@
+language: android
+jdk:
+    - oraclejdk8
+sudo: false
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-27.0.3
+    - android-27
+    - add-on
+    - extra
+  licenses:
+    - '.+'
+addons:
+  apt:
+    packages:
+    - libstdc++6:i386
+    - lib32z1
+    - build-essential
+    - autoconf
+    - automake
+    - libtool
+    - expect
+    - p7zip-full	
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+
+install:
+  # Ensure Gradle wrapper is executable, download wrapper and show version
+    - chmod +x ./gradlew; ls -l gradlew; ./gradlew wrapper -v
+
+script:
+    - make -C external NDK=/tmp/android-ndk-r10e
+    - ./gradlew clean assembleDebug

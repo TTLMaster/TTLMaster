@@ -1,18 +1,18 @@
-/* 
+/*
  * This file is part of the RootShell Project: http://code.google.com/p/RootShell/
- *  
+ *
  * Copyright (c) 2014 Stephen Erickson, Chris Ravenscroft
- *  
+ *
  * This code is dual-licensed under the terms of the Apache License Version 2.0 and
  * the terms of the General Public License (GPL) Version 2.
  * You may use this code according to either of these licenses as is most appropriate
  * for your project on a case-by-case basis.
- * 
+ *
  * The terms of each license can be found in the root directory of this project's repository as well as at:
- * 
+ *
  * * http://www.apache.org/licenses/LICENSE-2.0
  * * http://www.gnu.org/licenses/gpl-2.0.txt
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under these Licenses is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,11 +22,11 @@
 package io.github.ttlmaster.rootshell;
 
 
-import android.util.Log;
-
 import io.github.ttlmaster.rootshell.exceptions.RootDeniedException;
 import io.github.ttlmaster.rootshell.execution.Command;
 import io.github.ttlmaster.rootshell.execution.Shell;
+
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class RootShell {
 
     public static boolean debugMode = false;
 
-    public static final String version = "RootShell v1.3";
+    public static final String version = "RootShell v1.6";
 
     /**
      * Setting this to false will disable the handler that is used
@@ -141,6 +141,7 @@ public class RootShell {
             commandWait(RootShell.getShell(false), command);
 
         } catch (Exception e) {
+            RootShell.log("Exception: " + e);
             return false;
         }
 
@@ -152,11 +153,22 @@ public class RootShell {
 
         result.clear();
 
+        command = new Command(0, false, cmdToExecute + file) {
+            @Override
+            public void commandOutput(int id, String line) {
+                RootShell.log(line);
+                result.add(line);
+
+                super.commandOutput(id, line);
+            }
+        };
+
         try {
             RootShell.getShell(true).add(command);
             commandWait(RootShell.getShell(true), command);
 
         } catch (Exception e) {
+            RootShell.log("Exception: " + e);
             return false;
         }
 
@@ -176,24 +188,29 @@ public class RootShell {
 
     /**
      * @param binaryName String that represent the binary to find.
+     * @param singlePath boolean that represents whether to return a single path or multiple.
+     *
      * @return <code>List<String></code> containing the locations the binary was found at.
      */
-    public static List<String> findBinary(final String binaryName) {
-        return findBinary(binaryName, null);
+    public static List<String> findBinary(String binaryName, boolean singlePath) {
+        return findBinary(binaryName, null, singlePath);
     }
 
     /**
-     * @param binaryName  <code>String</code> that represent the binary to find.
+     * @param binaryName <code>String</code> that represent the binary to find.
      * @param searchPaths <code>List<String></code> which contains the paths to search for this binary in.
+     * @param singlePath boolean that represents whether to return a single path or multiple.
+     *
      * @return <code>List<String></code> containing the locations the binary was found at.
      */
-    public static List<String> findBinary(final String binaryName, List<String> searchPaths) {
+    public static List<String> findBinary(final String binaryName, List<String> searchPaths, boolean singlePath) {
 
         final List<String> foundPaths = new ArrayList<String>();
 
         boolean found = false;
 
-        if (searchPaths == null) {
+        if(searchPaths == null)
+        {
             searchPaths = RootShell.getPath();
         }
 
@@ -203,7 +220,8 @@ public class RootShell {
         try {
             for (String path : searchPaths) {
 
-                if (!path.endsWith("/")) {
+                if(!path.endsWith("/"))
+                {
                     path += "/";
                 }
 
@@ -224,12 +242,16 @@ public class RootShell {
                     }
                 };
 
-                RootShell.getShell(false).add(cc);
+                cc = RootShell.getShell(false).add(cc);
                 commandWait(RootShell.getShell(false), cc);
 
+                if(foundPaths.size() > 0 && singlePath) {
+                    break;
+                }
             }
 
             found = !foundPaths.isEmpty();
+
         } catch (Exception e) {
             RootShell.log(binaryName + " was not found, more information MAY be available with Debugging on.");
         }
@@ -239,13 +261,19 @@ public class RootShell {
 
             for (String path : searchPaths) {
 
-                if (!path.endsWith("/")) {
+                if(!path.endsWith("/"))
+                {
                     path += "/";
                 }
 
                 if (RootShell.exists(path + binaryName)) {
                     RootShell.log(binaryName + " was found here: " + path);
                     foundPaths.add(path);
+
+                    if(foundPaths.size() > 0 && singlePath) {
+                        break;
+                    }
+
                 } else {
                     RootShell.log(binaryName + " was NOT found here: " + path);
                 }
@@ -264,10 +292,11 @@ public class RootShell {
      * @param shellPath a <code>String</code> to Indicate the path to the shell that you want to open.
      * @param timeout   an <code>int</code> to Indicate the length of time before giving up on opening a shell.
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
-    public static Shell getCustomShell(String shellPath, int timeout) throws IOException, TimeoutException, RootDeniedException {
+    public static Shell getCustomShell(String shellPath, int timeout) throws IOException, TimeoutException, RootDeniedException
+    {
         return RootShell.getCustomShell(shellPath, timeout);
     }
 
@@ -376,8 +405,9 @@ public class RootShell {
                 }
             };
 
-            Shell.startRootShell().add(command);
-            commandWait(Shell.startRootShell(), command);
+            Shell shell = Shell.startRootShell(timeout, retries);
+            shell.add(command);
+            commandWait(shell, command);
 
             //parse the userid
             for (String userid : ID) {
@@ -399,15 +429,28 @@ public class RootShell {
     /**
      * @return <code>true</code> if BusyBox was found.
      */
-    public static boolean isBusyboxAvailable() {
-        return (findBinary("busybox")).size() > 0;
+    public static boolean isBusyboxAvailable()
+    {
+        return isBusyboxAvailable(false);
+    }
+
+    /**
+     * @return <code>true</code> if BusyBox or Toybox was found.
+     */
+    public static boolean isBusyboxAvailable(boolean includeToybox)
+    {
+        if(includeToybox) {
+            return (findBinary("busybox", true)).size() > 0 || (findBinary("toybox", true)).size() > 0;
+        } else {
+            return (findBinary("busybox", true)).size() > 0;
+        }
     }
 
     /**
      * @return <code>true</code> if su was found.
      */
     public static boolean isRootAvailable() {
-        return (findBinary("su")).size() > 0;
+        return (findBinary("su", true)).size() > 0;
     }
 
     /**

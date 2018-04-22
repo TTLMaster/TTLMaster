@@ -1,18 +1,18 @@
-/* 
+/*
  * This file is part of the RootShell Project: http://code.google.com/p/RootShell/
- *  
+ *
  * Copyright (c) 2014 Stephen Erickson, Chris Ravenscroft
- *  
+ *
  * This code is dual-licensed under the terms of the Apache License Version 2.0 and
  * the terms of the General Public License (GPL) Version 2.
  * You may use this code according to either of these licenses as is most appropriate
  * for your project on a case-by-case basis.
- * 
+ *
  * The terms of each license can be found in the root directory of this project's repository as well as at:
- * 
+ *
  * * http://www.apache.org/licenses/LICENSE-2.0
  * * http://www.gnu.org/licenses/gpl-2.0.txt
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under these Licenses is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,14 +22,14 @@
 
 package io.github.ttlmaster.rootshell.execution;
 
+import io.github.ttlmaster.rootshell.RootShell;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-
-import io.github.ttlmaster.rootshell.RootShell;
 
 import java.io.IOException;
 
@@ -46,6 +46,9 @@ public class Command {
     ExecutionMonitor executionMonitor = null;
 
     Handler mHandler = null;
+
+    //Has this command already been used?
+    protected boolean used = false;
 
     boolean executing = false;
 
@@ -160,8 +163,8 @@ public class Command {
     }
 
     protected final void finishCommand() {
-        executing = false;
-        finished = true;
+        this.executing = false;
+        this.finished = true;
         this.notifyAll();
     }
 
@@ -171,6 +174,7 @@ public class Command {
 
         if(javaCommand) {
             String filePath = context.getFilesDir().getPath();
+
             for (int i = 0; i < command.length; i++) {
                 /*
                  * TODO Make withFramework optional for applications
@@ -179,9 +183,16 @@ public class Command {
                 //export CLASSPATH=/data/user/0/ch.masshardt.emailnotification/files/anbuild.dex ; app_process /system/bin
                 if (Build.VERSION.SDK_INT > 22) {
                     //dalvikvm command is not working in Android Marshmallow
-                    sb.append("export CLASSPATH=").append(filePath).append("/anbuild.dex;").append(" app_process /system/bin ").append(command[i]);
+                    sb.append(
+                            "export CLASSPATH=" + filePath + "/anbuild.dex;"
+                                    + " app_process /system/bin "
+                                    + command[i]);
                 } else {
-                    sb.append("dalvikvm -cp ").append(filePath).append("/anbuild.dex").append(" com.android.internal.util.WithFramework").append(" io.github.ttlmaster.RootTools.containers.RootClass ").append(command[i]);
+                    sb.append(
+                            "dalvikvm -cp " + filePath + "/anbuild.dex"
+                                    + " com.android.internal.util.WithFramework"
+                                    + " io.github.ttlmaster.roottools.containers.RootClass "
+                                    + command[i]);
                 }
 
                 sb.append('\n');
@@ -193,6 +204,7 @@ public class Command {
                 sb.append('\n');
             }
         }
+
         return sb.toString();
     }
 
@@ -219,10 +231,17 @@ public class Command {
     }
 
     protected final void startExecution() {
-        executionMonitor = new ExecutionMonitor();
+        this.used = true;
+        executionMonitor = new ExecutionMonitor(this);
         executionMonitor.setPriority(Thread.MIN_PRIORITY);
         executionMonitor.start();
         executing = true;
+    }
+
+    public final void terminate()
+    {
+        RootShell.log("Terminating command at users request!");
+        terminated("Terminated at users request!");
     }
 
     protected final void terminate(String reason) {
@@ -230,7 +249,7 @@ public class Command {
             Shell.closeAll();
             RootShell.log("Terminating all shells.");
             terminated(reason);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
         }
     }
 
@@ -270,34 +289,28 @@ public class Command {
         }
     }
 
-    public final void resetCommand()
-    {
-        this.finished = false;
-        this.totalOutput = 0;
-        this.totalOutputProcessed = 0;
-        this.executing = false;
-        this.terminated = false;
-        this.exitCode = -1;
-    }
-
     private class ExecutionMonitor extends Thread {
+
+        private final Command command;
+
+        public ExecutionMonitor(Command command) {
+            this.command = command;
+        }
 
         public void run() {
 
-            if(timeout > 0)
+            if(command.timeout > 0)
             {
-                //We need to kill the command after the given timeout
-                while (!finished) {
-
-                    synchronized (Command.this) {
-                        try {
-                            Command.this.wait(timeout);
-                        } catch (InterruptedException ignored) {
-                        }
+                synchronized (command) {
+                    try {
+                        RootShell.log("Command " + command.id + " is waiting for: " + command.timeout);
+                        command.wait(command.timeout);
+                    } catch (InterruptedException e) {
+                        RootShell.log("Exception: " + e);
                     }
 
-                    if (!finished) {
-                        RootShell.log("Timeout Exception has occurred.");
+                    if (!command.isFinished()) {
+                        RootShell.log("Timeout Exception has occurred for command: " + command.id + ".");
                         terminate("Timeout Exception");
                     }
                 }

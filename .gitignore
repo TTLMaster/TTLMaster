@@ -5,3 +5,6 @@ build/*
 local.properties
 *.iml
 *.apk
+app/release/*
+app/beta/*
+app/debug/*

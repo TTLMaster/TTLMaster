@@ -1,18 +1,18 @@
-/* 
- * This file is part of the RootTools Project: http://code.google.com/p/roottools/
- *  
+/*
+ * This file is part of the RootTools Project: http://code.google.com/p/RootTools/
+ *
  * Copyright (c) 2012 Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks
- *  
+ *
  * This code is dual-licensed under the terms of the Apache License Version 2.0 and
  * the terms of the General Public License (GPL) Version 2.
  * You may use this code according to either of these licenses as is most appropriate
  * for your project on a case-by-case basis.
- * 
+ *
  * The terms of each license can be found in the root directory of this project's repository as well as at:
- * 
+ *
  * * http://www.apache.org/licenses/LICENSE-2.0
  * * http://www.gnu.org/licenses/gpl-2.0.txt
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under these Licenses is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import io.github.ttlmaster.roottools.Constants;
 import io.github.ttlmaster.rootshell.RootShell;
 import io.github.ttlmaster.rootshell.exceptions.RootDeniedException;
 import io.github.ttlmaster.rootshell.execution.Command;
@@ -229,10 +228,12 @@ public final class RootTools {
 
     /**
      * @param binaryName String that represent the binary to find.
+     * @param singlePath boolean that represents whether to return a single path or multiple.
+     *
      * @return <code>List<String></code> containing the paths the binary was found at.
      */
-    public static List<String> findBinary(String binaryName) {
-        return RootShell.findBinary(binaryName);
+    public static List<String> findBinary(String binaryName, boolean singlePath) {
+        return RootShell.findBinary(binaryName, singlePath);
     }
 
     /**
@@ -278,7 +279,7 @@ public final class RootTools {
      * @param shellPath a <code>String</code> to Indicate the path to the shell that you want to open.
      * @param timeout   an <code>int</code> to Indicate the length of time before giving up on opening a shell.
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
     public static Shell getCustomShell(String shellPath, int timeout) throws IOException, TimeoutException, RootDeniedException {
@@ -291,7 +292,7 @@ public final class RootTools {
      *
      * @param shellPath a <code>String</code> to Indicate the path to the shell that you want to open.
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
     public static Shell getCustomShell(String shellPath) throws IOException, TimeoutException, RootDeniedException {
@@ -362,7 +363,7 @@ public final class RootTools {
      * @param shellContext the context to execute the shell with
      * @param retry        a <code>int</code> to indicate how many times the ROOT shell should try to open with root priviliges...
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
     public static Shell getShell(boolean root, int timeout, Shell.ShellContext shellContext, int retry) throws IOException, TimeoutException, RootDeniedException {
@@ -377,7 +378,7 @@ public final class RootTools {
      * @param timeout      an <code>int</code> to Indicate the length of time to wait before giving up on opening a shell.
      * @param shellContext the context to execute the shell with
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
     public static Shell getShell(boolean root, int timeout, Shell.ShellContext shellContext) throws IOException, TimeoutException, RootDeniedException {
@@ -391,7 +392,7 @@ public final class RootTools {
      * @param root         a <code>boolean</code> to Indicate whether or not you want to open a root shell or a standard shell
      * @param shellContext the context to execute the shell with
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
     public static Shell getShell(boolean root, Shell.ShellContext shellContext) throws IOException, TimeoutException, RootDeniedException {
@@ -405,7 +406,7 @@ public final class RootTools {
      * @param root    a <code>boolean</code> to Indicate whether or not you want to open a root shell or a standard shell
      * @param timeout an <code>int</code> to Indicate the length of time to wait before giving up on opening a shell.
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
     public static Shell getShell(boolean root, int timeout) throws IOException, TimeoutException, RootDeniedException {
@@ -418,7 +419,7 @@ public final class RootTools {
      *
      * @param root a <code>boolean</code> to Indicate whether or not you want to open a root shell or a standard shell
      * @throws TimeoutException
-     * @throws io.github.ttlmaster.RootShell.exceptions.RootDeniedException
+     * @throws io.github.ttlmaster.rootshell.exceptions.RootDeniedException
      * @throws IOException
      */
     public static Shell getShell(boolean root) throws IOException, TimeoutException, RootDeniedException {
@@ -721,6 +722,7 @@ public final class RootTools {
      *
      * @param shell   The shell to execute the command on, this can be a root shell or a standard shell.
      * @param command The command to execute in the shell
+     *
      * @throws IOException
      */
     public static void runShellCommand(Shell shell, Command command) throws IOException {

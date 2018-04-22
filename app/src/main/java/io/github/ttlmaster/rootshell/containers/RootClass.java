@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/* #ANNOTATIONS @SupportedAnnotationTypes("io.github.ttlmaster.RootShell.containers.RootClass.Candidate") */
+/* #ANNOTATIONS @SupportedAnnotationTypes("io.github.ttlmaster.rootshell.containers.RootClass.Candidate") */
 /* #ANNOTATIONS @SupportedSourceVersion(SourceVersion.RELEASE_6) */
 public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
 
@@ -117,7 +117,7 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
                             " " + rc1 + " " + rc2 + " " + rc3 + " " + rc4 + " " + rc5
                     );
                     for (File file : classFiles) {
-                        sb.append(" ").append(file.getPath());
+                        sb.append(" " + file.getPath());
                     }
                     cmd = new String[]{
                             "cmd", "/C",
@@ -144,12 +144,12 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
                 jarBuilder.directory(builtPath);
                 try {
                     jarBuilder.start().waitFor();
-                } catch (IOException ignored) {
-                } catch (InterruptedException ignored) {
+                } catch (IOException e) {
+                } catch (InterruptedException e) {
                 }
 
                 String strRawFolder = "res" + File.separator + "raw";
-                builtPath.toString().startsWith("build");
+                if (builtPath.toString().startsWith("build")); //Check if running in AndroidStudio
                 strRawFolder = "src" + File.separator + "main" + File.separator + "res" + File.separator + "raw";
 
                 File rawFolder = new File(strRawFolder);
@@ -175,8 +175,8 @@ public class RootClass /* #ANNOTATIONS extends AbstractProcessor */ {
                 ProcessBuilder dexBuilder = new ProcessBuilder(cmd);
                 try {
                     dexBuilder.start().waitFor();
-                } catch (IOException ignored) {
-                } catch (InterruptedException ignored) {
+                } catch (IOException e) {
+                } catch (InterruptedException e) {
                 }
             }
             System.out.println("All done. ::: anbuild.dex should now be in your project's src" + File.separator + "main" + File.separator + "res" + File.separator + "raw" + File.separator + " folder :::");

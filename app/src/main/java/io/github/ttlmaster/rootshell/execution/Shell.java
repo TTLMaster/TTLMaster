@@ -1,18 +1,18 @@
-/* 
+/*
  * This file is part of the RootShell Project: http://code.google.com/p/RootShell/
- *  
+ *
  * Copyright (c) 2014 Stephen Erickson, Chris Ravenscroft
- *  
+ *
  * This code is dual-licensed under the terms of the Apache License Version 2.0 and
  * the terms of the General Public License (GPL) Version 2.
  * You may use this code according to either of these licenses as is most appropriate
  * for your project on a case-by-case basis.
- * 
+ *
  * The terms of each license can be found in the root directory of this project's repository as well as at:
- * 
+ *
  * * http://www.apache.org/licenses/LICENSE-2.0
  * * http://www.gnu.org/licenses/gpl-2.0.txt
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under these Licenses is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import io.github.ttlmaster.rootshell.RootShell;
 import io.github.ttlmaster.rootshell.exceptions.RootDeniedException;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
@@ -57,7 +58,8 @@ public class Shell {
         SYSTEM_APP("u:r:system_app:s0"), // System apps
         PLATFORM_APP("u:r:platform_app:s0"), // System apps
         UNTRUSTED_APP("u:r:untrusted_app:s0"), // Third-party apps
-        RECOVERY("u:r:recovery:s0"); //Recovery
+        RECOVERY("u:r:recovery:s0"), //Recovery
+        SUPERSU("u:r:supersu:s0"); //SUPER SU default
 
         private String value;
 
@@ -192,7 +194,7 @@ public class Shell {
 
                 try {
                     this.proc.destroy();
-                } catch (Exception ignored) {
+                } catch (Exception e) {
                 }
 
                 closeQuietly(this.inputStream);
@@ -208,7 +210,7 @@ public class Shell {
 
                 try {
                     this.proc.destroy();
-                } catch (Exception ignored) {
+                } catch (Exception e) {
                 }
 
                 closeQuietly(this.inputStream);
@@ -250,12 +252,16 @@ public class Shell {
                     "Unable to add commands to a closed shell");
         }
 
+        if(command.used) {
+            //The command has been used, don't re-use...
+            throw new IllegalStateException(
+                    "This command has already been executed. (Don't re-use command instances.)");
+        }
+
         while (this.isCleaning) {
             //Don't add commands while cleaning
             ;
         }
-
-        command.resetCommand();
 
         this.commands.add(command);
 
@@ -444,12 +450,12 @@ public class Shell {
                 while ((line = reader.readLine()) != null) {
                     stdout.add(line);
                 }
-            } catch (IOException ignored) {
+            } catch (IOException e) {
             }
             // make sure our stream is closed and resources will be freed
             try {
                 reader.close();
-            } catch (IOException ignored) {
+            } catch (IOException e) {
             }
 
             process.destroy();
@@ -469,7 +475,7 @@ public class Shell {
                                 version = line;
                                 break;
                             }
-                        } catch (NumberFormatException ignored) {
+                        } catch (NumberFormatException e) {
                         }
                     }
                 }
@@ -522,7 +528,7 @@ public class Shell {
                         } finally {
                             is.close();
                         }
-                    } catch (Exception ignored) {
+                    } catch (Exception e) {
                     }
                 }
 
@@ -590,15 +596,24 @@ public class Shell {
                     if (write < commands.size()) {
                         isExecuting = true;
                         Command cmd = commands.get(write);
-                        cmd.startExecution();
-                        RootShell.log("Executing: " + cmd.getCommand() + " with context: " + shellContext);
 
-                        outputStream.write(cmd.getCommand());
-                        String line = "\necho " + token + " " + totalExecuted + " $?\n";
-                        outputStream.write(line);
-                        outputStream.flush();
-                        write++;
-                        totalExecuted++;
+                        if(null != cmd)
+                        {
+                            cmd.startExecution();
+                            RootShell.log("Executing: " + cmd.getCommand() + " with context: " + shellContext);
+
+                            //write the command
+                            outputStream.write(cmd.getCommand());
+                            outputStream.flush();
+
+                            //write the token...
+                            String line = "\necho " + token + " " + totalExecuted + " $?\n";
+                            outputStream.write(line);
+                            outputStream.flush();
+
+                            write++;
+                            totalExecuted++;
+                        }
                     } else if (close) {
                         /**
                          * close the thread, the shell is closing.
@@ -610,11 +625,10 @@ public class Shell {
                         return;
                     }
                 }
-            } catch (IOException e) {
+            } catch (IOException | InterruptedException e) {
                 RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
-            } catch (InterruptedException e) {
-                RootShell.log(e.getMessage(), RootShell.LogLevel.ERROR, e);
-            } finally {
+            }
+            finally {
                 write = 0;
                 closeQuietly(outputStream);
             }
@@ -686,6 +700,7 @@ public class Shell {
                         /**
                          * token is suffix of output, send output part to implementer
                          */
+                        RootShell.log("Found token, line: " + outputLine);
                         command.output(command.id, outputLine.substring(0, pos));
                     }
 
@@ -698,14 +713,14 @@ public class Shell {
 
                             try {
                                 id = Integer.parseInt(fields[1]);
-                            } catch (NumberFormatException ignored) {
+                            } catch (NumberFormatException e) {
                             }
 
                             int exitCode = -1;
 
                             try {
                                 exitCode = Integer.parseInt(fields[2]);
-                            } catch (NumberFormatException ignored) {
+                            } catch (NumberFormatException e) {
                             }
 
                             if (id == totalRead) {
@@ -740,6 +755,7 @@ public class Shell {
 
                                 command.setExitCode(exitCode);
                                 command.commandFinished();
+
                                 command = null;
 
                                 read++;
@@ -753,7 +769,7 @@ public class Shell {
                 try {
                     proc.waitFor();
                     proc.destroy();
-                } catch (Exception ignored) {
+                } catch (Exception e) {
                 }
 
                 while (read < commands.size()) {
@@ -813,12 +829,12 @@ public class Shell {
         }
     }
 
-    public static void runRootCommand(Command command) throws IOException, TimeoutException, RootDeniedException {
-        Shell.startRootShell().add(command);
+    public static Command runRootCommand(Command command) throws IOException, TimeoutException, RootDeniedException {
+        return Shell.startRootShell().add(command);
     }
 
-    public static void runCommand(Command command) throws IOException, TimeoutException {
-        Shell.startShell().add(command);
+    public static Command runCommand(Command command) throws IOException, TimeoutException {
+        return Shell.startShell().add(command);
     }
 
     public static Shell startRootShell() throws IOException, TimeoutException, RootDeniedException {

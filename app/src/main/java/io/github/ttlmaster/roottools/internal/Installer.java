@@ -1,18 +1,18 @@
-/* 
- * This file is part of the RootTools Project: http://code.google.com/p/roottools/
- *  
+/*
+ * This file is part of the RootTools Project: http://code.google.com/p/RootTools/
+ *
  * Copyright (c) 2012 Stephen Erickson, Chris Ravenscroft, Dominik Schuermann, Adam Shanks
- *  
+ *
  * This code is dual-licensed under the terms of the Apache License Version 2.0 and
  * the terms of the General Public License (GPL) Version 2.
  * You may use this code according to either of these licenses as is most appropriate
  * for your project on a case-by-case basis.
- * 
+ *
  * The terms of each license can be found in the root directory of this project's repository as well as at:
- * 
+ *
  * * http://www.apache.org/licenses/LICENSE-2.0
  * * http://www.gnu.org/licenses/gpl-2.0.txt
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under these Licenses is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -120,7 +120,7 @@ class Installer
                             fos.close();
                             context.deleteFile(BOGUS_FILE_NAME);
                         }
-                        catch (IOException ignored)
+                        catch (IOException e1)
                         {
                         }
                     }
@@ -179,7 +179,7 @@ class Installer
                         oss.getFD().sync();
                         oss.close();
                     }
-                    catch (Exception ignored)
+                    catch (Exception e)
                     {
                     }
                 }
@@ -204,7 +204,7 @@ class Installer
                 commandWait(command);
 
             }
-            catch (Exception ignored)
+            catch (Exception e)
             {
             }
         }
@@ -253,7 +253,7 @@ class Installer
                 ;
             }
             byte[] digest = md.digest();
-            StringBuilder sb = new StringBuilder();
+            StringBuffer sb = new StringBuffer();
 
             for (int i = 0; i < digest.length; i++)
             {
@@ -276,7 +276,7 @@ class Installer
             {
                 is.close();
             }
-            catch (IOException ignored)
+            catch (IOException e)
             {
             }
         }

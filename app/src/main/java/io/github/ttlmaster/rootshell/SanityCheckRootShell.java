@@ -22,10 +22,6 @@
 
 package io.github.ttlmaster.rootshell;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeoutException;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -36,10 +32,13 @@ import android.os.StrictMode;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import io.github.ttlmaster.rootshell.RootShell;
 import io.github.ttlmaster.rootshell.exceptions.RootDeniedException;
 import io.github.ttlmaster.rootshell.execution.Command;
 import io.github.ttlmaster.rootshell.execution.Shell;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 public class SanityCheckRootShell extends Activity
 {

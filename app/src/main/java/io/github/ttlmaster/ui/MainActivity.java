@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    @BindView(R.id.current_ttl_scope)
-    TextView ttlScopeTextView;
-
     @BindView(R.id.refreshed_at)
     TextView refreshedAtTextView;
 
@@ -134,15 +131,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_4pda:
-                Uri uri = Uri.parse(getString(R.string.app_web_address)); //Ссылка на тему 4PDA
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-                return true;
 
             case R.id.action_settings: //Кнопка настроек
                 Intent settings = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(settings);
+                return true;
+            /**
+             * Открытие настроек тетеринга
+             */
+            case R.id.tethering_menu: //Кнопка настроек
+                Intent tetherSettings = new Intent();
+                tetherSettings.setClassName("com.android.settings", "com.android.settings.TetherSettings");
+                startActivity(tetherSettings);
                 return true;
 
         }
@@ -195,16 +195,6 @@ public class MainActivity extends AppCompatActivity {
         }).execute(preferences.getBanlistURL());
     }
 
-    /**
-     * Открытие настроек тетеринга
-     */
-    @OnClick(R.id.open_tethering_settings_button)
-    void openTetheringSettingsButton() {
-        Intent tetherSettings = new Intent();
-        tetherSettings.setClassName("com.android.settings", "com.android.settings.TetherSettings");
-        startActivity(tetherSettings);
-    }
-
     private void updateTtl() {
 
         new UpdateTtlTask().attach(new Task.OnResult<UpdateTtlTask.TtlStatus>() {
@@ -213,13 +203,6 @@ public class MainActivity extends AppCompatActivity {
                 if (ttlStatus == null) {
                     currentTtlView.setText("?");
                     return;
-                }
-                if (ttlStatus.forced) {
-                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables));
-                } else if (ttlStatus.workaround) {
-                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_iptables_workaround));
-                } else {
-                    ttlScopeTextView.setText(getResources().getText(R.string.main_ttl_this_device));
                 }
                 currentTtlView.setText(String.valueOf(ttlStatus.ttl));
                 swipeRefreshLayout.setRefreshing(false);

@@ -15,7 +15,7 @@ public class CheckDeviceTask extends Task<Void,CheckDeviceTask.DeviceCheckResult
 
     DeviceCheckResult action(Void p) {
         try {
-            return new DeviceCheckResult(Android.hasRoot(), Android.hasIptables());
+            return new DeviceCheckResult(Android.INSTANCE.hasRoot(), Android.INSTANCE.hasIptables());
         } catch (IOException | InterruptedException e) {
             TtlApplication.loge(e.toString());
             return new DeviceCheckResult(false, false);
@@ -31,7 +31,7 @@ public class CheckDeviceTask extends Task<Void,CheckDeviceTask.DeviceCheckResult
         public boolean hasRoot;
         public boolean hasIptables;
 
-        private DeviceCheckResult(boolean hasRoot, boolean hasIptables) {
+        public DeviceCheckResult(boolean hasRoot, boolean hasIptables) {
             this.hasRoot = hasRoot;
             this.hasIptables = hasIptables;
         }

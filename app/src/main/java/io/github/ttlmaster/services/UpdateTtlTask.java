@@ -11,10 +11,10 @@ public class UpdateTtlTask extends Task<Object, UpdateTtlTask.TtlStatus> {
     @Override
     public TtlStatus action(Object o) {
         try {
-            final boolean forced = Android.isTtlForced();
-            final boolean workaround = Android.isWorkaroundApplied();
+            final boolean forced = Android.INSTANCE.isTtlForced();
+            final boolean workaround = Android.INSTANCE.isWorkaroundApplied();
 
-            final int ttl = Android.getDeviceTtl();
+            final int ttl = Android.INSTANCE.getDeviceTtl();
 
             return new TtlStatus(ttl, forced, workaround);
         } catch (IOException | InterruptedException e) {

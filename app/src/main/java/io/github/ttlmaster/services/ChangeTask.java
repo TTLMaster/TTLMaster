@@ -30,44 +30,44 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
             String reconnectType = preferences.reconnectType();
 
             if (airplaneReconnectType.equals(reconnectType)) {
-                Android.enabledAirplaneMode();
+                Android.INSTANCE.enabledAirplaneMode();
             }
 
             if (mobileReconnectType.equals(reconnectType)) {
-                Android.disableMobileData();
+                Android.INSTANCE.disableMobileData();
             }
 
-            Android.disableTetheringNotification();
+            Android.INSTANCE.disableTetheringNotification();
 
-            TtlApplication.logi(String.format("COCO %b", Android.hasIptables()));
-            if (!preferences.ignoreIptables() && Android.hasIptables()) {
-                if (Android.canForceTtl()) {
-                    Android.forceSetTtl();
+            TtlApplication.logi(String.format("COCO %b", Android.INSTANCE.hasIptables()));
+            if (!preferences.ignoreIptables() && Android.INSTANCE.hasIptables()) {
+                if (Android.INSTANCE.canForceTtl()) {
+                    Android.INSTANCE.forceSetTtl();
                 } else {
-                    Android.applyWorkaround();
+                    Android.INSTANCE.applyWorkaround();
                 }
 
             }
 
-            if (!Android.isTtlForced()){
-                Android.changeDeviceTtl(preferences.ttlFallbackVaule());
+            if (!Android.INSTANCE.isTtlForced()){
+                Android.INSTANCE.changeDeviceTtl(preferences.ttlFallbackVaule());
             }
 
-            Android.disableBlockList();
+            Android.INSTANCE.disableBlockList();
             if (preferences.restrictionsEnabled()) {
-                Android.applyBlockList(preferences.getBans());
+                Android.INSTANCE.applyBlockList(preferences.getBans());
             }
 
             if (airplaneReconnectType.equals(reconnectType)) {
-                Android.disableAirplaneMode();
+                Android.INSTANCE.disableAirplaneMode();
             }
 
             if (mobileReconnectType.equals(reconnectType)) {
-                Android.enabledMobileData();
+                Android.INSTANCE.enabledMobileData();
             }
 
             if (preferences.startWifiHotspotOnApplyTtl()) {
-                Android.setWifiTetheringEnabled(context);
+                Android.INSTANCE.setWifiTetheringEnabled(context);
             }
 
         } catch (IOException | InterruptedException e) {

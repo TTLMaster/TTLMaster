@@ -34,32 +34,34 @@
                         android:padding="5dp">
 
                         <TextView
-                            android:id="@+id/current_ttl_view"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/rounded"
-                            android:gravity="center"
-                            android:padding="5dp"
-                            android:paddingLeft="10dp"
-                            android:textColor="#000"
-                            android:textSize="@dimen/abc_text_size_display_1_material"
-                            tools:ignore="PrivateResource"
-                            tools:text="63" />
-
-                        <TextView
                             android:id="@+id/hoy"
                             style="@style/Main_Button"
-                            android:layout_width="wrap_content"
+                            android:layout_width="207dp"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:lineSpacingExtra="8sp"
-                            android:paddingLeft="25dp"
+                            android:paddingLeft="15dp"
                             android:text="@string/main_current_ttl"
                             android:textSize="24sp"
                             android:textStyle="bold"
                             android:typeface="sans"
                             android:visibility="visible"
                             app:fontFamily="sans-serif" />
+
+                        <TextView
+                            android:id="@+id/current_ttl_view"
+                            android:layout_width="110dp"
+                            android:layout_height="111dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/rounded"
+                            android:gravity="center"
+                            android:padding="10dp"
+                            android:paddingLeft="0dp"
+                            android:paddingRight="0dp"
+                            android:textColor="#000"
+                            android:textSize="@dimen/abc_text_size_display_1_material"
+                            tools:ignore="PrivateResource"
+                            tools:text="63" />
 
                     </LinearLayout>
 

@@ -3,6 +3,7 @@
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:navigationBarColor" tools:ignore="NewApi">@color/colorNavBar</item>
+        <item name="android:statusBarColor" tools:ignore="NewApi">@color/colorNavBar</item>
     </style>
 
     <style name="Main_Card">

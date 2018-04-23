@@ -10,8 +10,8 @@ android {
         applicationId 'io.github.ttlmaster'
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 2032
-        versionName '2.0.3'
+        versionCode 2100
+        versionName '2.1.0b'
     }
 
     buildTypes {
@@ -40,7 +40,7 @@ dependencies {
     api 'net.orange-box.storebox:storebox-lib:1.4.0'
     api 'commons-io:commons-io:2.6'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 repositories {
     mavenCentral()

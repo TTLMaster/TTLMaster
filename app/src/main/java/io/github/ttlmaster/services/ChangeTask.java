@@ -21,14 +21,6 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
     Void action(ChangeTaskParameters param) {
         Context context = param.context;
         Preferences preferences = param.preferences;
-
-        /*
-        TODO Заменить на нотификации
-        if (preferences.showToastsOnBoot()) {
-            Toast.makeText(context, R.string.applying, Toast.LENGTH_LONG).show();
-        }
-        */
-
         String airplaneReconnectType = context.getString(R.string.prefs_general_reconnectType_airplane);
         String mobileReconnectType = context.getString(R.string.prefs_general_reconnectType_mobile);
 

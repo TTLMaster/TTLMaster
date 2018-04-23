@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
 
@@ -39,4 +40,8 @@ dependencies {
     api 'net.orange-box.storebox:storebox-lib:1.4.0'
     api 'commons-io:commons-io:2.6'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

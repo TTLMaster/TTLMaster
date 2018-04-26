@@ -159,11 +159,13 @@ object Android {
     }
 
     @Throws(IOException::class, InterruptedException::class)
+    @JvmStatic
     fun hasRoot(): Boolean {
         return RootShell.isRootAvailable() && RootShell.isAccessGiven()
     }
 
     @Throws(IOException::class, InterruptedException::class, TimeoutException::class, RootDeniedException::class)
+    @JvmStatic
     fun hasIptables(): Boolean {
         return checkUtil("iptables")
     }

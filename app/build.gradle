@@ -10,7 +10,7 @@ android {
         applicationId 'io.github.ttlmaster'
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 2100
+        versionCode 2101
         versionName '2.1.0b'
     }
 

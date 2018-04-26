@@ -15,7 +15,7 @@ public class CheckDeviceTask extends Task<Void,CheckDeviceTask.DeviceCheckResult
 
     DeviceCheckResult action(Void p) {
         try {
-            return new DeviceCheckResult(Android.INSTANCE.hasRoot(), Android.INSTANCE.hasIptables());
+            return new DeviceCheckResult(Android.hasRoot(), Android.hasIptables());
         } catch (IOException | InterruptedException e) {
             TtlApplication.loge(e.toString());
             return new DeviceCheckResult(false, false);

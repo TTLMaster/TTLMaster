@@ -148,13 +148,12 @@
                 <TextView
                     android:id="@+id/current_ttl_scope"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/main_ttl_this_device"
-                    android:textSize="18sp" />
+                    android:layout_height="match_parent"
+                    android:gravity="center|bottom"
+                    android:text="@string/copyright"
+                    android:textSize="14sp" />
 
             </LinearLayout>
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

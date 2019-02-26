@@ -5,7 +5,7 @@
 
 
     <string name="prefs_general_ignoreIptables_title">Не использовать iptables</string>
-    <string name="prefs_general_ignoreIptables_summary">Использовать старый метод установки TTL даже если iptables —set-ttl доступен</string>
+    <string name="prefs_general_ignoreIptables_summary">Использовать старый метод установки TTL даже если iptables --set-ttl доступен</string>
 
 
     <string name="prefs_general_wifiHotspotOn_title">Включать точку доступа</string>

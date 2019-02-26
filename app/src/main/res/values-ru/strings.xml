@@ -3,7 +3,8 @@
 
     <string name="main_version" formatted="false">Версия %s</string>
     <string name="main_current_ttl">Текущий TTL</string>
-    <string name="copyright">Copyright © 2015–2018 TTL Master</string>
+    <string name="main_ttl_this_device">Для этого устройства</string>
+    <string name="main_ttl_iptables">Для всех пакетов (iptables)</string>
     <string name="main_ttl_hint">Введите TTL</string>
     <string name="main_ttl_apply">Обойти ограничения</string>
     <string name="main_ttl_message_init">Выберите или введите значение TTL</string>

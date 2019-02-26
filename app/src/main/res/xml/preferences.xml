@@ -42,7 +42,7 @@
             android:summary="@string/prefs_general_reconnectType_summary"
             android:title="@string/prefs_general_reconnectType_title" />
 
-        <io.github.ttlmaster.ui.IntEditTextPreference
+        <ru.antiyotazapret.yotatetherttl.ui.IntEditTextPreference
             android:defaultValue="@integer/prefs_general_ttlValue_default"
             android:inputType="number"
             android:key="@string/prefs_general_ttlValue_key"
@@ -88,7 +88,6 @@
         <PreferenceScreen
             android:key="@string/prefs_misc_restart_key"
             android:title="@string/prefs_misc_restart_title" />
-
 
     </PreferenceCategory>
 

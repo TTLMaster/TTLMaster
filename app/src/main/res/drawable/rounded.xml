@@ -5,9 +5,7 @@
     <solid android:color="#00000000" />
 
     <stroke
-        android:width="5dp"
-        android:color="#009688"
-        android:paddingLeft="10dp"
-        />
+        android:width="2dp"
+        android:color="#00aeed" />
 
 </shape>

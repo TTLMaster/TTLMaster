@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="primary">#009688</color>
-    <color name="primaryDark">#00897B</color>
+    <color name="primary">#00aeed</color>
+    <color name="primaryDark">#0079a8</color>
     <color name="accent">@color/primary</color>
 
     <color name="colorNavBar">@color/primaryDark</color>
 
-    <color name="light_teal">@color/primary</color>
-    <color name="middle_teal">@color/primary</color>
-    <color name="deep_teal">@color/primaryDark</color>
+    <color name="light_blue">#00aeed</color>
+    <color name="middle_blue">#6495ED</color>
+    <color name="deep_blue">#0000FF</color>
 
     <color name="light_gray">#EDEDED</color>
 

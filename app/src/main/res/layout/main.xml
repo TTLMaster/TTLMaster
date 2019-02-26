@@ -1,10 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.MainActivity">
+    tools:context=".MainActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -15,6 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scrollbars="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,38 +35,34 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
-
-                        <TextView
-                            android:id="@+id/hoy"
-                            style="@style/Main_Button"
-                            android:layout_width="207dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:lineSpacingExtra="8sp"
-                            android:paddingLeft="15dp"
-                            android:text="@string/main_current_ttl"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:typeface="sans"
-                            android:visibility="visible"
-                            app:fontFamily="sans-serif" />
+                        android:orientation="vertical"
+                        android:padding="16dp">
 
                         <TextView
                             android:id="@+id/current_ttl_view"
-                            android:layout_width="110dp"
-                            android:layout_height="111dp"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
                             android:layout_gravity="center"
                             android:background="@drawable/rounded"
                             android:gravity="center"
-                            android:padding="10dp"
-                            android:paddingLeft="0dp"
-                            android:paddingRight="0dp"
                             android:textColor="#000"
                             android:textSize="@dimen/abc_text_size_display_1_material"
-                            tools:ignore="PrivateResource"
                             tools:text="63" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/main_current_ttl"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                        <TextView
+                            android:id="@+id/current_ttl_scope"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/main_ttl_this_device"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     </LinearLayout>
 
@@ -77,16 +78,21 @@
                         <Button
                             android:id="@+id/apply_ttl_method_button"
                             style="@style/Main_Button"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text="@string/main_ttl_apply"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:typeface="sans"
-                            android:visibility="visible" />
+                            android:layout_width="match_parent" />
 
                     </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView style="@style/Main_Card">
+
+                    <Button
+                        android:id="@+id/open_tethering_settings_button"
+                        style="@style/Main_Button"
+                        android:layout_width="match_parent"
+                        android:text="@string/main_settings_button" />
 
                 </android.support.v7.widget.CardView>
 
@@ -106,29 +112,24 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_margin="16dp"
                             android:text="@string/main_ttl_list_age"
-                            android:textAppearance="@style/TextAppearance.AppCompat"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
                             android:orientation="horizontal"
-                            android:weightSum="2">
+                            android:weightSum="2"
+                            android:layout_marginBottom="2dp">
 
                             <TextView
                                 android:id="@+id/refreshed_at"
                                 android:layout_width="0dp"
-                                android:layout_gravity="center_horizontal|bottom"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:hint="@string/never"
-                                android:textAllCaps="true"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                />
 
 
                             <Button
@@ -136,8 +137,7 @@
                                 style="@style/Main_Button"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
-                                android:text="@string/refresh_list_button"
-                                android:textStyle="bold" />
+                                android:text="@string/refresh_list_button" />
 
                         </LinearLayout>
 
@@ -145,15 +145,21 @@
 
                 </android.support.v7.widget.CardView>
 
-                <TextView
-                    android:id="@+id/current_ttl_scope"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center|bottom"
-                    android:text="@string/copyright"
-                    android:textSize="14sp" />
+                <android.support.v7.widget.CardView style="@style/Main_Card">
+
+                    <TextView
+                        android:id="@+id/enjoy_android_shit_xml"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"/>
+
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
+
+
+
+        </ScrollView>
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

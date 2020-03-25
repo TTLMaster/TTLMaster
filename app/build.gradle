@@ -9,8 +9,8 @@ android {
         applicationId 'ru.glebchajah.ttlmaster'
         minSdkVersion 8
         targetSdkVersion 22
-        versionCode 201
-        versionName '2.0.1'
+        versionCode 202
+        versionName '2.0.2'
     }
 
     buildTypes {

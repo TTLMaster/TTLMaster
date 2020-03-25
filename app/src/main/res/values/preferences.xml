@@ -23,6 +23,9 @@
     <string name="prefs_general_ttlValue_title">Value of TTL</string>
     <string name="prefs_general_ttlValue_summary">Used if no other method is available (Recommended: 127 -- Windows, 63 -- everything else)</string>
 
+    <string name="prefs_general_fixInputTtl_title">Fix input ttl</string>
+    <string name="prefs_general_fixInputTtl_summary">If operator send TTL=1 then the option will fix it</string>
+
     <string name="prefs_boot_title">Autostart</string>
 
     <string name="prefs_boot_autoStart_title">Autostart</string>

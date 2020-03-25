@@ -24,6 +24,9 @@
         <item>Не переподключаться</item>
     </string-array>
 
+    <string name="prefs_general_fixInputTtl_title">Фиксировать входящий ttl</string>
+    <string name="prefs_general_fixInputTtl_summary">Если оператор отпровляет TTL=1 то опция это исправит</string>
+
     <string name="prefs_boot_title">Автозапуск</string>
 
     <string name="prefs_boot_autoStart_title">Автозапуск</string>
@@ -31,7 +34,6 @@
 
     <string name="prefs_boot_showToasts_title">Оповещения</string>
     <string name="prefs_boot_showToasts_summary">Включение оповещений о смене TTL</string>
-
 
     <string name="prefs_restrictions_title">Ограничения</string>
 

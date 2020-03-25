@@ -75,6 +75,10 @@ public class Android {
         executor.executeAsRoot("iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64");
     }
 
+    public static void forceSetInputTtl() throws  IOException, InterruptedException {
+        executor.executeAsRoot("iptables -t mangle -I PREROUTING -j TTL --ttl-inc 1");
+    }
+
     public static boolean isTtlForced() throws IOException, InterruptedException {
         return executor.executeAsRoot("(iptables -t mangle -L | grep -q 'TTL set to 64' && echo ok)")
                 .getOutput().startsWith("ok");

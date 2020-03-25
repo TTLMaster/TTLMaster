@@ -42,6 +42,9 @@ public class ChangeTask extends Task<ChangeTask.ChangeTaskParameters,Void> {
             if (mobileReconnectType.equals(reconnectType)) {
                 Android.disableMobileData();
             }
+            if(preferences.fixInputTtl()) {
+                Android.forceSetInputTtl();
+            }
 
             Android.disableTetheringNotification();
 

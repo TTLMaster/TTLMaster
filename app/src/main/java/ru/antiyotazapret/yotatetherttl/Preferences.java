@@ -90,6 +90,15 @@ public interface Preferences {
     boolean ignoreIptables();
 
     /**
+     * Игорирование  iptables.
+     *
+     * @return {@code true} если нужно игнорировать
+     */
+    @KeyByResource(R.string.prefs_general_fixInputTtl_key)
+    @DefaultValue(R.bool.prefs_general_fixInputTtl_default)
+    boolean fixInputTtl();
+
+    /**
      * URL списка блокировки
      *
      * @return URL

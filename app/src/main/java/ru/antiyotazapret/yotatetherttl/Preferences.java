@@ -81,7 +81,7 @@ public interface Preferences {
 
 
     /**
-     * Игорирование  iptables.
+     * Игнорирование  iptables.
      *
      * @return {@code true} если нужно игнорировать
      */
